@@ -1,0 +1,387 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter+Tight:ital,wght@0,100..900;1,100..900&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* =========================================
+   36ZERO DESIGN SYSTEM - Global Styles
+   ========================================= */
+
+@layer base {
+  :root {
+    /* Brand Colors */
+    --brand-navy: #071923;
+    --brand-blue: #2f97dd;
+    --accent-gold: #c9a962;
+    --accent-teal: #1a9e8c;
+    --accent-coral: #e07a5f;
+    
+    /* Glassmorphism */
+    --glass-bg: rgba(7, 25, 35, 0.8);
+    --glass-border: rgba(255, 255, 255, 0.1);
+    --glass-border-blue: rgba(47, 151, 221, 0.2);
+    
+    /* Shadows */
+    --shadow-glow: 0 0 20px rgba(47, 151, 221, 0.3);
+    --shadow-glass: 0 8px 32px rgba(7, 25, 35, 0.3);
+  }
+
+  html {
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    @apply bg-brand-navy text-white font-sans font-light;
+    min-height: 100vh;
+  }
+
+  /* Typography Scale */
+  h1, .h1 {
+    @apply font-extrabold uppercase tracking-tighter;
+    font-size: clamp(2.5rem, 8vw, 5rem);
+    line-height: 0.95;
+  }
+
+  h2, .h2 {
+    @apply font-bold uppercase tracking-tight;
+    font-size: clamp(1.75rem, 5vw, 3rem);
+    line-height: 1.1;
+  }
+
+  h3, .h3 {
+    @apply font-semibold tracking-tight;
+    font-size: clamp(1.25rem, 3vw, 1.75rem);
+    line-height: 1.2;
+  }
+
+  p, .body {
+    @apply font-light leading-relaxed;
+    font-size: clamp(0.95rem, 1.5vw, 1.125rem);
+  }
+
+  /* Selection */
+  ::selection {
+    @apply bg-brand-blue/30 text-white;
+  }
+}
+
+@layer components {
+  /* =========================================
+     GLASSMORPHISM CARDS
+     ========================================= */
+  .glass-card {
+    @apply relative overflow-hidden rounded-2xl;
+    background: var(--glass-bg);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border);
+    box-shadow: var(--shadow-glass);
+  }
+
+  .glass-card-blue {
+    @apply glass-card;
+    border: 1px solid var(--glass-border-blue);
+  }
+
+  .glass-overlay {
+    @apply absolute inset-0;
+    background: linear-gradient(
+      135deg,
+      rgba(47, 151, 221, 0.05) 0%,
+      transparent 50%,
+      rgba(47, 151, 221, 0.02) 100%
+    );
+    pointer-events: none;
+  }
+
+  /* =========================================
+     BUTTONS
+     ========================================= */
+  .btn-primary {
+    @apply relative inline-flex items-center justify-center px-8 py-4 
+           font-medium tracking-wide uppercase text-sm
+           bg-brand-blue text-white rounded-full
+           transition-all duration-300 ease-out
+           hover:bg-brand-blue-600 hover:shadow-glow
+           focus:outline-none focus:ring-2 focus:ring-brand-blue focus:ring-offset-2 focus:ring-offset-brand-navy
+           overflow-hidden;
+  }
+
+  .btn-primary::before {
+    content: '';
+    @apply absolute inset-0;
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(255, 255, 255, 0.2) 50%,
+      transparent 100%
+    );
+    transform: translateX(-100%);
+    animation: shimmer 5s ease-in-out infinite;
+  }
+
+  .btn-secondary {
+    @apply inline-flex items-center justify-center px-8 py-4 
+           font-medium tracking-wide uppercase text-sm
+           bg-transparent text-white rounded-full
+           border border-white/30
+           transition-all duration-300 ease-out
+           hover:bg-white/10 hover:border-white/50
+           focus:outline-none focus:ring-2 focus:ring-white/50 focus:ring-offset-2 focus:ring-offset-brand-navy;
+  }
+
+  .btn-ghost {
+    @apply inline-flex items-center gap-2 
+           font-medium tracking-wide text-sm
+           text-brand-blue
+           transition-all duration-300 ease-out
+           hover:text-brand-blue-400;
+  }
+
+  .btn-ghost svg {
+    @apply transition-transform duration-300;
+  }
+
+  .btn-ghost:hover svg {
+    @apply translate-x-1;
+  }
+
+  /* =========================================
+     NAVIGATION
+     ========================================= */
+  .nav-link {
+    @apply relative font-medium text-sm tracking-wide uppercase
+           text-white/70 transition-colors duration-300
+           hover:text-white;
+  }
+
+  .nav-link::after {
+    content: '';
+    @apply absolute -bottom-1 left-0 w-0 h-0.5 bg-brand-blue
+           transition-all duration-300 ease-out;
+  }
+
+  .nav-link:hover::after,
+  .nav-link.active::after {
+    @apply w-full;
+  }
+
+  .nav-link.active {
+    @apply text-white;
+  }
+
+  /* =========================================
+     MAP MARKERS
+     ========================================= */
+  .marker-hub {
+    @apply relative w-6 h-6 bg-brand-blue rounded-full
+           shadow-glow cursor-pointer
+           transition-transform duration-300
+           hover:scale-125;
+  }
+
+  .marker-hub::after {
+    content: '';
+    @apply absolute inset-0 rounded-full bg-brand-blue
+           animate-ping opacity-75;
+  }
+
+  .marker-stop {
+    @apply w-3 h-3 bg-white/60 rounded-full
+           transition-all duration-300
+           hover:bg-brand-blue hover:scale-150;
+  }
+
+  /* =========================================
+     FORM INPUTS
+     ========================================= */
+  .input-field {
+    @apply w-full px-4 py-3 
+           bg-white/5 text-white placeholder-white/40
+           border border-white/20 rounded-xl
+           transition-all duration-300
+           focus:bg-white/10 focus:border-brand-blue focus:outline-none focus:ring-2 focus:ring-brand-blue/20;
+  }
+
+  .input-label {
+    @apply block mb-2 font-medium text-sm tracking-wide text-white/70;
+  }
+
+  /* =========================================
+     VESSEL CARDS
+     ========================================= */
+  .vessel-card {
+    @apply glass-card group cursor-pointer;
+  }
+
+  .vessel-card-image {
+    @apply relative aspect-[4/3] overflow-hidden rounded-t-2xl;
+  }
+
+  .vessel-card-image img {
+    @apply w-full h-full object-cover
+           transition-transform duration-700 ease-out
+           group-hover:scale-110;
+  }
+
+  .vessel-card-overlay {
+    @apply absolute inset-0 bg-gradient-horizon opacity-0
+           transition-opacity duration-300
+           group-hover:opacity-100;
+  }
+
+  .vessel-card-badge {
+    @apply absolute top-4 right-4 px-3 py-1
+           text-xs font-semibold uppercase tracking-wider
+           bg-brand-blue text-white rounded-full;
+  }
+
+  .vessel-card-content {
+    @apply p-6 space-y-3;
+  }
+
+  /* =========================================
+     PRICING TABLE
+     ========================================= */
+  .price-tag {
+    @apply inline-flex items-baseline gap-1;
+  }
+
+  .price-currency {
+    @apply text-sm font-medium text-white/60;
+  }
+
+  .price-value {
+    @apply text-2xl font-bold text-white;
+  }
+
+  .price-suffix {
+    @apply text-sm font-medium text-white/60;
+  }
+
+  /* =========================================
+     LOADING STATES
+     ========================================= */
+  .skeleton {
+    @apply relative overflow-hidden bg-white/5 rounded-lg;
+  }
+
+  .skeleton::after {
+    content: '';
+    @apply absolute inset-0;
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(255, 255, 255, 0.05) 50%,
+      transparent 100%
+    );
+    animation: shimmer 1.5s ease-in-out infinite;
+  }
+
+  /* =========================================
+     STEP INDICATOR (LAP Calculator)
+     ========================================= */
+  .step-indicator {
+    @apply flex items-center gap-3;
+  }
+
+  .step-dot {
+    @apply w-3 h-3 rounded-full bg-white/20
+           transition-all duration-300;
+  }
+
+  .step-dot.active {
+    @apply bg-brand-blue w-8;
+  }
+
+  .step-dot.completed {
+    @apply bg-brand-blue;
+  }
+
+  /* =========================================
+     SCROLL ANIMATIONS
+     ========================================= */
+  .fade-in-up {
+    @apply opacity-0 translate-y-8;
+    animation: slideUp 0.6s ease-out forwards;
+  }
+
+  .stagger-1 { animation-delay: 0.1s; }
+  .stagger-2 { animation-delay: 0.2s; }
+  .stagger-3 { animation-delay: 0.3s; }
+  .stagger-4 { animation-delay: 0.4s; }
+  .stagger-5 { animation-delay: 0.5s; }
+  .stagger-6 { animation-delay: 0.6s; }
+}
+
+@layer utilities {
+  /* Text gradient utility */
+  .text-gradient {
+    @apply bg-clip-text text-transparent;
+    background-image: linear-gradient(135deg, #2f97dd 0%, #1a9e8c 100%);
+  }
+
+  /* Glow effects */
+  .glow {
+    box-shadow: var(--shadow-glow);
+  }
+
+  .glow-lg {
+    box-shadow: 0 0 40px rgba(47, 151, 221, 0.4);
+  }
+
+  /* Hide scrollbar but keep functionality */
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Aspect ratios for vessel images */
+  .aspect-vessel {
+    aspect-ratio: 4 / 3;
+  }
+
+  .aspect-hero {
+    aspect-ratio: 16 / 9;
+  }
+
+  /* Safe area padding for mobile */
+  .safe-top {
+    padding-top: env(safe-area-inset-top);
+  }
+
+  .safe-bottom {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+}
+
+/* =========================================
+   RESPONSIVE ADJUSTMENTS
+   ========================================= */
+@media (max-width: 768px) {
+  .btn-primary,
+  .btn-secondary {
+    @apply px-6 py-3 text-xs;
+  }
+}
+
+/* =========================================
+   PRINT STYLES
+   ========================================= */
+@media print {
+  body {
+    @apply bg-white text-black;
+  }
+  
+  .glass-card {
+    @apply bg-gray-100 border-gray-300;
+    backdrop-filter: none;
+  }
+}

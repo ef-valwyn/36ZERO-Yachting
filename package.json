@@ -1,0 +1,28 @@
+{
+  "name": "36zero-platform",
+  "version": "1.0.0",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "turbo dev",
+    "build": "turbo build",
+    "lint": "turbo lint",
+    "dev:yachting": "turbo dev --filter=yachting",
+    "dev:lap": "turbo dev --filter=lap",
+    "db:generate": "turbo db:generate --filter=@36zero/database",
+    "db:push": "turbo db:push --filter=@36zero/database",
+    "db:seed": "turbo db:seed --filter=@36zero/database",
+    "db:studio": "turbo db:studio --filter=@36zero/database"
+  },
+  "devDependencies": {
+    "turbo": "^2.3.0",
+    "typescript": "^5.3.3"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "packageManager": "npm@10.2.0"
+}
