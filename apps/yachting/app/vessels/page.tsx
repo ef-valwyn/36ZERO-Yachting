@@ -10,16 +10,16 @@ import SiteFooter from '@/components/SiteFooter';
 // Placeholder vessel data - in production, this would come from the database via API
 const allVessels = [
   {
-    id: 'azure-horizon',
-    name: 'Azure Horizon',
+    id: 'Adventure One',
+    name: 'Adventure One',
     manufacturer: 'Adventure Yachts',
     model: 'AY60',
-    year: 2023,
-    price: 1850000,
-    currency: 'EUR',
+    year: 2026,
+    price: 2950000,
+    currency: 'USD',
     length: 18.29,
-    capacity: 8,
-    maxSpeed: 12,
+    capacity: 10,
+    maxSpeed: 18,
     imageUrl: 'https://images.unsplash.com/photo-1567899378494-47b22a2ae96a?w=800&q=80',
     status: 'available' as const,
     isFeatured: true,
