@@ -1,7 +1,11 @@
-import 'dotenv/config';
+import { config } from 'dotenv';
+import { resolve } from 'path';
 import { neon } from '@neondatabase/serverless';
 import { drizzle } from 'drizzle-orm/neon-http';
 import * as schema from '../schema';
+
+// Load .env.local from the root of the monorepo
+config({ path: resolve(__dirname, '../../../.env.local') });
 
 const sql = neon(process.env.DATABASE_URL!);
 const db = drizzle(sql, { schema });
