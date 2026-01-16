@@ -10,6 +10,7 @@ export interface ButtonProps extends Omit<HTMLMotionProps<'button'>, 'ref'> {
   isLoading?: boolean;
   leftIcon?: React.ReactNode;
   rightIcon?: React.ReactNode;
+  asChild?: boolean;
 }
 
 const variants = {
@@ -35,24 +36,41 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       rightIcon,
       children,
       disabled,
+      asChild = false,
       ...props
     },
     ref
   ) => {
+    const buttonClassName = cn(
+      variants[variant],
+      variant !== 'ghost' && sizes[size],
+      isLoading && 'opacity-70 cursor-not-allowed',
+      className
+    );
+
+    if (asChild && React.isValidElement(children)) {
+      // When asChild is true, clone the child and merge props
+      const { disabled: _, asChild: __, ...restProps } = props;
+      return React.cloneElement(children as React.ReactElement<any>, {
+        ...restProps,
+        className: cn(buttonClassName, (children as any).props?.className),
+        ref,
+      });
+    }
+
+    const buttonProps = {
+      className: buttonClassName,
+      disabled: disabled || isLoading,
+      whileHover: { scale: 1.02 },
+      whileTap: { scale: 0.98 },
+      transition: { duration: 0.2 },
+      ...props,
+    };
+
     return (
       <motion.button
         ref={ref}
-        className={cn(
-          variants[variant],
-          variant !== 'ghost' && sizes[size],
-          isLoading && 'opacity-70 cursor-not-allowed',
-          className
-        )}
-        disabled={disabled || isLoading}
-        whileHover={{ scale: 1.02 }}
-        whileTap={{ scale: 0.98 }}
-        transition={{ duration: 0.2 }}
-        {...props}
+        {...buttonProps}
       >
         {isLoading ? (
           <span className="flex items-center gap-2">
