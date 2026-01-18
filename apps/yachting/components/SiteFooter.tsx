@@ -44,7 +44,7 @@ export const SiteFooter: React.FC = () => {
         youtube: 'https://youtube.com/@36zeroyachting',
       }}
       contactInfo={{
-        email: 'hello@36zero.yachting',
+        email: 'hello@36zeroyachting.com',
         phone: '+44 20 1234 5678',
         address: 'Marina Bay, London, UK',
       }}

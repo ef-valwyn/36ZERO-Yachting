@@ -7,8 +7,8 @@ A unified monorepo powering **36ZERO Yachting** (premium yacht brokerage) and **
 ```
 36zero-platform/
 ├── apps/
-│   ├── yachting/          # Main brokerage site (36zero.yachting)
-│   └── lap/               # LAP circumnavigation (lap.36zero.yachting)
+│   ├── yachting/          # Main brokerage site (36zeroyachting.com)
+│   └── lap/               # LAP circumnavigation (36zeroyachting.com/lap)
 ├── packages/
 │   ├── ui/                # Shared design system & components
 │   ├── database/          # Drizzle ORM schemas & Neon client
@@ -186,23 +186,20 @@ Transactional emails:
    - **LAP**: `apps/lap` (or use rewrites)
 3. Add environment variables
 4. Configure domains:
-   - `36zero.yachting` → Yachting app
-   - `lap.36zero.yachting` → LAP routes
+   - `36zeroyachting.com` → Yachting app
+   - `36zeroyachting.com/lap` → LAP routes
 
 ### Domain Configuration
 
 ```js
-// next.config.ts - Subdomain rewrites
+// next.config.ts - Path-based routing
+// LAP routes are handled via /lap path within the main app
+// Domain: 36zeroyachting.com/lap
 async rewrites() {
-  return {
-    beforeFiles: [
-      {
-        source: '/:path*',
-        has: [{ type: 'host', value: 'lap.36zero.yachting' }],
-        destination: '/lap/:path*',
-      },
-    ],
-  };
+  return [
+    // All routes are handled within the same app
+    // /lap/* routes are available at 36zeroyachting.com/lap
+  ];
 }
 ```
 
