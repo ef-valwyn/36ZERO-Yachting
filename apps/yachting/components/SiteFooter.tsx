@@ -14,7 +14,7 @@ const footerSections: FooterSection[] = [
     ],
   },
   {
-    title: 'LAP',
+    title: '36ZERO LAP™',
     links: [
       { label: 'The Route', href: '/lap' },
       { label: 'Join a Passage', href: '/lap/passages' },

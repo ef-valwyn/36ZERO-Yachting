@@ -2,6 +2,12 @@ import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
   transpilePackages: ['@36zero/ui', '@36zero/database'],
+  // Suppress Clerk + Next.js 15 async headers warning (dev-only, doesn't affect functionality)
+  logging: {
+    fetches: {
+      fullUrl: false,
+    },
+  },
   images: {
     remotePatterns: [
       {
