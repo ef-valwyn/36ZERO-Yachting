@@ -34,9 +34,14 @@ export const Navigation: React.FC<NavigationProps> = ({
 }) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [isCompact, setIsCompact] = useState(false);
+  const [isCompact, setIsCompact] = useState(true); // Default to true for SSR
   const [showScrollArrow, setShowScrollArrow] = useState(false);
+  const [isCollapsed, setIsCollapsed] = useState(false);
   const navScrollRef = useRef<HTMLDivElement>(null);
+  const navContainerRef = useRef<HTMLDivElement>(null);
+  const logoRef = useRef<HTMLDivElement>(null);
+  const lastScrollY = useRef(0);
+  const scrollThreshold = 30;
 
   // Check if nav items overflow and need scroll arrow
   const checkOverflow = useCallback(() => {
@@ -57,23 +62,44 @@ export const Navigation: React.FC<NavigationProps> = ({
 
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50);
+      const currentScrollY = window.scrollY;
+      
+      setIsScrolled(currentScrollY > 30);
+      
+      // Only apply collapse behavior on desktop (lg breakpoint = 1024px)
+      if (window.innerWidth >= 1024) {
+        // Scrolling up - any upward scroll expands the header
+        if (currentScrollY < lastScrollY.current) {
+          setIsCollapsed(false);
+        }
+        // Scrolling down past threshold - collapse
+        else if (currentScrollY > scrollThreshold) {
+          setIsCollapsed(true);
+        }
+      } else {
+        setIsCollapsed(false);
+      }
+      
+      lastScrollY.current = currentScrollY;
     };
 
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll();
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   // Track window width for responsive behavior
   useEffect(() => {
     const handleResize = () => {
-      setIsCompact(window.innerWidth < 1024);
+      const compact = window.innerWidth < 1024;
+      setIsCompact(compact);
+      if (compact) {
+        setIsCollapsed(false);
+      }
       checkOverflow();
     };
 
-    // Set initial value
     handleResize();
-
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, [checkOverflow]);
@@ -115,28 +141,53 @@ export const Navigation: React.FC<NavigationProps> = ({
     solid: 'bg-brand-navy/95 backdrop-blur-xl border-b border-white/10',
   };
 
+  // Calculate whether to show collapsed state (only on desktop)
+  const showCollapsed = isCollapsed && !isCompact;
+
   return (
     <>
       <motion.nav
+        ref={navContainerRef}
         className={cn(
           'fixed top-0 left-0 right-0 z-50',
-          'transition-all duration-500 ease-out',
           navVariants[variant],
           className
         )}
-        initial={{ y: -100 }}
-        animate={{ y: 0 }}
-        transition={{ duration: 0.5, ease: 'easeOut' }}
+        initial={false}
+        animate={{
+          height: showCollapsed ? 48 : 80,
+        }}
+        transition={{ duration: 0.4, ease: [0.4, 0, 0.2, 1] }}
       >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16 lg:h-20">
-            {/* Logo */}
-            <Link href="/" className="relative z-10 flex-shrink-0">
-              {logo}
-            </Link>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full">
+          <div className="flex items-center justify-between h-full relative">
+            {/* Logo Container - moves to center when collapsed */}
+            <motion.div
+              ref={logoRef}
+              className="relative z-10 flex-shrink-0"
+              initial={false}
+              animate={{
+                x: showCollapsed ? 'calc(50vw - 120px)' : 0,
+                scale: showCollapsed ? 0.7 : 1,
+              }}
+              transition={{ duration: 0.4, ease: [0.4, 0, 0.2, 1] }}
+            >
+              <Link href="/" className="block">
+                {logo}
+              </Link>
+            </motion.div>
 
-            {/* Navigation Links Container */}
-            <div className="flex items-center flex-1 mx-4 lg:mx-8 min-w-0 relative">
+            {/* Navigation Links Container - slides up when collapsed */}
+            <motion.div 
+              className="flex items-center flex-1 mx-4 lg:mx-8 min-w-0 relative"
+              initial={false}
+              animate={{
+                y: showCollapsed ? -60 : 0,
+                opacity: showCollapsed ? 0 : 1,
+                pointerEvents: showCollapsed ? 'none' : 'auto',
+              }}
+              transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
+            >
               {/* Scrollable Nav Links */}
               <div
                 ref={navScrollRef}
@@ -160,7 +211,7 @@ export const Navigation: React.FC<NavigationProps> = ({
 
               {/* Scroll Arrow Indicator */}
               <AnimatePresence>
-                {showScrollArrow && (
+                {showScrollArrow && !showCollapsed && (
                   <motion.button
                     initial={{ opacity: 0, x: -10 }}
                     animate={{ opacity: 1, x: 0 }}
@@ -174,19 +225,31 @@ export const Navigation: React.FC<NavigationProps> = ({
                   </motion.button>
                 )}
               </AnimatePresence>
-            </div>
+            </motion.div>
 
-            {/* Desktop Actions & CTA - only visible on large screens */}
-            <div className="hidden lg:flex items-center gap-4 flex-shrink-0">
+            {/* Desktop Actions & CTA - slides up when collapsed */}
+            <motion.div 
+              className="hidden lg:flex items-center gap-4 flex-shrink-0"
+              initial={false}
+              animate={{
+                y: showCollapsed ? -60 : 0,
+                opacity: showCollapsed ? 0 : 1,
+                pointerEvents: showCollapsed ? 'none' : 'auto',
+              }}
+              transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
+            >
               {actions}
               <Button variant="primary" size="sm" asChild>
                 <Link href={ctaHref}>{ctaLabel}</Link>
               </Button>
-            </div>
+            </motion.div>
 
-            {/* Mobile/Tablet Menu Button - visible below lg breakpoint */}
+            {/* Mobile/Tablet Menu Button */}
             <button
-              className="lg:hidden relative z-10 p-2 -mr-2 flex-shrink-0"
+              className={cn(
+                "lg:hidden relative z-10 p-2 -mr-2 flex-shrink-0",
+                showCollapsed && "hidden"
+              )}
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               aria-label="Toggle menu"
             >
@@ -218,7 +281,7 @@ export const Navigation: React.FC<NavigationProps> = ({
         </div>
       </motion.nav>
 
-      {/* Mobile/Tablet Menu - Only shows Profile and Contact Us */}
+      {/* Mobile/Tablet Menu */}
       <AnimatePresence>
         {isMobileMenuOpen && isCompact && (
           <motion.div
@@ -234,7 +297,7 @@ export const Navigation: React.FC<NavigationProps> = ({
               onClick={() => setIsMobileMenuOpen(false)}
             />
 
-            {/* Menu Content - Only Profile & Contact */}
+            {/* Menu Content */}
             <motion.div
               className="relative flex flex-col items-center justify-center h-full gap-8"
               initial={{ opacity: 0, y: 20 }}
