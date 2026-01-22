@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { ClerkProvider } from '@clerk/nextjs';
 import '@36zero/ui/styles';
 import './globals.css';
+import WorldPremierePopup from '@/components/WorldPremierePopup';
 
 // Force dynamic rendering to fix Clerk + Next.js 15 compatibility
 export const dynamic = 'force-dynamic';
@@ -51,6 +52,7 @@ export default function RootLayout({
       <html lang="en" className="scroll-smooth">
         <body className="bg-brand-navy text-white antialiased">
           {children}
+          <WorldPremierePopup />
         </body>
       </html>
     </ClerkProvider>
