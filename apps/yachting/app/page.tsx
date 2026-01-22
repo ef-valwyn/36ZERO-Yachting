@@ -142,54 +142,78 @@ export default function HomePage() {
       </HeroVideo>
 
       {/* Value Propositions */}
-      <section className="py-24 px-6">
+      <section className="py-24 px-6 overflow-hidden">
         <div className="max-w-7xl mx-auto">
-          <motion.div
-            className="grid md:grid-cols-3 gap-8"
-            initial={{ opacity: 0, y: 40 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: '-100px' }}
-            transition={{ duration: 0.6 }}
-          >
-            <GlassCard variant="hover" padding="lg" className="text-center">
-              <div className="w-16 h-16 mx-auto mb-6 rounded-full bg-brand-blue/10 flex items-center justify-center">
-                <Ship className="w-8 h-8 text-brand-blue" />
-              </div>
-              <h3 className="text-xl font-semibold text-white mb-3">
-                Premium Brokerage
-              </h3>
-              <p className="text-white/60 font-light">
-                Curated selection of expedition and sailing yachts from 
-                world-renowned manufacturers.
-              </p>
-            </GlassCard>
+          <div className="grid md:grid-cols-3 gap-8">
+            {/* Premium Brokerage - slides from left */}
+            <motion.div
+              initial={{ opacity: 0, x: -100 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true, margin: '-100px' }}
+              transition={{ duration: 0.6, ease: 'easeOut' }}
+            >
+              <Link href="/vessels" className="block h-full">
+                <GlassCard variant="hover" padding="lg" className="text-center h-full cursor-pointer">
+                  <div className="w-16 h-16 mx-auto mb-6 rounded-full bg-brand-blue/10 flex items-center justify-center">
+                    <Ship className="w-8 h-8 text-brand-blue" />
+                  </div>
+                  <h3 className="text-xl font-semibold text-white mb-3">
+                    Premium Brokerage
+                  </h3>
+                  <p className="text-white/60 font-light">
+                    Curated selection of expedition and sailing yachts from 
+                    world-renowned manufacturers.
+                  </p>
+                </GlassCard>
+              </Link>
+            </motion.div>
 
-            <GlassCard variant="hover" padding="lg" className="text-center">
-              <div className="w-16 h-16 mx-auto mb-6 rounded-full bg-brand-blue/10 flex items-center justify-center">
-                <AdventureYachtsLogoMark size={36} className="text-brand-blue" />
-              </div>
-              <h3 className="text-xl font-semibold text-white mb-3">
-                Adventure Yachts
-              </h3>
-              <p className="text-white/60 font-light">
-                Exclusive partnership with Adventure Yachts – purpose-built 
-                vessels for serious ocean passages.
-              </p>
-            </GlassCard>
+            {/* Adventure Yachts - slides from bottom */}
+            <motion.div
+              initial={{ opacity: 0, y: 100 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: '-100px' }}
+              transition={{ duration: 0.6, ease: 'easeOut', delay: 0.1 }}
+            >
+              <Link href="/adventure-yachts" className="block h-full">
+                <GlassCard variant="hover" padding="lg" className="text-center h-full cursor-pointer">
+                  <div className="w-16 h-16 mx-auto mb-6 rounded-full bg-brand-blue/10 flex items-center justify-center">
+                    <AdventureYachtsLogoMark size={36} className="text-brand-blue" />
+                  </div>
+                  <h3 className="text-xl font-semibold text-white mb-3">
+                    Adventure Yachts
+                  </h3>
+                  <p className="text-white/60 font-light">
+                    Exclusive partnership with Adventure Yachts – purpose-built 
+                    vessels for serious ocean passages.
+                  </p>
+                </GlassCard>
+              </Link>
+            </motion.div>
 
-            <GlassCard variant="hover" padding="lg" className="text-center">
-              <div className="w-16 h-16 mx-auto mb-6 rounded-full bg-brand-blue/10 flex items-center justify-center">
-                <LogoLapMark size={32} className="text-brand-blue" />
-              </div>
-              <h3 className="text-xl font-semibold text-white mb-3">
-                36ZERO LAP™
-              </h3>
-              <p className="text-white/60 font-light">
-                Join the most ambitious sailing journey – sail passages of 
-                our global circumnavigation.
-              </p>
-            </GlassCard>
-          </motion.div>
+            {/* 36ZERO LAP - slides from right */}
+            <motion.div
+              initial={{ opacity: 0, x: 100 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true, margin: '-100px' }}
+              transition={{ duration: 0.6, ease: 'easeOut', delay: 0.2 }}
+            >
+              <Link href="/lap" className="block h-full">
+                <GlassCard variant="hover" padding="lg" className="text-center h-full cursor-pointer">
+                  <div className="w-16 h-16 mx-auto mb-6 rounded-full bg-brand-blue/10 flex items-center justify-center">
+                    <LogoLapMark size={32} className="text-brand-blue" />
+                  </div>
+                  <h3 className="text-xl font-semibold text-white mb-3">
+                    36ZERO LAP™
+                  </h3>
+                  <p className="text-white/60 font-light">
+                    Join the most ambitious sailing journey – sail passages of 
+                    our global circumnavigation.
+                  </p>
+                </GlassCard>
+              </Link>
+            </motion.div>
+          </div>
         </div>
       </section>
 

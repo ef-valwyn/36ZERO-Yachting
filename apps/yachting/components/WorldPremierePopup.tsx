@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Calendar, MapPin, Mail, ChevronLeft, User, Phone, Globe, Building2 } from 'lucide-react';
 import { Button, GlassCard } from '@36zero/ui';
+import Image from 'next/image';
 
 const COOKIE_POPUP_SEEN = '36zero_premiere_seen';
 const COOKIE_MINIMIZED_CLOSED = '36zero_premiere_minimized_closed';
@@ -286,11 +287,22 @@ export default function WorldPremierePopup() {
                             </span>
                           </div>
 
-                          <h2 className="text-2xl md:text-3xl font-bold text-white mb-3">
+                          <h2 className="text-2xl md:text-3xl font-bold text-white mb-4">
                             Adventure Yachts AY60
                             <br />
                             <span className="text-gradient">World Premiere</span>
                           </h2>
+
+                          {/* IMHS Logo */}
+                          <div className="flex justify-center mb-4">
+                            <Image
+                              src="/images/imhs-logo.png"
+                              alt="International Multihull Show"
+                              width={200}
+                              height={80}
+                              className="object-contain"
+                            />
+                          </div>
 
                           <div className="space-y-2">
                             <div className="flex items-center justify-center gap-2 text-brand-blue">
