@@ -285,6 +285,7 @@ See `.env.example` for all required variables:
    - [ ] Switch order of LAP section and Available Vessels on home page
    - [ ] Remove About from nav bar, add About 36ZERO section on home page
    - [ ] Payload CMS integration
+   - [ ] Popup for La Grande Motte
 
 2. **Phase 2**: Brokerage & Assets
    - [x] Vessel listings page
@@ -293,7 +294,7 @@ See `.env.example` for all required variables:
    - [ ] Align CMS for vessels - create distinct sections for Adventure Yachts vs other listings
    - [ ] Create detail pages for each vessel, backed by CMS
    - [ ] Upload spec sheet to Vercel Blob storage
-   - [ ] Upload all visual collateral to Vercel Blob storage
+   - [ ] Upload all visual collateral to Vercel Blob storage, refresh code for url to point all images to this storage
    - [ ] Search with Meilisearch
    - [ ] Inquiry form
 
