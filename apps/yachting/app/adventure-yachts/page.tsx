@@ -118,11 +118,87 @@ const specifications = [
   { label: 'Crew', value: '2' },
 ];
 
+// AY60 Vessel Areas for Interactive Explorer
+// TODO: Update image URLs to Vercel Blob storage URLs
+const vesselAreas = [
+  {
+    id: 'cockpit',
+    name: 'Cockpit',
+    imageUrl: 'https://images.unsplash.com/photo-1569263979104-865ab7cd8d13?w=1920&q=80',
+    hotspots: [
+      { id: 1, x: 25, y: 30, label: 'Rain Shower' },
+      { id: 2, x: 70, y: 45, label: 'Helm Controls' },
+      { id: 3, x: 50, y: 70, label: 'Seating Area' },
+    ],
+  },
+  {
+    id: 'outdoor-deck',
+    name: 'Outdoor Deck',
+    imageUrl: 'https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=1920&q=80',
+    hotspots: [
+      { id: 1, x: 30, y: 40, label: 'Sun Loungers' },
+      { id: 2, x: 65, y: 35, label: 'Dining Area' },
+      { id: 3, x: 80, y: 60, label: 'BBQ Station' },
+    ],
+  },
+  {
+    id: 'saloon',
+    name: 'Saloon',
+    imageUrl: 'https://images.unsplash.com/photo-1605281317010-fe5ffe798166?w=1920&q=80',
+    hotspots: [
+      { id: 1, x: 20, y: 50, label: 'Entertainment System' },
+      { id: 2, x: 55, y: 40, label: 'L-Shaped Sofa' },
+      { id: 3, x: 75, y: 65, label: 'Panoramic Windows' },
+    ],
+  },
+  {
+    id: 'kitchen',
+    name: 'Kitchen',
+    imageUrl: 'https://images.unsplash.com/photo-1540946485063-a40da27545f8?w=1920&q=80',
+    hotspots: [
+      { id: 1, x: 25, y: 45, label: 'Induction Cooktop' },
+      { id: 2, x: 60, y: 35, label: 'Wine Cooler' },
+      { id: 3, x: 45, y: 70, label: 'Full-Size Refrigerator' },
+    ],
+  },
+  {
+    id: 'helm',
+    name: 'Helm',
+    imageUrl: 'https://images.unsplash.com/photo-1567899378494-47b22a2ae96a?w=1920&q=80',
+    hotspots: [
+      { id: 1, x: 35, y: 40, label: 'Glass Cockpit Displays' },
+      { id: 2, x: 65, y: 50, label: 'Joystick Control' },
+      { id: 3, x: 50, y: 25, label: 'Chart Plotter' },
+    ],
+  },
+  {
+    id: 'beach-club',
+    name: 'Beach Club',
+    imageUrl: 'https://images.unsplash.com/photo-1500514966906-fe245eea9344?w=1920&q=80',
+    hotspots: [
+      { id: 1, x: 30, y: 55, label: 'Swim Platform' },
+      { id: 2, x: 70, y: 40, label: 'Tender Garage' },
+      { id: 3, x: 50, y: 75, label: 'Freshwater Shower' },
+    ],
+  },
+  {
+    id: 'berths',
+    name: 'Berths',
+    imageUrl: 'https://images.unsplash.com/photo-1569263979104-865ab7cd8d13?w=1920&q=80',
+    hotspots: [
+      { id: 1, x: 40, y: 45, label: 'King-Size Bed' },
+      { id: 2, x: 25, y: 60, label: 'En-Suite Bathroom' },
+      { id: 3, x: 70, y: 35, label: 'Walk-In Wardrobe' },
+    ],
+  },
+];
+
 export default function AdventureYachtsPage() {
   const [activeGalleryIndex, setActiveGalleryIndex] = React.useState(0);
   const [slideDirection, setSlideDirection] = React.useState<'left' | 'right'>('right');
   const [isVideoPlaying, setIsVideoPlaying] = React.useState(false);
   const [galleryHoverZone, setGalleryHoverZone] = React.useState<'left' | 'right' | null>(null);
+  const [activeVesselArea, setActiveVesselArea] = React.useState(vesselAreas[0]);
 
   // Auto-scroll gallery every 5 seconds
   React.useEffect(() => {
@@ -424,10 +500,41 @@ export default function AdventureYachtsPage() {
             <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
               AY60 Power Catamaran
             </h2>
-            <p className="text-lg text-white/60 font-light max-w-3xl mx-auto">
+            <p className="text-lg text-white/60 font-light max-w-3xl mx-auto mb-8">
               Experience the pinnacle of power catamaran design. The AY60 combines 
               revolutionary hull technology with luxurious amenities for the ultimate ocean adventure.
             </p>
+
+            {/* Section Navigation */}
+            <div className="flex flex-wrap items-center justify-center gap-2 md:gap-0">
+              <a 
+                href="#ay60-specifications" 
+                className="px-4 py-2 text-white/70 hover:text-white transition-colors text-sm font-medium"
+              >
+                Specifications
+              </a>
+              <span className="hidden md:inline text-white/30">|</span>
+              <a 
+                href="#ay60-tour" 
+                className="px-4 py-2 text-white/70 hover:text-white transition-colors text-sm font-medium"
+              >
+                Tour
+              </a>
+              <span className="hidden md:inline text-white/30">|</span>
+              <a 
+                href="#ay60-gallery" 
+                className="px-4 py-2 text-white/70 hover:text-white transition-colors text-sm font-medium"
+              >
+                Gallery
+              </a>
+              <span className="hidden md:inline text-white/30 mr-2">|</span>
+              <a 
+                href="#ay60-reserve" 
+                className="px-5 py-2 bg-brand-blue text-white rounded-full text-sm font-semibold hover:bg-brand-blue/80 transition-colors shadow-glow"
+              >
+                Reserve Your AY60
+              </a>
+            </div>
           </motion.div>
 
           {/* Video Section */}
@@ -475,7 +582,8 @@ export default function AdventureYachtsPage() {
 
           {/* Specifications */}
           <motion.div
-            className="mb-16"
+            id="ay60-specifications"
+            className="mb-16 scroll-mt-24"
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -509,8 +617,139 @@ export default function AdventureYachtsPage() {
             </GlassCard>
           </motion.div>
 
+          {/* Virtual Tour - Explore the AY60 */}
+          <motion.div
+            id="ay60-tour"
+            className="mb-16 scroll-mt-24"
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+          >
+            <div className="text-center mb-8">
+              <p className="text-brand-blue font-medium tracking-widest uppercase text-sm mb-4">
+                Virtual Tour
+              </p>
+              <h3 className="text-3xl md:text-4xl font-bold text-white mb-4">
+                Explore the AY60
+              </h3>
+              <p className="text-white/60 font-light max-w-2xl mx-auto">
+                Discover every detail of this exceptional power catamaran. Select an area below to explore.
+              </p>
+            </div>
+
+            {/* Area Selection Tabs */}
+            <div className="flex flex-wrap justify-center gap-2 mb-8">
+              {vesselAreas.map((area) => (
+                <button
+                  key={area.id}
+                  onClick={() => setActiveVesselArea(area)}
+                  className={`px-5 py-2.5 rounded-full text-sm font-medium transition-all duration-300 ${
+                    activeVesselArea.id === area.id
+                      ? 'bg-brand-blue text-white shadow-glow'
+                      : 'bg-white/5 text-white/70 hover:bg-white/10 hover:text-white border border-white/10'
+                  }`}
+                >
+                  {area.name}
+                </button>
+              ))}
+            </div>
+
+            {/* Interactive Image Display */}
+            <GlassCard variant="blue" padding="none" className="overflow-hidden">
+              <div className="relative aspect-[16/9]">
+                {/* Background Image with Transition */}
+                <AnimatePresence mode="wait">
+                  <motion.div
+                    key={activeVesselArea.id}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.5 }}
+                    className="absolute inset-0"
+                  >
+                    <Image
+                      src={activeVesselArea.imageUrl}
+                      alt={activeVesselArea.name}
+                      fill
+                      className="object-cover"
+                    />
+                    {/* Gradient overlay for better hotspot visibility */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-brand-navy/40 via-transparent to-brand-navy/20" />
+                  </motion.div>
+                </AnimatePresence>
+
+                {/* Hotspots */}
+                <AnimatePresence mode="wait">
+                  <motion.div
+                    key={activeVesselArea.id + '-hotspots'}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.3, delay: 0.3 }}
+                    className="absolute inset-0"
+                  >
+                    {activeVesselArea.hotspots.map((hotspot, index) => (
+                      <motion.div
+                        key={hotspot.id}
+                        className="absolute group"
+                        style={{ left: `${hotspot.x}%`, top: `${hotspot.y}%` }}
+                        initial={{ scale: 0, opacity: 0 }}
+                        animate={{ scale: 1, opacity: 1 }}
+                        transition={{ duration: 0.3, delay: 0.4 + index * 0.1 }}
+                      >
+                        {/* Hotspot Marker */}
+                        <div className="relative">
+                          {/* Pulse ring */}
+                          <div className="absolute inset-0 w-8 h-8 -translate-x-1/2 -translate-y-1/2 rounded-full bg-brand-blue/30 animate-ping" />
+                          
+                          {/* Main circle */}
+                          <div className="relative w-8 h-8 -translate-x-1/2 -translate-y-1/2 rounded-full bg-brand-blue border-2 border-white shadow-lg cursor-pointer flex items-center justify-center group-hover:scale-110 transition-transform">
+                            <div className="w-2 h-2 rounded-full bg-white" />
+                          </div>
+
+                          {/* Expandable Label */}
+                          <div className="absolute left-6 top-1/2 -translate-y-1/2 pointer-events-none">
+                            <div className="bg-brand-navy/95 backdrop-blur-md rounded-lg px-4 py-2 border border-white/20 shadow-xl whitespace-nowrap opacity-0 group-hover:opacity-100 translate-x-2 group-hover:translate-x-0 transition-all duration-300">
+                              <p className="text-white text-sm font-medium">{hotspot.label}</p>
+                            </div>
+                          </div>
+                        </div>
+                      </motion.div>
+                    ))}
+                  </motion.div>
+                </AnimatePresence>
+
+                {/* Area Label */}
+                <div className="absolute bottom-6 left-6">
+                  <motion.div
+                    key={activeVesselArea.id + '-label'}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.4 }}
+                    className="bg-brand-navy/80 backdrop-blur-md rounded-xl px-5 py-3 border border-white/10"
+                  >
+                    <p className="text-brand-blue text-xs font-medium uppercase tracking-wider mb-1">
+                      Currently Viewing
+                    </p>
+                    <p className="text-white text-xl font-semibold">{activeVesselArea.name}</p>
+                  </motion.div>
+                </div>
+
+                {/* Instruction hint */}
+                <div className="absolute bottom-6 right-6">
+                  <div className="bg-brand-navy/60 backdrop-blur-sm rounded-full px-4 py-2 border border-white/10">
+                    <p className="text-white/60 text-xs">Hover over markers to explore features</p>
+                  </div>
+                </div>
+              </div>
+            </GlassCard>
+          </motion.div>
+
           {/* Photo Gallery */}
           <motion.div
+            id="ay60-gallery"
+            className="scroll-mt-24"
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -632,7 +871,7 @@ export default function AdventureYachtsPage() {
       </section>
 
       {/* Reserve Your Vessel Section */}
-      <section className="py-32 px-6">
+      <section id="ay60-reserve" className="py-32 px-6 scroll-mt-24">
         <div className="max-w-7xl mx-auto">
           <motion.div
             className="text-center mb-16"
