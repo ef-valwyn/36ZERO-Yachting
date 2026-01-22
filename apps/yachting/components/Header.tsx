@@ -1,7 +1,6 @@
 'use client';
 
 import React from 'react';
-import { usePathname } from 'next/navigation';
 import {
   SignInButton,
   SignUpButton,
@@ -11,13 +10,12 @@ import {
 } from '@clerk/nextjs';
 import { Navigation, type NavItem } from '@36zero/ui';
 import Logo from './Logo';
-import LapLogo from './LapLogo';
 
 const navItems: NavItem[] = [
   { label: 'Home', href: '/' },
   { label: 'Available Vessels', href: '/vessels' },
   { label: 'Adventure Yachts', href: '/adventure-yachts' },
-  { label: '36ZERO LAP™', href: '/lap' },
+  { label: 'LAP Circumnavigation', href: '/lap' },
   { label: 'About', href: '/about' },
 ];
 
@@ -26,15 +24,9 @@ interface HeaderProps {
 }
 
 export const Header: React.FC<HeaderProps> = ({ variant = 'transparent' }) => {
-  const pathname = usePathname();
-  
-  // Use LAP logo on /lap routes, default logo everywhere else
-  const isLapPage = pathname?.startsWith('/lap');
-  const CurrentLogo = isLapPage ? <LapLogo /> : <Logo />;
-
   return (
     <Navigation
-      logo={CurrentLogo}
+      logo={<Logo />}
       items={navItems}
       ctaLabel="Contact Us"
       ctaHref="/contact"

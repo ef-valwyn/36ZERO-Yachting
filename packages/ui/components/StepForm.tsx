@@ -155,7 +155,7 @@ export const StepForm: React.FC<StepFormProps> = ({
       </h3>
 
       {/* Step Content */}
-      <div className="relative min-h-[400px]">
+      <div className="relative min-h-[300px] overflow-hidden">
         <AnimatePresence mode="wait" custom={direction}>
           <motion.div
             key={currentStep}
@@ -169,11 +169,10 @@ export const StepForm: React.FC<StepFormProps> = ({
           >
             {/* Step 1: Select Passages */}
             {currentStep === 0 && (
-              <div className="h-full flex flex-col">
+              <div className="space-y-3">
                 <p className="text-sm text-white/60 mb-4">
                   Select up to {maxPassages} passages for your journey
                 </p>
-                <div className="flex-1 overflow-y-auto space-y-3 pr-2 scrollbar-thin scrollbar-thumb-white/20 scrollbar-track-transparent">
                 {passages.map((passage) => (
                   <button
                     key={passage.id}
@@ -208,7 +207,6 @@ export const StepForm: React.FC<StepFormProps> = ({
                     )}
                   </button>
                 ))}
-                </div>
               </div>
             )}
 

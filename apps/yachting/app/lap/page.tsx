@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { 
   ArrowRight, 
+  Globe, 
   Calendar, 
   Users, 
   Anchor, 
@@ -24,16 +25,15 @@ import {
 } from '@36zero/ui';
 import Header from '@/components/Header';
 import SiteFooter from '@/components/SiteFooter';
-import LapLogo from '@/components/LapLogo';
 
 // Passage data for the booking flow
 const passages: Passage[] = [
   {
-    id: 'pacific-gateway',
-    name: 'Passage 1: The Pacific Gateway',
-    description: 'Saint Lucia to Bora Bora. Panama Canal Transit, Pacific trade winds to Tahiti\'s coral atolls.',
-    startDate: '9 Jan 2027',
-    endDate: '8 May 2027',
+    id: 'pacific-dreams',
+    name: 'Passage 1: Pacific Dreams',
+    description: 'French Polynesia to Fiji through the South Pacific',
+    startDate: 'Apr 2025',
+    endDate: 'Jun 2025',
     distanceNm: 1973,
     pricePerPerson: 45000,
     maxGuests: 4,
@@ -42,9 +42,9 @@ const passages: Passage[] = [
   {
     id: 'coral-crossing',
     name: 'Passage 2: Coral Crossing',
-    description: 'Bora Bora to Lombok. South Pacific islands, Great Barrier Reef and Indonesia.',
-    startDate: '11 May 2027',
-    endDate: '14 Sep 2027',
+    description: 'Fiji to Australia via Vanuatu and the Coral Sea',
+    startDate: 'Jul 2025',
+    endDate: 'Sep 2025',
     distanceNm: 1680,
     pricePerPerson: 52000,
     maxGuests: 4,
@@ -53,9 +53,9 @@ const passages: Passage[] = [
   {
     id: 'indian-ocean-odyssey',
     name: 'Passage 3: Indian Ocean Odyssey',
-    description: 'Lombok to Cape Town. True blue water adventure, Indian Ocean to Cape of Good Hope.',
-    startDate: '18 Sep 2027',
-    endDate: '15 Dec 2027',
+    description: 'Australia to Djibouti via Indonesia and Maldives',
+    startDate: 'Oct 2025',
+    endDate: 'Feb 2026',
     distanceNm: 5450,
     pricePerPerson: 68000,
     maxGuests: 4,
@@ -64,9 +64,9 @@ const passages: Passage[] = [
   {
     id: 'atlantic-return',
     name: 'Passage 4: Atlantic Return',
-    description: 'Cape Town to Saint Lucia. Saint Helena stop, South Atlantic tradewind crossing.',
-    startDate: '16 Jan 2028',
-    endDate: '15 Apr 2028',
+    description: 'Djibouti to Antigua via Mediterranean and Atlantic',
+    startDate: 'Apr 2026',
+    endDate: 'Aug 2026',
     distanceNm: 8780,
     pricePerPerson: 72000,
     maxGuests: 4,
@@ -250,21 +250,6 @@ export default function LAPPage() {
 
       {/* Hero Section */}
       <section className="relative pt-32 pb-24 px-6 overflow-hidden">
-        {/* Background SVG */}
-        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-          <svg
-            className="w-full h-full max-w-[1464px] opacity-30"
-            viewBox="0 0 1464 950"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-            preserveAspectRatio="xMidYMid slice"
-          >
-            <path d="M1018 553.422L982.258 620.485L884.335 804.998C863.932 843.11 824.275 867 781.193 867H305L560.415 386.572L605.788 301.022L700.908 122.238C714.083 97.4708 739.809 82 767.811 82H894.329L784.982 287.936L739.943 372.669L725.745 399.33H725.908L644.14 553.422H1018Z" stroke="#2F97DD" strokeWidth="3"/>
-            <path d="M598 82L342.226 562.421L296.79 647.971L201.692 826.725C188.507 851.514 162.73 867 134.673 867H7.84434L117.345 661.057L162.455 576.324L176.672 549.662H176.509L258.384 395.578H-116L-80.2076 328.508L18.0156 144.158C38.2839 105.882 77.9963 82 121.31 82H598Z" stroke="#2F97DD" strokeWidth="3"/>
-          </svg>
-        </div>
-        
-        {/* Radial gradient overlay */}
         <div className="absolute inset-0 bg-gradient-to-b from-brand-blue/5 via-transparent to-transparent" />
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-brand-blue/5 rounded-full blur-3xl" />
         
@@ -275,9 +260,9 @@ export default function LAPPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
           >
-            {/* LAP Logo Badge */}
-            <div className="inline-flex items-center justify-center px-6 py-3 rounded-full bg-brand-blue/10 border border-brand-blue/20 mb-6">
-              <LapLogo variant="full" />
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-brand-blue/10 border border-brand-blue/20 mb-6">
+              <Globe className="w-4 h-4 text-brand-blue" />
+              <span className="text-sm font-medium text-brand-blue">36ZERO LAP</span>
             </div>
             
             <h1 className="text-4xl md:text-6xl font-extrabold uppercase tracking-tighter text-white mb-6">
@@ -399,7 +384,7 @@ export default function LAPPage() {
                       </h3>
                     </div>
                     {passage.requiresOffshoreCompetency && (
-                      <span className="px-2 py-1 text-xs font-medium bg-accent-gold/20 text-accent-gold rounded-full whitespace-nowrap flex-shrink-0">
+                      <span className="px-2 py-1 text-xs font-medium bg-accent-gold/20 text-accent-gold rounded-full">
                         Offshore Required
                       </span>
                     )}
@@ -555,7 +540,7 @@ export default function LAPPage() {
               animate={{ opacity: 1, y: 0 }}
             >
               <p className="text-brand-blue font-medium tracking-widest uppercase text-sm mb-2">
-                Build Your LAP
+                LAP Calculator
               </p>
               <h2 className="text-3xl md:text-4xl font-bold text-white">
                 Plan Your Passages

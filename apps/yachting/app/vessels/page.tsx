@@ -190,7 +190,7 @@ export default function VesselsPage() {
       <Header variant="solid" />
 
       {/* Page Header */}
-      <section className="pt-24 lg:pt-28 pb-6 px-6">
+      <section className="pt-32 pb-12 px-6">
         <div className="max-w-7xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -211,8 +211,8 @@ export default function VesselsPage() {
         </div>
       </section>
 
-      {/* Filters & Search - Sticky below header */}
-      <section className="px-6 sticky top-16 lg:top-20 z-30 bg-brand-navy/95 backdrop-blur-xl border-b border-white/10">
+      {/* Filters & Search */}
+      <section className="pb-8 px-6 sticky top-20 z-30 bg-brand-navy/95 backdrop-blur-xl border-b border-white/10">
         <div className="max-w-7xl mx-auto">
           <div className="flex flex-col lg:flex-row items-stretch lg:items-center gap-4 py-4">
             {/* Search */}

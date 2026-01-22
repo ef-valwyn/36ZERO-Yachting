@@ -3,9 +3,6 @@ import { ClerkProvider } from '@clerk/nextjs';
 import '@36zero/ui/styles';
 import './globals.css';
 
-// Force dynamic rendering to fix Clerk + Next.js 15 compatibility
-export const dynamic = 'force-dynamic';
-
 export const metadata: Metadata = {
   title: {
     default: '36ZERO Yachting | Premium Yacht Brokerage',

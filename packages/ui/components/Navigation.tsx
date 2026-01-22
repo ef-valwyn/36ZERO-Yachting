@@ -1,9 +1,9 @@
 'use client';
 
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
-import { Menu, X, ChevronRight } from 'lucide-react';
+import { Menu, X } from 'lucide-react';
 import { cn } from '../lib/utils';
 import { Button } from './Button';
 
@@ -34,26 +34,6 @@ export const Navigation: React.FC<NavigationProps> = ({
 }) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [isCompact, setIsCompact] = useState(false);
-  const [showScrollArrow, setShowScrollArrow] = useState(false);
-  const navScrollRef = useRef<HTMLDivElement>(null);
-
-  // Check if nav items overflow and need scroll arrow
-  const checkOverflow = useCallback(() => {
-    if (navScrollRef.current) {
-      const { scrollWidth, clientWidth, scrollLeft } = navScrollRef.current;
-      const hasOverflow = scrollWidth > clientWidth;
-      const isAtEnd = scrollLeft + clientWidth >= scrollWidth - 10;
-      setShowScrollArrow(hasOverflow && !isAtEnd);
-    }
-  }, []);
-
-  // Scroll nav items to the right
-  const scrollNavRight = () => {
-    if (navScrollRef.current) {
-      navScrollRef.current.scrollBy({ left: 150, behavior: 'smooth' });
-    }
-  };
 
   useEffect(() => {
     const handleScroll = () => {
@@ -63,30 +43,6 @@ export const Navigation: React.FC<NavigationProps> = ({
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
-
-  // Track window width for responsive behavior
-  useEffect(() => {
-    const handleResize = () => {
-      setIsCompact(window.innerWidth < 1024);
-      checkOverflow();
-    };
-
-    // Set initial value
-    handleResize();
-
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, [checkOverflow]);
-
-  // Check overflow on mount and when items change
-  useEffect(() => {
-    checkOverflow();
-    const scrollEl = navScrollRef.current;
-    if (scrollEl) {
-      scrollEl.addEventListener('scroll', checkOverflow);
-      return () => scrollEl.removeEventListener('scroll', checkOverflow);
-    }
-  }, [checkOverflow, items]);
 
   // Prevent body scroll when mobile menu is open
   useEffect(() => {
@@ -99,13 +55,6 @@ export const Navigation: React.FC<NavigationProps> = ({
       document.body.style.overflow = '';
     };
   }, [isMobileMenuOpen]);
-
-  // Close mobile menu when switching to desktop
-  useEffect(() => {
-    if (!isCompact) {
-      setIsMobileMenuOpen(false);
-    }
-  }, [isCompact]);
 
   const navVariants = {
     transparent: cn(
@@ -128,65 +77,37 @@ export const Navigation: React.FC<NavigationProps> = ({
         animate={{ y: 0 }}
         transition={{ duration: 0.5, ease: 'easeOut' }}
       >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16 lg:h-20">
+        <div className="max-w-7xl mx-auto px-6 lg:px-8">
+          <div className="flex items-center justify-between h-20">
             {/* Logo */}
-            <Link href="/" className="relative z-10 flex-shrink-0">
+            <Link href="/" className="relative z-10">
               {logo}
             </Link>
 
-            {/* Navigation Links Container */}
-            <div className="flex items-center flex-1 mx-4 lg:mx-8 min-w-0 relative">
-              {/* Scrollable Nav Links */}
-              <div
-                ref={navScrollRef}
-                className="flex items-center gap-4 lg:gap-10 overflow-x-auto scrollbar-hide"
-              >
-                {items.map((item) => (
-                  <Link
-                    key={item.href}
-                    href={item.href}
-                    className={cn(
-                      'whitespace-nowrap text-sm',
-                      'font-medium text-white/70 hover:text-white transition-colors',
-                      'py-1 px-2',
-                      item.isActive && 'text-white'
-                    )}
-                  >
-                    {item.label}
-                  </Link>
-                ))}
-              </div>
-
-              {/* Scroll Arrow Indicator */}
-              <AnimatePresence>
-                {showScrollArrow && (
-                  <motion.button
-                    initial={{ opacity: 0, x: -10 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    exit={{ opacity: 0, x: -10 }}
-                    transition={{ duration: 0.2 }}
-                    onClick={scrollNavRight}
-                    className="absolute right-0 flex items-center justify-center w-8 h-8 bg-gradient-to-l from-brand-navy via-brand-navy/90 to-transparent pl-4 pr-0"
-                    aria-label="Scroll to see more options"
-                  >
-                    <ChevronRight className="w-5 h-5 text-brand-blue animate-pulse" />
-                  </motion.button>
-                )}
-              </AnimatePresence>
+            {/* Desktop Navigation */}
+            <div className="hidden lg:flex items-center gap-10">
+              {items.map((item) => (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className={cn('nav-link', item.isActive && 'active')}
+                >
+                  {item.label}
+                </Link>
+              ))}
             </div>
 
-            {/* Desktop Actions & CTA - only visible on large screens */}
-            <div className="hidden lg:flex items-center gap-4 flex-shrink-0">
+            {/* Actions & CTA Button */}
+            <div className="hidden lg:flex items-center gap-4">
               {actions}
               <Button variant="primary" size="sm" asChild>
                 <Link href={ctaHref}>{ctaLabel}</Link>
               </Button>
             </div>
 
-            {/* Mobile/Tablet Menu Button - visible below lg breakpoint */}
+            {/* Mobile Menu Button */}
             <button
-              className="lg:hidden relative z-10 p-2 -mr-2 flex-shrink-0"
+              className="lg:hidden relative z-10 p-2 -mr-2"
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               aria-label="Toggle menu"
             >
@@ -218,9 +139,9 @@ export const Navigation: React.FC<NavigationProps> = ({
         </div>
       </motion.nav>
 
-      {/* Mobile/Tablet Menu - Only shows Profile and Contact Us */}
+      {/* Mobile Menu Overlay */}
       <AnimatePresence>
-        {isMobileMenuOpen && isCompact && (
+        {isMobileMenuOpen && (
           <motion.div
             className="fixed inset-0 z-40 lg:hidden"
             initial={{ opacity: 0 }}
@@ -234,7 +155,7 @@ export const Navigation: React.FC<NavigationProps> = ({
               onClick={() => setIsMobileMenuOpen(false)}
             />
 
-            {/* Menu Content - Only Profile & Contact */}
+            {/* Menu Content */}
             <motion.div
               className="relative flex flex-col items-center justify-center h-full gap-8"
               initial={{ opacity: 0, y: 20 }}
@@ -242,41 +163,51 @@ export const Navigation: React.FC<NavigationProps> = ({
               exit={{ opacity: 0, y: 20 }}
               transition={{ delay: 0.1, duration: 0.3 }}
             >
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: 20 }}
-                transition={{ delay: 0.1 }}
-                className="text-center"
-              >
-                <p className="text-white/50 text-sm uppercase tracking-wider mb-6">Account</p>
-              </motion.div>
+              {items.map((item, index) => (
+                <motion.div
+                  key={item.href}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: 20 }}
+                  transition={{ delay: 0.1 + index * 0.05 }}
+                >
+                  <Link
+                    href={item.href}
+                    className={cn(
+                      'text-2xl font-semibold tracking-tight',
+                      'text-white/70 transition-colors hover:text-white',
+                      item.isActive && 'text-white'
+                    )}
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    {item.label}
+                  </Link>
+                </motion.div>
+              ))}
 
               {actions && (
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: 20 }}
-                  transition={{ delay: 0.15 }}
-                  className="flex flex-col items-center gap-4"
+                  transition={{ delay: 0.1 + items.length * 0.05 }}
+                  className="mt-4 flex flex-col items-center gap-3"
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
                   {actions}
                 </motion.div>
               )}
-
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: 20 }}
-                transition={{ delay: 0.2 }}
-                className="mt-8"
+                transition={{ delay: 0.1 + items.length * 0.05 + (actions ? 0.05 : 0) }}
+                className="mt-4"
               >
                 <Button
                   variant="primary"
                   size="lg"
                   onClick={() => setIsMobileMenuOpen(false)}
-                  asChild
                 >
                   <Link href={ctaHref}>{ctaLabel}</Link>
                 </Button>
