@@ -276,33 +276,49 @@ See `.env.example` for all required variables:
 
 ## 📝 Next Steps
 
-1. **Phase 1**: Shell & CMS
+1. **Phase 1**: Shell & Content
    - [x] Monorepo setup
    - [x] Design system
    - [x] Database schema
    - [x] Brand logos and icons
+   - [ ] Update home landing text
+   - [ ] Switch order of LAP section and Available Vessels on home page
+   - [ ] Remove About from nav bar, add About 36ZERO section on home page
    - [ ] Payload CMS integration
 
-2. **Phase 2**: Brokerage
+2. **Phase 2**: Brokerage & Assets
    - [x] Vessel listings page
    - [x] Adventure Yachts partnership page
    - [x] AY60 showcase with gallery & specs
-   - [ ] Individual vessel pages
+   - [ ] Align CMS for vessels - create distinct sections for Adventure Yachts vs other listings
+   - [ ] Create detail pages for each vessel, backed by CMS
+   - [ ] Upload spec sheet to Vercel Blob storage
+   - [ ] Upload all visual collateral to Vercel Blob storage
    - [ ] Search with Meilisearch
    - [ ] Inquiry form
 
-3. **Phase 3**: LAP
+3. **Phase 3**: LAP & User Features
    - [x] Route visualization
    - [x] Booking flow
    - [x] 36ZERO LAP™ branding
+   - [ ] Connect Mapbox and update the 36ZERO LAP route map
+   - [ ] Create detailed pages/subpages for the 4 passages
+   - [ ] Configure account management page
    - [ ] User document vault
    - [ ] Profile dashboard
 
-4. **Phase 4**: Automation
+4. **Phase 4**: Automation & Personalization
    - [ ] Stripe checkout
    - [ ] HubSpot sync
    - [ ] Email sequences
    - [ ] Webhook handlers
+
+5. **Phase 5**: Personalization (Long-term)
+   - [ ] Adjust page appearance based on user personas
+   - [ ] Manual persona selector with dynamic content:
+     - **Remote Worker**: Focus on technology, connectivity, ability to work from boat
+     - **Family**: Highlight space, Ocean education programs, family-friendly features
+     - **Explorer**: Technical specs, range capabilities, expedition features
 
 ## 📄 License
 
