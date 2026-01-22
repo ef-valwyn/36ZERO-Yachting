@@ -3,10 +3,12 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
-import { ArrowRight, Compass, Ship, Globe } from 'lucide-react';
+import { ArrowRight, Ship } from 'lucide-react';
 import { HeroVideo, Button, GlassCard, VesselCard } from '@36zero/ui';
 import Header from '@/components/Header';
 import SiteFooter from '@/components/SiteFooter';
+import LogoLapMark from '@/components/LogoLapMark';
+import AdventureYachtsLogoMark from '@/components/AdventureYachtsLogoMark';
 
 // Animation variants for staggered entry
 const containerVariants = {
@@ -164,7 +166,7 @@ export default function HomePage() {
 
             <GlassCard variant="hover" padding="lg" className="text-center">
               <div className="w-16 h-16 mx-auto mb-6 rounded-full bg-brand-blue/10 flex items-center justify-center">
-                <Compass className="w-8 h-8 text-brand-blue" />
+                <AdventureYachtsLogoMark size={36} className="text-brand-blue" />
               </div>
               <h3 className="text-xl font-semibold text-white mb-3">
                 Adventure Yachts
@@ -177,10 +179,10 @@ export default function HomePage() {
 
             <GlassCard variant="hover" padding="lg" className="text-center">
               <div className="w-16 h-16 mx-auto mb-6 rounded-full bg-brand-blue/10 flex items-center justify-center">
-                <Globe className="w-8 h-8 text-brand-blue" />
+                <LogoLapMark size={32} className="text-brand-blue" />
               </div>
               <h3 className="text-xl font-semibold text-white mb-3">
-                LAP Circumnavigation
+                36ZERO LAP™
               </h3>
               <p className="text-white/60 font-light">
                 Join the most ambitious sailing journey – sail passages of 

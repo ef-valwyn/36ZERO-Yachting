@@ -1,14 +1,18 @@
 # 36ZERO Platform
 
-A unified monorepo powering **36ZERO Yachting** (premium yacht brokerage) and **36ZERO LAP** (Life Adventure Passage circumnavigation experience).
+A unified monorepo powering **36ZERO Yachting** (premium yacht brokerage), **Adventure Yachts** partnership, and **36ZERO LAP™** (Life Adventure Passage circumnavigation experience).
 
 ## 🏗️ Architecture
 
 ```
 36zero-platform/
 ├── apps/
-│   ├── yachting/          # Main brokerage site (36zeroyachting.com)
-│   └── lap/               # LAP circumnavigation (36zeroyachting.com/lap)
+│   ├── yachting/          # Main site (36zeroyachting.com)
+│   │   ├── /              # Homepage
+│   │   ├── /vessels       # Yacht brokerage listings
+│   │   ├── /adventure-yachts  # Adventure Yachts partnership
+│   │   └── /lap           # LAP circumnavigation
+│   └── lap/               # (Legacy - routes now in yachting app)
 ├── packages/
 │   ├── ui/                # Shared design system & components
 │   ├── database/          # Drizzle ORM schemas & Neon client
@@ -84,6 +88,21 @@ Shared design system with 36ZERO brand styling:
 
 ```tsx
 import { Button, GlassCard, VesselCard } from '@36zero/ui';
+```
+
+### App Components
+
+Brand-specific components in `apps/yachting/components/`:
+
+- **Logo.tsx** - Main 36ZERO Yachting logo (full & mark variants)
+- **LapLogo.tsx** - 36ZERO LAP™ logo for LAP pages
+- **LogoLapMark.tsx** - LAP icon mark for cards/UI
+- **AdventureYachtsLogoMark.tsx** - Adventure Yachts wordmark icon
+
+```tsx
+import Logo from '@/components/Logo';
+import LogoLapMark from '@/components/LogoLapMark';
+import AdventureYachtsLogoMark from '@/components/AdventureYachtsLogoMark';
 ```
 
 ### @36zero/database
@@ -208,34 +227,40 @@ async rewrites() {
 ```
 apps/yachting/
 ├── app/
-│   ├── layout.tsx         # Root layout with Clerk
-│   ├── page.tsx           # Homepage with hero
-│   ├── vessels/page.tsx   # Brokerage listings
-│   └── lap/page.tsx       # LAP circumnavigation
+│   ├── layout.tsx              # Root layout with Clerk
+│   ├── page.tsx                # Homepage with hero
+│   ├── vessels/page.tsx        # Brokerage listings
+│   ├── adventure-yachts/page.tsx  # Adventure Yachts AY60 showcase
+│   └── lap/
+│       ├── page.tsx            # LAP circumnavigation
+│       └── layout.tsx          # LAP-specific layout
 ├── components/
-│   ├── Header.tsx         # Site navigation
-│   ├── Logo.tsx           # Brand logo
-│   └── SiteFooter.tsx     # Footer with links
+│   ├── Header.tsx              # Site navigation
+│   ├── Logo.tsx                # Main 36ZERO logo (mark & full)
+│   ├── LapLogo.tsx             # LAP-specific logo
+│   ├── LogoLapMark.tsx         # LAP icon mark only
+│   ├── AdventureYachtsLogoMark.tsx  # Adventure Yachts icon
+│   └── SiteFooter.tsx          # Footer with links
 
 packages/ui/
 ├── components/
-│   ├── Button.tsx         # Primary/secondary/ghost
-│   ├── GlassCard.tsx      # Glassmorphism cards
-│   ├── HeroVideo.tsx      # Video background hero
-│   ├── Navigation.tsx     # Responsive nav
-│   ├── VesselCard.tsx     # Vessel listing card
-│   ├── StepForm.tsx       # LAP booking wizard
-│   ├── RouteMap.tsx       # Mapbox integration
-│   └── Footer.tsx         # Site footer
+│   ├── Button.tsx              # Primary/secondary/ghost
+│   ├── GlassCard.tsx           # Glassmorphism cards
+│   ├── HeroVideo.tsx           # Video background hero
+│   ├── Navigation.tsx          # Responsive nav with mobile menu
+│   ├── VesselCard.tsx          # Vessel listing card
+│   ├── StepForm.tsx            # LAP booking wizard
+│   ├── RouteMap.tsx            # Mapbox integration
+│   └── Footer.tsx              # Site footer
 ├── styles/
-│   └── globals.css        # Design system CSS
-└── tailwind.config.ts     # Brand tokens
+│   └── globals.css             # Design system CSS
+└── tailwind.config.ts          # Brand tokens
 
 packages/database/
-├── schema/index.ts        # Drizzle schema
-├── seed/index.ts          # Sample data
-├── client.ts              # Neon connection
-└── drizzle.config.ts      # Drizzle Kit config
+├── schema/index.ts             # Drizzle schema
+├── seed/index.ts               # Sample data
+├── client.ts                   # Neon connection
+└── drizzle.config.ts           # Drizzle Kit config
 ```
 
 ## 🔒 Environment Variables
@@ -255,10 +280,13 @@ See `.env.example` for all required variables:
    - [x] Monorepo setup
    - [x] Design system
    - [x] Database schema
+   - [x] Brand logos and icons
    - [ ] Payload CMS integration
 
 2. **Phase 2**: Brokerage
    - [x] Vessel listings page
+   - [x] Adventure Yachts partnership page
+   - [x] AY60 showcase with gallery & specs
    - [ ] Individual vessel pages
    - [ ] Search with Meilisearch
    - [ ] Inquiry form
@@ -266,6 +294,7 @@ See `.env.example` for all required variables:
 3. **Phase 3**: LAP
    - [x] Route visualization
    - [x] Booking flow
+   - [x] 36ZERO LAP™ branding
    - [ ] User document vault
    - [ ] Profile dashboard
 
