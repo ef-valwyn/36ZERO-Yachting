@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
 import Image from 'next/image';
 import { 
@@ -18,6 +18,7 @@ import {
 import { Button, GlassCard } from '@36zero/ui';
 import Header from '@/components/Header';
 import SiteFooter from '@/components/SiteFooter';
+import AdventureYachtsLogoMark from '@/components/AdventureYachtsLogoMark';
 
 // Animation variants
 const containerVariants = {
@@ -119,12 +120,14 @@ const specifications = [
 
 export default function AdventureYachtsPage() {
   const [activeGalleryIndex, setActiveGalleryIndex] = React.useState(0);
+  const [slideDirection, setSlideDirection] = React.useState<'left' | 'right'>('right');
   const [isVideoPlaying, setIsVideoPlaying] = React.useState(false);
   const [galleryHoverZone, setGalleryHoverZone] = React.useState<'left' | 'right' | null>(null);
 
   // Auto-scroll gallery every 5 seconds
   React.useEffect(() => {
     const interval = setInterval(() => {
+      setSlideDirection('right');
       setActiveGalleryIndex((prev) => (prev + 1) % galleryImages.length);
     }, 5000);
     return () => clearInterval(interval);
@@ -142,11 +145,18 @@ export default function AdventureYachtsPage() {
   };
 
   const nextGalleryImage = () => {
+    setSlideDirection('right');
     setActiveGalleryIndex((prev) => (prev + 1) % galleryImages.length);
   };
 
   const prevGalleryImage = () => {
+    setSlideDirection('left');
     setActiveGalleryIndex((prev) => (prev - 1 + galleryImages.length) % galleryImages.length);
+  };
+
+  const goToGalleryImage = (index: number) => {
+    setSlideDirection(index > activeGalleryIndex ? 'right' : 'left');
+    setActiveGalleryIndex(index);
   };
 
   const handleGalleryMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -193,7 +203,7 @@ export default function AdventureYachtsPage() {
               variants={itemVariants}
               className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-brand-blue/10 border border-brand-blue/20 mb-6"
             >
-              <Anchor className="w-4 h-4 text-brand-blue" />
+              <AdventureYachtsLogoMark size={16} className="text-brand-blue" />
               <span className="text-sm font-medium text-brand-blue">Adventure Yachts Partnership</span>
             </motion.div>
 
@@ -463,9 +473,44 @@ export default function AdventureYachtsPage() {
             </GlassCard>
           </motion.div>
 
-          {/* Photo Gallery */}
+          {/* Specifications */}
           <motion.div
             className="mb-16"
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+          >
+            <GlassCard variant="blue" padding="lg">
+              <h3 className="text-2xl font-semibold text-white mb-8 text-center">
+                Technical Specifications
+              </h3>
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                {specifications.map((spec, index) => (
+                  <motion.div
+                    key={spec.label}
+                    className="text-center p-4 rounded-xl bg-white/5"
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.4, delay: index * 0.05 }}
+                  >
+                    <p className="text-2xl font-bold text-brand-blue mb-1">{spec.value}</p>
+                    <p className="text-sm text-white/60">{spec.label}</p>
+                  </motion.div>
+                ))}
+              </div>
+              <div className="text-center mt-8">
+                <Button variant="primary" onClick={handleDownloadSpecSheet}>
+                  <Download className="w-4 h-4 mr-2" />
+                  Download Full Specifications
+                </Button>
+              </div>
+            </GlassCard>
+          </motion.div>
+
+          {/* Photo Gallery */}
+          <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -477,12 +522,29 @@ export default function AdventureYachtsPage() {
               onMouseMove={handleGalleryMouseMove}
               onMouseLeave={() => setGalleryHoverZone(null)}
             >
-              <Image
-                src={galleryImages[activeGalleryIndex].url}
-                alt={galleryImages[activeGalleryIndex].alt}
-                fill
-                className="object-cover transition-all duration-500"
-              />
+              <AnimatePresence initial={false} mode="popLayout">
+                <motion.div
+                  key={activeGalleryIndex}
+                  initial={{ 
+                    x: slideDirection === 'right' ? '100%' : '-100%'
+                  }}
+                  animate={{ 
+                    x: 0
+                  }}
+                  exit={{ 
+                    x: slideDirection === 'right' ? '-100%' : '100%'
+                  }}
+                  transition={{ duration: 0.5, ease: [0.4, 0, 0.2, 1] }}
+                  className="absolute inset-0"
+                >
+                  <Image
+                    src={galleryImages[activeGalleryIndex].url}
+                    alt={galleryImages[activeGalleryIndex].alt}
+                    fill
+                    className="object-cover"
+                  />
+                </motion.div>
+              </AnimatePresence>
               
               {/* Left Navigation Zone */}
               <motion.div
@@ -537,7 +599,7 @@ export default function AdventureYachtsPage() {
               </motion.div>
 
               {/* Image Counter */}
-              <div className="absolute bottom-4 right-4 px-3 py-1.5 rounded-full bg-brand-navy/80 backdrop-blur-sm">
+              <div className="absolute bottom-4 right-4 px-3 py-1.5 rounded-full bg-brand-navy/80 backdrop-blur-sm z-10">
                 <span className="text-sm text-white">
                   {activeGalleryIndex + 1} / {galleryImages.length}
                 </span>
@@ -549,7 +611,7 @@ export default function AdventureYachtsPage() {
               {galleryImages.map((image, index) => (
                 <button
                   key={image.id}
-                  onClick={() => setActiveGalleryIndex(index)}
+                  onClick={() => goToGalleryImage(index)}
                   className={`relative flex-shrink-0 w-24 h-16 rounded-lg overflow-hidden transition-all ${
                     index === activeGalleryIndex 
                       ? 'ring-2 ring-brand-blue' 
@@ -565,41 +627,6 @@ export default function AdventureYachtsPage() {
                 </button>
               ))}
             </div>
-          </motion.div>
-
-          {/* Specifications */}
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-          >
-            <GlassCard variant="blue" padding="lg">
-              <h3 className="text-2xl font-semibold text-white mb-8 text-center">
-                Technical Specifications
-              </h3>
-              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-                {specifications.map((spec, index) => (
-                  <motion.div
-                    key={spec.label}
-                    className="text-center p-4 rounded-xl bg-white/5"
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.4, delay: index * 0.05 }}
-                  >
-                    <p className="text-2xl font-bold text-brand-blue mb-1">{spec.value}</p>
-                    <p className="text-sm text-white/60">{spec.label}</p>
-                  </motion.div>
-                ))}
-              </div>
-              <div className="text-center mt-8">
-                <Button variant="primary" onClick={handleDownloadSpecSheet}>
-                  <Download className="w-4 h-4 mr-2" />
-                  Download Full Specifications
-                </Button>
-              </div>
-            </GlassCard>
           </motion.div>
         </div>
       </section>
