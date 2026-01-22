@@ -54,7 +54,7 @@ const vessels = [
     availability: 'Available Now',
     availabilityDate: null,
     status: 'available',
-    imageUrl: 'https://images.unsplash.com/photo-1567899378494-47b22a2ae96a?w=800&q=80',
+    imageUrl: '/images/ay60-gallery-1.png',
     description: 'The flagship AY60 Sport with triple outboard configuration for maximum performance and efficiency.',
   },
   {
@@ -94,7 +94,7 @@ const vessels = [
 
 // Gallery images for AY60 showcase
 const galleryImages = [
-  { id: 1, url: 'https://images.unsplash.com/photo-1567899378494-47b22a2ae96a?w=1200&q=80', alt: 'AY60 Exterior' },
+  { id: 1, url: '/images/ay60-gallery-1.png', alt: 'AY60 Exterior' },
   { id: 2, url: 'https://images.unsplash.com/photo-1540946485063-a40da27545f8?w=1200&q=80', alt: 'AY60 Bow View' },
   { id: 3, url: 'https://images.unsplash.com/photo-1605281317010-fe5ffe798166?w=1200&q=80', alt: 'AY60 Interior' },
   { id: 4, url: 'https://images.unsplash.com/photo-1569263979104-865ab7cd8d13?w=1200&q=80', alt: 'AY60 Cockpit' },
@@ -258,7 +258,7 @@ export default function AdventureYachtsPage() {
         {/* Background Image */}
         <div className="absolute inset-0">
           <Image
-            src="https://images.unsplash.com/photo-1567899378494-47b22a2ae96a?w=1920&q=80"
+            src="/images/ay60-hero.png"
             alt="AY60 Power Catamaran"
             fill
             className="object-cover"
