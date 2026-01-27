@@ -44,9 +44,9 @@ export const SiteFooter: React.FC = () => {
         youtube: 'https://youtube.com/@36zeroyachting',
       }}
       contactInfo={{
-        email: 'hello@36zeroyachting.com',
-        phone: '+44 20 1234 5678',
-        address: 'Marina Bay, London, UK',
+        email: 'info@36zeroyachting.com',
+        phone: '+1 315 825 7260',
+        address: '160 Robinson Rd #20-03, Singapore 068914',
       }}
     />
   );

@@ -514,6 +514,7 @@ export default function LAPPage() {
                   </div>
 
                   <div className="flex items-center justify-between pt-4 border-t border-white/10">
+                    {/* Price hidden temporarily - data preserved in passage object
                     <div>
                       <p className="text-xs text-white/40">From</p>
                       <p className="text-2xl font-bold text-white">
@@ -521,6 +522,8 @@ export default function LAPPage() {
                         <span className="text-sm font-normal text-white/50"> /person</span>
                       </p>
                     </div>
+                    */}
+                    <div /> {/* Spacer to maintain layout */}
                     <Button 
                       variant="ghost"
                       onClick={() => setShowBookingForm(true)}
