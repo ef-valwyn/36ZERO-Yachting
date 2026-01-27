@@ -2,7 +2,7 @@
 
 import React, { useState, useMemo, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Search, SlidersHorizontal, X, ChevronDown, Loader2, Anchor } from 'lucide-react';
+import { Search, SlidersHorizontal, X, ChevronDown, Loader2 } from 'lucide-react';
 import { VesselCard, GlassCard, Button, cn } from '@36zero/ui';
 import Header from '@/components/Header';
 import SiteFooter from '@/components/SiteFooter';
@@ -373,12 +373,6 @@ export default function VesselsPage() {
               {/* Results count */}
               <p className="text-sm text-white/40 mb-6">
                 {filteredVessels.length} vessel{filteredVessels.length !== 1 ? 's' : ''} found
-                {filteredVessels.some(v => v.isAdventureYacht) && (
-                  <span className="ml-2 inline-flex items-center gap-1 text-brand-blue">
-                    <Anchor className="w-3.5 h-3.5" />
-                    Adventure Yachts shown first
-                  </span>
-                )}
               </p>
 
               {/* Vessel Grid */}
@@ -396,15 +390,7 @@ export default function VesselsPage() {
                         animate={{ opacity: 1, scale: 1 }}
                         exit={{ opacity: 0, scale: 0.9 }}
                         transition={{ duration: 0.3, delay: index * 0.05 }}
-                        className="relative"
                       >
-                        {/* Adventure Yacht Badge */}
-                        {vessel.isAdventureYacht && (
-                          <div className="absolute top-4 left-4 z-10 px-2.5 py-1 rounded-full bg-brand-blue/90 backdrop-blur-sm text-white text-xs font-medium flex items-center gap-1.5">
-                            <Anchor className="w-3 h-3" />
-                            Adventure Yacht
-                          </div>
-                        )}
                         <VesselCard {...vessel} />
                       </motion.div>
                     ))}
