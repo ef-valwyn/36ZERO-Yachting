@@ -86,7 +86,7 @@ export default function HomePage() {
         {/* Background Image */}
         <div className="absolute inset-0">
           <Image
-            src="/images/ay60-hero.png"
+            src="https://yyofqqbn0jyxo9dg.public.blob.vercel-storage.com/heros/AY60-Hero.png"
             alt="Luxury catamaran on calm blue waters"
             fill
             priority
