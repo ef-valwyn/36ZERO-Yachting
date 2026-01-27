@@ -270,7 +270,7 @@ export default function AdventureYachtsPage() {
         {/* Background Image */}
         <div className="absolute inset-0">
           <Image
-            src="/images/ay60-hero.png"
+            src="https://yyofqqbn0jyxo9dg.public.blob.vercel-storage.com/36-zero-videos/yachts/adventure-one/hero-landing.png"
             alt="AY60 Power Catamaran"
             fill
             className="object-cover"
@@ -562,7 +562,7 @@ export default function AdventureYachtsPage() {
                 {!isVideoPlaying ? (
                   <>
                     <Image
-                      src="https://images.unsplash.com/photo-1567899378494-47b22a2ae96a?w=1920&q=80"
+                      src="https://yyofqqbn0jyxo9dg.public.blob.vercel-storage.com/36-zero-videos/yachts/adventure-one/hero-landing.png"
                       alt="AY60 Video Thumbnail"
                       fill
                       className="object-cover"
