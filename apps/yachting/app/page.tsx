@@ -1,9 +1,9 @@
 'use client';
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
-import { ArrowRight, Ship } from 'lucide-react';
+import { ArrowRight, Ship, Loader2 } from 'lucide-react';
 import { HeroVideo, Button, GlassCard, VesselCard } from '@36zero/ui';
 import Header from '@/components/Header';
 import SiteFooter from '@/components/SiteFooter';
@@ -35,56 +35,46 @@ const itemVariants = {
   },
 };
 
-// Placeholder vessel data - in production, this would come from the database
-const featuredVessels = [
-  {
-    id: 'azure-horizon',
-    name: 'Azure Horizon',
-    manufacturer: 'Adventure Yachts',
-    model: 'AY60',
-    year: 2023,
-    price: 1850000,
-    currency: 'EUR',
-    length: 18.29,
-    capacity: 8,
-    maxSpeed: 12,
-    imageUrl: 'https://images.unsplash.com/photo-1567899378494-47b22a2ae96a?w=800&q=80',
-    status: 'available' as const,
-    isFeatured: true,
-  },
-  {
-    id: 'southern-cross',
-    name: 'Southern Cross',
-    manufacturer: 'Adventure Yachts',
-    model: 'AY52',
-    year: 2022,
-    price: 1250000,
-    currency: 'EUR',
-    length: 15.85,
-    capacity: 6,
-    maxSpeed: 10,
-    imageUrl: 'https://images.unsplash.com/photo-1540946485063-a40da27545f8?w=800&q=80',
-    status: 'available' as const,
-    isFeatured: false,
-  },
-  {
-    id: 'windward-spirit',
-    name: 'Windward Spirit',
-    manufacturer: 'Oyster',
-    model: '565',
-    year: 2021,
-    price: 1650000,
-    currency: 'GBP',
-    length: 17.0,
-    capacity: 6,
-    maxSpeed: 11,
-    imageUrl: 'https://images.unsplash.com/photo-1605281317010-fe5ffe798166?w=800&q=80',
-    status: 'under-contract' as const,
-    isFeatured: false,
-  },
-];
+// Types for vessel data from API
+interface Vessel {
+  id: string;
+  name: string;
+  manufacturer: string;
+  model: string;
+  year: number;
+  price: number;
+  currency: string;
+  length: number;
+  capacity: number;
+  maxSpeed: number | null;
+  imageUrl: string;
+  status: string;
+  isFeatured: boolean;
+}
 
 export default function HomePage() {
+  const [vessels, setVessels] = useState<Vessel[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  // Fetch featured vessels from API
+  useEffect(() => {
+    async function fetchVessels() {
+      try {
+        setIsLoading(true);
+        const response = await fetch('/api/vessels');
+        if (!response.ok) throw new Error('Failed to fetch');
+        const data = await response.json();
+        // Take first 3 vessels for featured section
+        setVessels(data.slice(0, 3));
+      } catch (err) {
+        console.error('Error fetching vessels:', err);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+    fetchVessels();
+  }, []);
+
   return (
     <main className="min-h-screen bg-brand-navy">
       <Header variant="transparent" />
@@ -315,20 +305,44 @@ export default function HomePage() {
             </Button>
           </motion.div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {featuredVessels.map((vessel, index) => (
-              <motion.div
-                key={vessel.id}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-                className={vessel.isFeatured ? 'lg:col-span-2' : ''}
-              >
-                <VesselCard {...vessel} />
-              </motion.div>
-            ))}
-          </div>
+          {/* Loading State */}
+          {isLoading && (
+            <div className="flex items-center justify-center py-16">
+              <Loader2 className="w-8 h-8 text-brand-blue animate-spin" />
+            </div>
+          )}
+
+          {/* Vessels Grid */}
+          {!isLoading && vessels.length > 0 && (
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {vessels.map((vessel, index) => (
+                <motion.div
+                  key={vessel.id}
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5, delay: index * 0.1 }}
+                  className={vessel.isFeatured ? 'lg:col-span-2' : ''}
+                >
+                  <VesselCard 
+                    {...vessel} 
+                    maxSpeed={vessel.maxSpeed ?? undefined}
+                    status={vessel.status === 'reserved' ? 'under-contract' : vessel.status as 'available' | 'under-contract' | 'sold'}
+                  />
+                </motion.div>
+              ))}
+            </div>
+          )}
+
+          {/* Empty State */}
+          {!isLoading && vessels.length === 0 && (
+            <GlassCard padding="lg" className="text-center">
+              <p className="text-white/60">No vessels available at the moment.</p>
+              <Button variant="primary" asChild className="mt-4">
+                <Link href="/contact">Contact Us</Link>
+              </Button>
+            </GlassCard>
+          )}
         </div>
       </section>
 
