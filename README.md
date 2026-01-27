@@ -111,7 +111,7 @@ Drizzle ORM with Neon Postgres:
 
 - **Tables**: passages, stages, users, vessels, bookings, documents, inquiries
 - **Relations**: Fully typed with Drizzle relations
-- **Seed data**: 4 passages, 13 stages, sample vessels
+- **Seed data**: 4 passages, 13 stages, 4 Adventure Yachts + brokerage vessels
 
 ```tsx
 import { db, schema } from '@36zero/database';
@@ -161,9 +161,11 @@ const vessels = await db.query.vessels.findMany({
 - 13 stages with coordinates for mapping
 - Logistics notes (flight hubs, transfers)
 
-**vessels** - Brokerage listings
-- Full specs, pricing, status
-- Adventure Yachts partnership flag
+**vessels** - Unified vessel CMS (Brokerage + Adventure Yachts)
+- Full specs, pricing, status, gallery images
+- `isAdventureYacht` - Flag for Adventure Yachts partnership vessels
+- `isVisible` - Control visibility on public listings
+- `variant`, `availabilityText`, `sortOrder` - Adventure yacht display fields
 
 **users** - Clerk-linked profiles
 - Sailing experience, certifications
@@ -229,8 +231,13 @@ apps/yachting/
 ├── app/
 │   ├── layout.tsx              # Root layout with Clerk
 │   ├── page.tsx                # Homepage with hero
-│   ├── vessels/page.tsx        # Brokerage listings
+│   ├── vessels/page.tsx        # Brokerage listings (fetches from API)
 │   ├── adventure-yachts/page.tsx  # Adventure Yachts AY60 showcase
+│   ├── api/
+│   │   └── vessels/
+│   │       ├── route.ts        # GET /api/vessels (all visible, adventure yachts first)
+│   │       └── adventure-yachts/
+│   │           └── route.ts    # GET /api/vessels/adventure-yachts (adventure only)
 │   └── lap/
 │       ├── page.tsx            # LAP circumnavigation
 │       └── layout.tsx          # LAP-specific layout
@@ -292,7 +299,7 @@ See `.env.example` for all required variables:
    - [x] Vessel listings page
    - [x] Adventure Yachts partnership page
    - [x] AY60 showcase with gallery & specs
-   - [ ] Align CMS for vessels - create distinct sections for Adventure Yachts vs other listings
+   - [x] Unified CMS for vessels (isAdventureYacht flag, isVisible control, API routes)
    - [ ] Create detail pages for each vessel, backed by CMS
    - [ ] Upload spec sheet to Vercel Blob storage
    - [ ] Upload all visual collateral to Vercel Blob storage, refresh code for url to point all images to this storage
