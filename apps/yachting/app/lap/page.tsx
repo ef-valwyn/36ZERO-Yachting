@@ -12,7 +12,8 @@ import {
   CheckCircle,
   Ship,
   FileText,
-  CreditCard
+  CreditCard,
+  Play
 } from 'lucide-react';
 import { 
   Button, 
@@ -410,6 +411,49 @@ export default function LAPPage() {
           />
         </div>
       </section>
+
+      {/* Video Section - Coming Soon (set to true to enable) */}
+      {false && (
+        <section className="py-24 px-6">
+          <div className="max-w-5xl mx-auto">
+            <motion.div
+              className="text-center mb-12"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+            >
+              <p className="text-brand-blue font-medium tracking-widest uppercase text-sm mb-2">
+                The Journey
+              </p>
+              <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
+                Experience the Adventure
+              </h2>
+              <p className="text-white/60 max-w-2xl mx-auto">
+                Watch the story of the 36ZERO Life Adventure Passage and discover 
+                what awaits you on this once-in-a-lifetime circumnavigation.
+              </p>
+            </motion.div>
+
+            <motion.div
+              className="relative aspect-video rounded-2xl overflow-hidden bg-brand-navy-50/20 border border-white/10"
+              initial={{ opacity: 0, scale: 0.95 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
+            >
+              {/* Replace with actual video embed - e.g. YouTube: */}
+              {/* <iframe src="https://www.youtube.com/embed/VIDEO_ID" ... /> */}
+              <div className="absolute inset-0 flex items-center justify-center">
+                <div className="text-center">
+                  <div className="w-20 h-20 rounded-full bg-brand-blue/20 flex items-center justify-center mb-4 mx-auto">
+                    <Play className="w-8 h-8 text-brand-blue ml-1" />
+                  </div>
+                  <p className="text-white/40 text-sm">Video coming soon</p>
+                </div>
+              </div>
+            </motion.div>
+          </div>
+        </section>
+      )}
 
       {/* Passages Overview */}
       <section className="py-24 px-6 bg-gradient-to-b from-transparent via-brand-navy-50/5 to-transparent">

@@ -8,6 +8,7 @@ import { HeroVideo, Button, GlassCard, VesselCard } from '@36zero/ui';
 import Header from '@/components/Header';
 import SiteFooter from '@/components/SiteFooter';
 import LogoLapMark from '@/components/LogoLapMark';
+import LapLogo from '@/components/LapLogo';
 import AdventureYachtsLogoMark from '@/components/AdventureYachtsLogoMark';
 
 // Animation variants for staggered entry
@@ -217,6 +218,77 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* LAP CTA Section */}
+      <section className="py-24 px-6 relative overflow-hidden">
+        {/* Background gradient */}
+        <div className="absolute inset-0 bg-gradient-to-r from-brand-blue/10 via-transparent to-brand-blue/5" />
+        
+        <div className="max-w-7xl mx-auto relative">
+          <GlassCard variant="blue" padding="none" className="overflow-hidden">
+            <div className="grid lg:grid-cols-2">
+              {/* Content */}
+              <div className="p-10 lg:p-16 flex flex-col justify-center">
+                <motion.div
+                  initial={{ opacity: 0, x: -30 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.6 }}
+                >
+                  <LapLogo className="mb-6" />
+                  <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
+                    Sail the World
+                    <br />
+                    <span className="text-brand-blue">One Passage at a Time</span>
+                  </h2>
+                  <p className="text-white/70 font-light mb-8 max-w-lg">
+                    Join our circumnavigation journey. Choose from 4 passages 
+                    spanning the Pacific, Coral Sea, Indian Ocean, and Atlantic. 
+                    No yacht required – just your sense of adventure.
+                  </p>
+                  <div className="flex flex-col sm:flex-row gap-4">
+                    <Button variant="primary" asChild>
+                      <Link href="/lap">
+                        Explore The Route
+                        <ArrowRight className="w-4 h-4 ml-2" />
+                      </Link>
+                    </Button>
+                    <Button variant="secondary" asChild>
+                      <Link href="/lap/passages">View Passages</Link>
+                    </Button>
+                  </div>
+                </motion.div>
+              </div>
+
+              {/* Stats */}
+              <div className="bg-brand-navy/50 p-10 lg:p-16 grid grid-cols-2 gap-8">
+                {[
+                  { value: '4', label: 'Passages' },
+                  { value: '14', label: 'Stages' },
+                  { value: '26,000', label: 'Nautical Miles' },
+                  { value: '15', label: 'Months' },
+                ].map((stat, index) => (
+                  <motion.div
+                    key={stat.label}
+                    className="text-center"
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    whileInView={{ opacity: 1, scale: 1 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.4, delay: index * 0.1 }}
+                  >
+                    <p className="text-4xl md:text-5xl font-bold text-brand-blue mb-2">
+                      {stat.value}
+                    </p>
+                    <p className="text-sm text-white/60 uppercase tracking-wider">
+                      {stat.label}
+                    </p>
+                  </motion.div>
+                ))}
+              </div>
+            </div>
+          </GlassCard>
+        </div>
+      </section>
+
       {/* Featured Vessels */}
       <section className="py-24 px-6 bg-gradient-to-b from-transparent to-brand-navy-50/5">
         <div className="max-w-7xl mx-auto">
@@ -257,79 +329,6 @@ export default function HomePage() {
               </motion.div>
             ))}
           </div>
-        </div>
-      </section>
-
-      {/* LAP CTA Section */}
-      <section className="py-24 px-6 relative overflow-hidden">
-        {/* Background gradient */}
-        <div className="absolute inset-0 bg-gradient-to-r from-brand-blue/10 via-transparent to-brand-blue/5" />
-        
-        <div className="max-w-7xl mx-auto relative">
-          <GlassCard variant="blue" padding="none" className="overflow-hidden">
-            <div className="grid lg:grid-cols-2">
-              {/* Content */}
-              <div className="p-10 lg:p-16 flex flex-col justify-center">
-                <motion.div
-                  initial={{ opacity: 0, x: -30 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.6 }}
-                >
-                  <p className="text-brand-blue font-medium tracking-widest uppercase text-sm mb-4">
-                    36ZERO LAP
-                  </p>
-                  <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
-                    Sail the World
-                    <br />
-                    <span className="text-brand-blue">One Passage at a Time</span>
-                  </h2>
-                  <p className="text-white/70 font-light mb-8 max-w-lg">
-                    Join our circumnavigation journey. Choose from 4 passages 
-                    spanning the Pacific, Coral Sea, Indian Ocean, and Atlantic. 
-                    No yacht required – just your sense of adventure.
-                  </p>
-                  <div className="flex flex-col sm:flex-row gap-4">
-                    <Button variant="primary" asChild>
-                      <Link href="/lap">
-                        Explore The Route
-                        <ArrowRight className="w-4 h-4 ml-2" />
-                      </Link>
-                    </Button>
-                    <Button variant="secondary" asChild>
-                      <Link href="/lap/passages">View Passages</Link>
-                    </Button>
-                  </div>
-                </motion.div>
-              </div>
-
-              {/* Stats */}
-              <div className="bg-brand-navy/50 p-10 lg:p-16 grid grid-cols-2 gap-8">
-                {[
-                  { value: '4', label: 'Passages' },
-                  { value: '13', label: 'Stages' },
-                  { value: '26,000', label: 'Nautical Miles' },
-                  { value: '18', label: 'Months' },
-                ].map((stat, index) => (
-                  <motion.div
-                    key={stat.label}
-                    className="text-center"
-                    initial={{ opacity: 0, scale: 0.8 }}
-                    whileInView={{ opacity: 1, scale: 1 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.4, delay: index * 0.1 }}
-                  >
-                    <p className="text-4xl md:text-5xl font-bold text-brand-blue mb-2">
-                      {stat.value}
-                    </p>
-                    <p className="text-sm text-white/60 uppercase tracking-wider">
-                      {stat.label}
-                    </p>
-                  </motion.div>
-                ))}
-              </div>
-            </div>
-          </GlassCard>
         </div>
       </section>
 

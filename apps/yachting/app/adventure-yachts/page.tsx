@@ -428,20 +428,20 @@ export default function AdventureYachtsPage() {
               className="space-y-6"
             >
               <p className="text-lg text-white/80 font-light leading-relaxed">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor 
-                incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud 
-                exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                Adventure Yachts designs and builds high-performance catamarans. Whether you&apos;re 
+                looking to explore ownership, or operate private charters to dream destinations, 
+                you&apos;re here because like us, you love freedom, comfort, craftsmanship, and 
+                sustainability. An Adventure Yacht is like a high-end resort that moves with you. 
+                It is off limits to others, but it holds no limits for you. Live life adrift yet 
+                anchored to what matters as your perspective shifts with the passing shores.
               </p>
               <p className="text-lg text-white/80 font-light leading-relaxed">
-                Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu 
-                fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in 
-                culpa qui officia deserunt mollit anim id est laborum. Sed ut perspiciatis unde 
-                omnis iste natus error sit voluptatem accusantium doloremque laudantium.
-              </p>
-              <p className="text-lg text-white/80 font-light leading-relaxed">
-                Totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto 
-                beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit 
-                aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione.
+                Our AY60 catamarans are built for years of performance by a team of Thai artisans 
+                who incorporate multi-generational knowledge with the art and science of boatbuilding. 
+                Engineered from exceptional materials, yachts are custom designed with optimal buoyancy, 
+                adaptability, capacity, and efficiency. On our pursuit for function, we have not 
+                overlooked style or comfort, matching ergonomics and ample storage capabilities with 
+                feet-up, worries-down elegance.
               </p>
             </motion.div>
 
