@@ -1,100 +1,29 @@
 'use client';
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Search, SlidersHorizontal, X, ChevronDown } from 'lucide-react';
+import { Search, SlidersHorizontal, X, ChevronDown, Loader2, Anchor } from 'lucide-react';
 import { VesselCard, GlassCard, Button, cn } from '@36zero/ui';
 import Header from '@/components/Header';
 import SiteFooter from '@/components/SiteFooter';
 
-// Placeholder vessel data - in production, this would come from the database via API
-const allVessels = [
-  {
-    id: 'Adventure One',
-    name: 'Adventure One',
-    manufacturer: 'Adventure Yachts',
-    model: 'AY60',
-    year: 2026,
-    price: 2950000,
-    currency: 'USD',
-    length: 18.29,
-    capacity: 10,
-    maxSpeed: 18,
-    imageUrl: 'https://images.unsplash.com/photo-1567899378494-47b22a2ae96a?w=800&q=80',
-    status: 'available' as const,
-    isFeatured: true,
-  },
-  {
-    id: 'southern-cross',
-    name: 'Southern Cross',
-    manufacturer: 'Adventure Yachts',
-    model: 'AY52',
-    year: 2022,
-    price: 1250000,
-    currency: 'EUR',
-    length: 15.85,
-    capacity: 6,
-    maxSpeed: 10,
-    imageUrl: 'https://images.unsplash.com/photo-1540946485063-a40da27545f8?w=800&q=80',
-    status: 'available' as const,
-  },
-  {
-    id: 'windward-spirit',
-    name: 'Windward Spirit',
-    manufacturer: 'Oyster',
-    model: '565',
-    year: 2021,
-    price: 1650000,
-    currency: 'GBP',
-    length: 17.0,
-    capacity: 6,
-    maxSpeed: 11,
-    imageUrl: 'https://images.unsplash.com/photo-1605281317010-fe5ffe798166?w=800&q=80',
-    status: 'under-contract' as const,
-  },
-  {
-    id: 'ocean-pioneer',
-    name: 'Ocean Pioneer',
-    manufacturer: 'Hallberg-Rassy',
-    model: '57',
-    year: 2020,
-    price: 980000,
-    currency: 'EUR',
-    length: 17.32,
-    capacity: 6,
-    maxSpeed: 9,
-    imageUrl: 'https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=800&q=80',
-    status: 'available' as const,
-  },
-  {
-    id: 'blue-moon',
-    name: 'Blue Moon',
-    manufacturer: 'Swan',
-    model: '65',
-    year: 2019,
-    price: 2200000,
-    currency: 'EUR',
-    length: 19.81,
-    capacity: 8,
-    maxSpeed: 12,
-    imageUrl: 'https://images.unsplash.com/photo-1569263979104-865ab7cd8d13?w=800&q=80',
-    status: 'available' as const,
-  },
-  {
-    id: 'trade-wind',
-    name: 'Trade Wind',
-    manufacturer: 'Adventure Yachts',
-    model: 'AY48',
-    year: 2023,
-    price: 890000,
-    currency: 'EUR',
-    length: 14.63,
-    capacity: 4,
-    maxSpeed: 9,
-    imageUrl: 'https://images.unsplash.com/photo-1500514966906-fe245eea9344?w=800&q=80',
-    status: 'available' as const,
-  },
-];
+// Types for vessel data from API
+interface Vessel {
+  id: string;
+  name: string;
+  manufacturer: string;
+  model: string;
+  year: number;
+  price: number;
+  currency: string;
+  length: number;
+  capacity: number;
+  maxSpeed: number | null;
+  imageUrl: string;
+  status: 'available' | 'under-contract' | 'sold' | 'reserved';
+  isFeatured: boolean;
+  isAdventureYacht: boolean;
+}
 
 const manufacturers = ['All', 'Adventure Yachts', 'Oyster', 'Hallberg-Rassy', 'Swan'];
 const priceRanges = [
@@ -113,6 +42,10 @@ const lengthRanges = [
 ];
 
 export default function VesselsPage() {
+  const [vessels, setVessels] = useState<Vessel[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedManufacturer, setSelectedManufacturer] = useState('All');
   const [selectedPriceRange, setSelectedPriceRange] = useState(priceRanges[0]);
@@ -120,57 +53,60 @@ export default function VesselsPage() {
   const [showFilters, setShowFilters] = useState(false);
   const [sortBy, setSortBy] = useState<'price-asc' | 'price-desc' | 'newest' | 'length'>('newest');
 
-  // Filter and sort vessels
-  const filteredVessels = useMemo(() => {
-    let result = allVessels.filter((vessel) => {
-      // Search query
-      if (searchQuery) {
-        const query = searchQuery.toLowerCase();
-        if (
-          !vessel.name.toLowerCase().includes(query) &&
-          !vessel.manufacturer.toLowerCase().includes(query) &&
-          !vessel.model.toLowerCase().includes(query)
-        ) {
-          return false;
+  // Fetch vessels from API
+  useEffect(() => {
+    async function fetchVessels() {
+      try {
+        setIsLoading(true);
+        setError(null);
+        
+        // Build query params for server-side filtering
+        const params = new URLSearchParams();
+        params.set('sort', sortBy);
+        if (selectedManufacturer !== 'All') {
+          params.set('manufacturer', selectedManufacturer);
         }
+        if (selectedPriceRange.min > 0) {
+          params.set('minPrice', selectedPriceRange.min.toString());
+        }
+        if (selectedPriceRange.max !== Infinity) {
+          params.set('maxPrice', selectedPriceRange.max.toString());
+        }
+        if (selectedLengthRange.min > 0) {
+          params.set('minLength', selectedLengthRange.min.toString());
+        }
+        if (selectedLengthRange.max !== Infinity) {
+          params.set('maxLength', selectedLengthRange.max.toString());
+        }
+
+        const response = await fetch(`/api/vessels?${params.toString()}`);
+        if (!response.ok) {
+          throw new Error('Failed to fetch vessels');
+        }
+        const data = await response.json();
+        setVessels(data);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'Failed to load vessels');
+        console.error('Error fetching vessels:', err);
+      } finally {
+        setIsLoading(false);
       }
-
-      // Manufacturer filter
-      if (selectedManufacturer !== 'All' && vessel.manufacturer !== selectedManufacturer) {
-        return false;
-      }
-
-      // Price filter
-      if (vessel.price < selectedPriceRange.min || vessel.price > selectedPriceRange.max) {
-        return false;
-      }
-
-      // Length filter
-      if (vessel.length < selectedLengthRange.min || vessel.length > selectedLengthRange.max) {
-        return false;
-      }
-
-      return true;
-    });
-
-    // Sort
-    switch (sortBy) {
-      case 'price-asc':
-        result.sort((a, b) => a.price - b.price);
-        break;
-      case 'price-desc':
-        result.sort((a, b) => b.price - a.price);
-        break;
-      case 'newest':
-        result.sort((a, b) => b.year - a.year);
-        break;
-      case 'length':
-        result.sort((a, b) => b.length - a.length);
-        break;
     }
 
-    return result;
-  }, [searchQuery, selectedManufacturer, selectedPriceRange, selectedLengthRange, sortBy]);
+    fetchVessels();
+  }, [sortBy, selectedManufacturer, selectedPriceRange, selectedLengthRange]);
+
+  // Client-side search filtering (search is fast enough to do client-side)
+  const filteredVessels = useMemo(() => {
+    if (!searchQuery) return vessels;
+    
+    const query = searchQuery.toLowerCase();
+    return vessels.filter((vessel) => 
+      vessel.name.toLowerCase().includes(query) ||
+      vessel.manufacturer.toLowerCase().includes(query) ||
+      vessel.model.toLowerCase().includes(query)
+    );
+  }, [vessels, searchQuery]);
 
   const activeFiltersCount = [
     selectedManufacturer !== 'All',
@@ -411,43 +347,82 @@ export default function VesselsPage() {
       {/* Results */}
       <section className="py-8 px-6">
         <div className="max-w-7xl mx-auto">
-          {/* Results count */}
-          <p className="text-sm text-white/40 mb-6">
-            {filteredVessels.length} vessel{filteredVessels.length !== 1 ? 's' : ''} found
-          </p>
+          {/* Loading State */}
+          {isLoading && (
+            <div className="flex flex-col items-center justify-center py-24">
+              <Loader2 className="w-8 h-8 text-brand-blue animate-spin mb-4" />
+              <p className="text-white/60">Loading vessels...</p>
+            </div>
+          )}
 
-          {/* Vessel Grid */}
-          {filteredVessels.length > 0 ? (
-            <motion.div
-              className="grid md:grid-cols-2 lg:grid-cols-3 gap-6"
-              layout
-            >
-              <AnimatePresence mode="popLayout">
-                {filteredVessels.map((vessel, index) => (
-                  <motion.div
-                    key={vessel.id}
-                    layout
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    exit={{ opacity: 0, scale: 0.9 }}
-                    transition={{ duration: 0.3, delay: index * 0.05 }}
-                  >
-                    <VesselCard {...vessel} />
-                  </motion.div>
-                ))}
-              </AnimatePresence>
-            </motion.div>
-          ) : (
+          {/* Error State */}
+          {error && !isLoading && (
             <GlassCard padding="lg" className="text-center">
               <div className="py-12">
-                <p className="text-lg text-white/60 mb-4">
-                  No vessels match your current filters
-                </p>
-                <Button variant="secondary" onClick={clearFilters}>
-                  Clear Filters
+                <p className="text-lg text-accent-coral mb-4">{error}</p>
+                <Button variant="secondary" onClick={() => window.location.reload()}>
+                  Try Again
                 </Button>
               </div>
             </GlassCard>
+          )}
+
+          {/* Results */}
+          {!isLoading && !error && (
+            <>
+              {/* Results count */}
+              <p className="text-sm text-white/40 mb-6">
+                {filteredVessels.length} vessel{filteredVessels.length !== 1 ? 's' : ''} found
+                {filteredVessels.some(v => v.isAdventureYacht) && (
+                  <span className="ml-2 inline-flex items-center gap-1 text-brand-blue">
+                    <Anchor className="w-3.5 h-3.5" />
+                    Adventure Yachts shown first
+                  </span>
+                )}
+              </p>
+
+              {/* Vessel Grid */}
+              {filteredVessels.length > 0 ? (
+                <motion.div
+                  className="grid md:grid-cols-2 lg:grid-cols-3 gap-6"
+                  layout
+                >
+                  <AnimatePresence mode="popLayout">
+                    {filteredVessels.map((vessel, index) => (
+                      <motion.div
+                        key={vessel.id}
+                        layout
+                        initial={{ opacity: 0, scale: 0.9 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        exit={{ opacity: 0, scale: 0.9 }}
+                        transition={{ duration: 0.3, delay: index * 0.05 }}
+                        className="relative"
+                      >
+                        {/* Adventure Yacht Badge */}
+                        {vessel.isAdventureYacht && (
+                          <div className="absolute top-4 left-4 z-10 px-2.5 py-1 rounded-full bg-brand-blue/90 backdrop-blur-sm text-white text-xs font-medium flex items-center gap-1.5">
+                            <Anchor className="w-3 h-3" />
+                            Adventure Yacht
+                          </div>
+                        )}
+                        <VesselCard {...vessel} />
+                      </motion.div>
+                    ))}
+                  </AnimatePresence>
+                </motion.div>
+              ) : (
+                <GlassCard padding="lg" className="text-center">
+                  <div className="py-12">
+                    <p className="text-lg text-white/60 mb-4">
+                      No vessels match your current filters
+                    </p>
+                    <Button variant="secondary" onClick={clearFilters}>
+                      Clear Filters
+                    </Button>
+                  </div>
+                </GlassCard>
+              )}
+            </>
           )}
         </div>
       </section>

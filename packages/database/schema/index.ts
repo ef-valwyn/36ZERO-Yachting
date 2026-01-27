@@ -145,7 +145,7 @@ export const users = pgTable('users', {
 });
 
 // =========================================
-// VESSELS TABLE (Brokerage)
+// VESSELS TABLE (Unified CMS - Brokerage + Adventure Yachts)
 // =========================================
 
 export const vessels = pgTable('vessels', {
@@ -188,7 +188,17 @@ export const vessels = pgTable('vessels', {
     safety?: string[];
   }>(),
   isFeatured: boolean('is_featured').notNull().default(false),
+  
+  // Visibility control
+  isVisible: boolean('is_visible').notNull().default(true), // Hide vessels from public listings
+  
+  // Adventure Yachts specific fields
   isAdventureYacht: boolean('is_adventure_yacht').notNull().default(false),
+  variant: varchar('variant', { length: 255 }), // e.g., "Outboard Version", "Hybrid Inboard Version"
+  availabilityText: varchar('availability_text', { length: 100 }), // e.g., "Available Now", "Q3 2026"
+  availabilityDate: date('availability_date'), // For sorting and filtering
+  sortOrder: integer('sort_order').default(0), // Explicit ordering for adventure yachts display
+  
   hubspotDealId: varchar('hubspot_deal_id', { length: 100 }),
   createdAt: timestamp('created_at').defaultNow().notNull(),
   updatedAt: timestamp('updated_at').defaultNow().notNull(),

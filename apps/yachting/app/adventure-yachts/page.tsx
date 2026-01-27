@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -13,7 +13,8 @@ import {
   Calendar,
   Anchor,
   Zap,
-  Shield
+  Shield,
+  Loader2
 } from 'lucide-react';
 import { Button, GlassCard } from '@36zero/ui';
 import Header from '@/components/Header';
@@ -44,53 +45,37 @@ const itemVariants = {
   },
 };
 
-// Vessel data - in production, this would come from CMS
-const vessels = [
-  {
-    id: 'adventure-one',
-    name: 'Adventure One',
-    model: 'AY60 Sport',
-    variant: 'Outboard Version',
-    availability: 'Available Now',
-    availabilityDate: null,
-    status: 'available',
-    imageUrl: '/images/ay60-gallery-1.png',
-    description: 'The flagship AY60 Sport with triple outboard configuration for maximum performance and efficiency.',
-  },
-  {
-    id: 'adventure-two',
-    name: 'Adventure Two',
-    model: 'AY60 Flybridge',
-    variant: 'Hybrid Inboard Version',
-    availability: 'Q3 2026',
-    availabilityDate: '2026-07-01',
-    status: 'coming-soon',
-    imageUrl: 'https://images.unsplash.com/photo-1540946485063-a40da27545f8?w=800&q=80',
-    description: 'The luxurious flybridge variant with hybrid inboard propulsion for extended range and comfort.',
-  },
-  {
-    id: 'adventure-three',
-    name: 'Adventure Three',
-    model: 'AY60 Sport',
-    variant: 'Outboard Version',
-    availability: 'Q3 2026',
-    availabilityDate: '2026-07-01',
-    status: 'coming-soon',
-    imageUrl: 'https://images.unsplash.com/photo-1605281317010-fe5ffe798166?w=800&q=80',
-    description: 'Another stunning AY60 Sport ready for customization to your exact specifications.',
-  },
-  {
-    id: 'adventure-four',
-    name: 'Adventure Four',
-    model: 'AY60 Sport',
-    variant: 'Long-Range Outboard Version',
-    availability: 'Q4 2026',
-    availabilityDate: '2026-10-01',
-    status: 'coming-soon',
-    imageUrl: 'https://images.unsplash.com/photo-1569263979104-865ab7cd8d13?w=800&q=80',
-    description: 'Extended fuel capacity and range optimization for serious ocean passages.',
-  },
-];
+// Types for vessel data from API
+interface AdventureYacht {
+  id: string;
+  name: string;
+  slug: string;
+  model: string;
+  variant: string;
+  availability: string;
+  availabilityDate: string | null;
+  status: 'available' | 'coming-soon';
+  imageUrl: string;
+  description: string;
+  shortDescription: string | null;
+  manufacturer: string;
+  year: number;
+  price: number;
+  currency: string;
+  length: number;
+  beam: number | null;
+  draft: number | null;
+  capacity: number;
+  cabins: number | null;
+  crew: number | null;
+  maxSpeed: number | null;
+  cruisingSpeed: number | null;
+  fuelCapacity: number | null;
+  waterCapacity: number | null;
+  range: number | null;
+  specs: Record<string, unknown> | null;
+  galleryImages: string[];
+}
 
 // Gallery images for AY60 showcase
 const galleryImages = [
@@ -119,7 +104,6 @@ const specifications = [
 ];
 
 // AY60 Vessel Areas for Interactive Explorer
-// TODO: Update image URLs to Vercel Blob storage URLs
 const vesselAreas = [
   {
     id: 'cockpit',
@@ -194,11 +178,40 @@ const vesselAreas = [
 ];
 
 export default function AdventureYachtsPage() {
+  // State for vessel data from API
+  const [vessels, setVessels] = useState<AdventureYacht[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
   const [activeGalleryIndex, setActiveGalleryIndex] = React.useState(0);
   const [slideDirection, setSlideDirection] = React.useState<'left' | 'right'>('right');
   const [isVideoPlaying, setIsVideoPlaying] = React.useState(false);
   const [galleryHoverZone, setGalleryHoverZone] = React.useState<'left' | 'right' | null>(null);
   const [activeVesselArea, setActiveVesselArea] = React.useState(vesselAreas[0]);
+
+  // Fetch adventure yachts from API
+  useEffect(() => {
+    async function fetchAdventureYachts() {
+      try {
+        setIsLoading(true);
+        setError(null);
+        
+        const response = await fetch('/api/vessels/adventure-yachts');
+        if (!response.ok) {
+          throw new Error('Failed to fetch adventure yachts');
+        }
+        const data = await response.json();
+        setVessels(data);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'Failed to load vessels');
+        console.error('Error fetching adventure yachts:', err);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+
+    fetchAdventureYachts();
+  }, []);
 
   // Auto-scroll gallery every 5 seconds
   React.useEffect(() => {
@@ -210,7 +223,6 @@ export default function AdventureYachtsPage() {
   }, []);
 
   const handleDownloadSpecSheet = () => {
-    // In production, this would link to a Vercel Blob URL
     const specSheetUrl = '/documents/ay60-spec-sheet.pdf';
     window.open(specSheetUrl, '_blank');
   };
@@ -572,7 +584,6 @@ export default function AdventureYachtsPage() {
                   </>
                 ) : (
                   <div className="w-full h-full bg-black flex items-center justify-center">
-                    {/* In production, embed actual video player */}
                     <p className="text-white/60">Video player placeholder - Connect to video source</p>
                   </div>
                 )}
@@ -870,7 +881,7 @@ export default function AdventureYachtsPage() {
         </div>
       </section>
 
-      {/* Reserve Your Vessel Section */}
+      {/* Reserve Your Vessel Section - Now powered by CMS */}
       <section id="ay60-reserve" className="py-32 px-6 scroll-mt-24">
         <div className="max-w-7xl mx-auto">
           <motion.div
@@ -892,73 +903,113 @@ export default function AdventureYachtsPage() {
             </p>
           </motion.div>
 
-          {/* Vessel Cards */}
-          <div className="grid md:grid-cols-2 gap-6">
-            {vessels.map((vessel, index) => (
-              <motion.div
-                key={vessel.id}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-              >
-                <GlassCard variant="hover" padding="none" className="overflow-hidden group">
-                  {/* Image */}
-                  <div className="relative aspect-[16/10] overflow-hidden">
-                    <Image
-                      src={vessel.imageUrl}
-                      alt={vessel.name}
-                      fill
-                      className="object-cover transition-transform duration-700 group-hover:scale-110"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-brand-navy via-transparent to-transparent" />
-                    
-                    {/* Availability Badge */}
-                    <div className={`absolute top-4 right-4 px-3 py-1.5 rounded-full text-sm font-medium ${
-                      vessel.status === 'available' 
-                        ? 'bg-accent-teal text-white' 
-                        : 'bg-accent-gold/90 text-brand-navy'
-                    }`}>
-                      <div className="flex items-center gap-1.5">
-                        <Calendar className="w-3.5 h-3.5" />
-                        {vessel.availability}
+          {/* Loading State */}
+          {isLoading && (
+            <div className="flex flex-col items-center justify-center py-24">
+              <Loader2 className="w-8 h-8 text-brand-blue animate-spin mb-4" />
+              <p className="text-white/60">Loading available vessels...</p>
+            </div>
+          )}
+
+          {/* Error State */}
+          {error && !isLoading && (
+            <GlassCard padding="lg" className="text-center">
+              <div className="py-12">
+                <p className="text-lg text-accent-coral mb-4">{error}</p>
+                <Button variant="secondary" onClick={() => window.location.reload()}>
+                  Try Again
+                </Button>
+              </div>
+            </GlassCard>
+          )}
+
+          {/* Vessel Cards - Dynamic from CMS */}
+          {!isLoading && !error && vessels.length > 0 && (
+            <div className="grid md:grid-cols-2 gap-6">
+              {vessels.map((vessel, index) => (
+                <motion.div
+                  key={vessel.id}
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5, delay: index * 0.1 }}
+                >
+                  <GlassCard variant="hover" padding="none" className="overflow-hidden group">
+                    {/* Image */}
+                    <div className="relative aspect-[16/10] overflow-hidden">
+                      <Image
+                        src={vessel.imageUrl}
+                        alt={vessel.name}
+                        fill
+                        className="object-cover transition-transform duration-700 group-hover:scale-110"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-brand-navy via-transparent to-transparent" />
+                      
+                      {/* Availability Badge */}
+                      <div className={`absolute top-4 right-4 px-3 py-1.5 rounded-full text-sm font-medium ${
+                        vessel.status === 'available' 
+                          ? 'bg-accent-teal text-white' 
+                          : 'bg-accent-gold/90 text-brand-navy'
+                      }`}>
+                        <div className="flex items-center gap-1.5">
+                          <Calendar className="w-3.5 h-3.5" />
+                          {vessel.availability}
+                        </div>
                       </div>
                     </div>
-                  </div>
 
-                  {/* Content */}
-                  <div className="p-6">
-                    <div className="mb-4">
-                      <p className="text-brand-blue text-sm font-medium mb-1">{vessel.model}</p>
-                      <h3 className="text-2xl font-bold text-white mb-1">{vessel.name}</h3>
-                      <p className="text-white/60 text-sm">{vessel.variant}</p>
-                    </div>
-                    
-                    <p className="text-white/70 font-light mb-6">
-                      {vessel.description}
-                    </p>
+                    {/* Content */}
+                    <div className="p-6">
+                      <div className="mb-4">
+                        <p className="text-brand-blue text-sm font-medium mb-1">{vessel.model}</p>
+                        <h3 className="text-2xl font-bold text-white mb-1">{vessel.name}</h3>
+                        <p className="text-white/60 text-sm">{vessel.variant}</p>
+                      </div>
+                      
+                      <p className="text-white/70 font-light mb-6">
+                        {vessel.shortDescription || vessel.description}
+                      </p>
 
-                    <div className="flex items-center justify-between">
-                      <Button 
-                        variant={vessel.status === 'available' ? 'primary' : 'secondary'}
-                        asChild
-                      >
-                        <Link href={`/contact?vessel=${vessel.id}`}>
-                          {vessel.status === 'available' ? 'Inquire Now' : 'Register Interest'}
-                          <ArrowRight className="w-4 h-4 ml-2" />
-                        </Link>
-                      </Button>
-                      <Button variant="ghost" asChild>
-                        <Link href={`/vessels/${vessel.id}`}>
-                          View Details
-                        </Link>
-                      </Button>
+                      <div className="flex items-center justify-between">
+                        <Button 
+                          variant={vessel.status === 'available' ? 'primary' : 'secondary'}
+                          asChild
+                        >
+                          <Link href={`/contact?vessel=${vessel.slug}`}>
+                            {vessel.status === 'available' ? 'Inquire Now' : 'Register Interest'}
+                            <ArrowRight className="w-4 h-4 ml-2" />
+                          </Link>
+                        </Button>
+                        <Button variant="ghost" asChild>
+                          <Link href={`/vessels/${vessel.slug}`}>
+                            View Details
+                          </Link>
+                        </Button>
+                      </div>
                     </div>
-                  </div>
-                </GlassCard>
-              </motion.div>
-            ))}
-          </div>
+                  </GlassCard>
+                </motion.div>
+              ))}
+            </div>
+          )}
+
+          {/* Empty State */}
+          {!isLoading && !error && vessels.length === 0 && (
+            <GlassCard padding="lg" className="text-center">
+              <div className="py-12">
+                <Anchor className="w-12 h-12 text-brand-blue/50 mx-auto mb-4" />
+                <p className="text-lg text-white/60 mb-2">
+                  No Adventure Yachts available at the moment
+                </p>
+                <p className="text-sm text-white/40 mb-6">
+                  Contact us to learn about upcoming availability
+                </p>
+                <Button variant="primary" asChild>
+                  <Link href="/contact">Contact Us</Link>
+                </Button>
+              </div>
+            </GlassCard>
+          )}
 
           {/* CTA */}
           <motion.div
