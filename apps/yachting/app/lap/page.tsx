@@ -1,7 +1,7 @@
 'use client';
 
-import React, { useState } from 'react';
-import { motion } from 'framer-motion';
+import React, { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
 import { 
   ArrowRight, 
@@ -280,8 +280,23 @@ const journeySteps = [
   },
 ];
 
+const cyclingPhrases = [
+  'NO OWNERSHIP REQUIRED',
+  'KEEP YOUR DAY JOB',
+  'STAY IN SCHOOL',
+  'FIND YOUR HORIZON',
+];
+
 export default function LAPPage() {
   const [showBookingForm, setShowBookingForm] = useState(false);
+  const [phraseIndex, setPhraseIndex] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setPhraseIndex((prev) => (prev + 1) % cyclingPhrases.length);
+    }, 3000);
+    return () => clearInterval(interval);
+  }, []);
 
   const handleBookingSubmit = (data: {
     selectedPassages: string[];
@@ -330,14 +345,31 @@ export default function LAPPage() {
             </div>
             
             <h1 className="text-4xl md:text-6xl font-extrabold uppercase tracking-tighter text-white mb-6">
-              Sail Around
+              Sail Around The World
               <br />
-              <span className="text-gradient">The World</span>
+              {/* Cycling gradient text with roll-down animation */}
+              <span className="h-[1.2em] inline-block overflow-hidden align-bottom">
+                <AnimatePresence mode="wait">
+                  <motion.span
+                    key={phraseIndex}
+                    className="text-gradient inline-block"
+                    initial={{ y: '-100%', opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    exit={{ y: '100%', opacity: 0 }}
+                    transition={{ 
+                      duration: 0.5, 
+                      ease: [0.4, 0, 0.2, 1]
+                    }}
+                  >
+                    {cyclingPhrases[phraseIndex]}
+                  </motion.span>
+                </AnimatePresence>
+              </span>
             </h1>
             
             <p className="text-lg text-white/70 font-light mb-10 max-w-2xl mx-auto">
-              The Life Adventure Passage is a multi-year circumnavigation broken into 4 passages. 
-              Join us for one leg or sail them all – no yacht ownership required.
+              The 36ZERO LAP is an ambitious oceanic circumnavigation broken into 4 passages. 
+              Supported by 36ZERO Yachting every step along the World ARC™, join us for one leg or sail them all.
             </p>
 
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
@@ -409,6 +441,139 @@ export default function LAPPage() {
             initialZoom={2}
             totalDistance={26000}
           />
+        </div>
+      </section>
+
+      {/* Features Section */}
+      <section className="py-24 px-6">
+        <div className="max-w-7xl mx-auto">
+          <motion.div
+            className="text-center mb-16"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+          >
+            <p className="text-brand-blue font-medium tracking-widest uppercase text-sm mb-2">
+              Why 36ZERO LAP
+            </p>
+            <h2 className="text-3xl md:text-4xl font-bold text-white">
+              Adventure Without Compromise
+            </h2>
+          </motion.div>
+
+          {/* Feature 1: No Ownership Required - Card Left, Text Right */}
+          <div className="grid md:grid-cols-2 gap-8 md:gap-16 items-center mb-24">
+            <motion.div
+              initial={{ opacity: 0, x: -100 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true, margin: "-100px" }}
+              transition={{ duration: 0.6, ease: [0.4, 0, 0.2, 1] }}
+            >
+              <GlassCard variant="blue" padding="lg" className="h-full">
+                <div className="aspect-[4/3] flex items-center justify-center">
+                  <div className="text-center">
+                    <div className="w-20 h-20 mx-auto mb-4 rounded-full bg-brand-blue/20 border border-brand-blue/30 flex items-center justify-center">
+                      <Ship className="w-10 h-10 text-brand-blue" />
+                    </div>
+                    <h3 className="text-2xl font-bold text-white">No Ownership Required</h3>
+                  </div>
+                </div>
+              </GlassCard>
+            </motion.div>
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-100px" }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              className="space-y-4"
+            >
+              <h3 className="text-2xl md:text-3xl font-bold text-white">
+                No Ownership Required
+              </h3>
+              <p className="text-white/70 font-light leading-relaxed">
+                Make your next lease an apartment that moves. The 36ZERO LAP offers sail and power vessels perfectly suited for long-range oceanic exploration in exceptional comfort.
+              </p>
+              <p className="text-white/70 font-light leading-relaxed">
+                Have your own yacht? Join the 36ZERO LAP to benefit from pre-departure assessments, 24/7 global support, route planning, repairs and more.
+              </p>
+            </motion.div>
+          </div>
+
+          {/* Feature 2: Global Connectivity - Text Left, Card Right */}
+          <div className="grid md:grid-cols-2 gap-8 md:gap-16 items-center mb-24">
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-100px" }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              className="space-y-4 order-2 md:order-1"
+            >
+              <h3 className="text-2xl md:text-3xl font-bold text-white">
+                Global Connectivity by Design
+              </h3>
+              <p className="text-white/70 font-light leading-relaxed">
+                All 36ZERO LAP vessels are part of our global connectivity suite powered by Starlink. Whether you are running a business, following the Ocean Education curriculum, or taking a sabbatical, we make sure you're always connected.
+              </p>
+              <p className="text-white/70 font-light leading-relaxed">
+                From location positioning data, onboard diagnostics are plugged into 36ZERO by default.
+              </p>
+            </motion.div>
+            <motion.div
+              initial={{ opacity: 0, x: 100 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true, margin: "-100px" }}
+              transition={{ duration: 0.6, ease: [0.4, 0, 0.2, 1] }}
+              className="order-1 md:order-2"
+            >
+              <GlassCard variant="blue" padding="lg" className="h-full">
+                <div className="aspect-[4/3] flex items-center justify-center">
+                  <div className="text-center">
+                    <div className="w-20 h-20 mx-auto mb-4 rounded-full bg-brand-blue/20 border border-brand-blue/30 flex items-center justify-center">
+                      <svg className="w-10 h-10 text-brand-blue" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M12 21a9.004 9.004 0 008.716-6.747M12 21a9.004 9.004 0 01-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 017.843 4.582M12 3a8.997 8.997 0 00-7.843 4.582m15.686 0A11.953 11.953 0 0112 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0121 12c0 .778-.099 1.533-.284 2.253m0 0A17.919 17.919 0 0112 16.5c-3.162 0-6.133-.815-8.716-2.247m0 0A9.015 9.015 0 013 12c0-1.605.42-3.113 1.157-4.418" />
+                      </svg>
+                    </div>
+                    <h3 className="text-2xl font-bold text-white">Global Connectivity</h3>
+                  </div>
+                </div>
+              </GlassCard>
+            </motion.div>
+          </div>
+
+          {/* Feature 3: Crew Augmentation - Card Left, Text Right */}
+          <div className="grid md:grid-cols-2 gap-8 md:gap-16 items-center">
+            <motion.div
+              initial={{ opacity: 0, x: -100 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true, margin: "-100px" }}
+              transition={{ duration: 0.6, ease: [0.4, 0, 0.2, 1] }}
+            >
+              <GlassCard variant="blue" padding="lg" className="h-full">
+                <div className="aspect-[4/3] flex items-center justify-center">
+                  <div className="text-center">
+                    <div className="w-20 h-20 mx-auto mb-4 rounded-full bg-brand-blue/20 border border-brand-blue/30 flex items-center justify-center">
+                      <Users className="w-10 h-10 text-brand-blue" />
+                    </div>
+                    <h3 className="text-2xl font-bold text-white">Crew Augmentation</h3>
+                  </div>
+                </div>
+              </GlassCard>
+            </motion.div>
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-100px" }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              className="space-y-4"
+            >
+              <h3 className="text-2xl md:text-3xl font-bold text-white">
+                Crew Augmentation
+              </h3>
+              <p className="text-white/70 font-light leading-relaxed">
+                Whether it's your first voyage or you're a seasoned skipper, we know finding competent crew is important. We can place any crew from skipper to stew to support your journey from any major rally node.
+              </p>
+            </motion.div>
+          </div>
         </div>
       </section>
 

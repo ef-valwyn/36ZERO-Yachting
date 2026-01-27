@@ -4,7 +4,8 @@ import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { ArrowRight, Ship, Loader2 } from 'lucide-react';
-import { HeroVideo, Button, GlassCard, VesselCard } from '@36zero/ui';
+import Image from 'next/image';
+import { Button, GlassCard, VesselCard } from '@36zero/ui';
 import Header from '@/components/Header';
 import SiteFooter from '@/components/SiteFooter';
 import LogoLapMark from '@/components/LogoLapMark';
@@ -80,13 +81,22 @@ export default function HomePage() {
       <Header variant="transparent" />
 
       {/* Hero Section - "Horizon Office" */}
-      <HeroVideo
-        videoSrc="/videos/hero-ocean.mp4"
-        posterSrc="/images/hero-poster.jpg"
-        fallbackColor="#071923"
-        overlayOpacity={0.6}
-      >
-        <div className="flex items-center justify-center h-full px-6">
+      <section className="relative h-screen min-h-[600px] overflow-hidden">
+        {/* Background Image */}
+        <div className="absolute inset-0">
+          <Image
+            src="/images/hero-landing.png"
+            alt="Luxury catamaran on calm blue waters"
+            fill
+            priority
+            className="object-cover object-center"
+          />
+          {/* Gradient overlay for text readability */}
+          <div className="absolute inset-0 bg-gradient-to-b from-brand-navy/70 via-brand-navy/40 to-brand-navy/80" />
+        </div>
+
+        {/* Content */}
+        <div className="relative h-full flex items-center justify-center px-6 pt-20">
           <motion.div
             className="text-center max-w-4xl"
             variants={containerVariants}
@@ -97,7 +107,7 @@ export default function HomePage() {
               variants={itemVariants}
               className="text-brand-blue font-medium tracking-widest uppercase text-sm mb-4"
             >
-              Welcome to 36ZERO
+              WELCOME TO 36ZERO YACHTING
             </motion.p>
             <motion.h1
               variants={itemVariants}
@@ -125,12 +135,15 @@ export default function HomePage() {
                 </Link>
               </Button>
               <Button variant="secondary" size="lg" asChild>
-                <Link href="/lap">Explore LAP</Link>
+                <Link href="/lap" className="flex items-center gap-3">
+                  Explore
+                  <LapLogo className="h-5 w-auto [&_svg]:h-5 [&_svg]:w-auto" />
+                </Link>
               </Button>
             </motion.div>
           </motion.div>
         </div>
-      </HeroVideo>
+      </section>
 
       {/* Value Propositions */}
       <section className="py-24 px-6 overflow-hidden">
