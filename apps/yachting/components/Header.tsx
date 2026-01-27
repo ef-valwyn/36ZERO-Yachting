@@ -18,7 +18,6 @@ const navItems: NavItem[] = [
   { label: 'Available Vessels', href: '/vessels' },
   { label: 'Adventure Yachts', href: '/adventure-yachts' },
   { label: '36ZERO LAP™', href: '/lap' },
-  { label: 'About', href: '/about' },
 ];
 
 interface HeaderProps {
