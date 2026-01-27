@@ -20,6 +20,7 @@ export interface VesselCardProps {
   maxSpeed?: number; // in knots
   imageUrl: string;
   status?: 'available' | 'under-contract' | 'sold';
+  availabilityText?: string | null; // Custom text to show instead of status (e.g. "Q2 2026")
   isFeatured?: boolean;
   className?: string;
 }
@@ -49,6 +50,7 @@ export const VesselCard: React.FC<VesselCardProps> = ({
   maxSpeed,
   imageUrl,
   status = 'available',
+  availabilityText,
   isFeatured = false,
   className,
 }) => {
@@ -85,10 +87,10 @@ export const VesselCard: React.FC<VesselCardProps> = ({
           <span
             className={cn(
               'vessel-card-badge',
-              statusColors[status]
+              availabilityText && status !== 'available' ? 'bg-accent-gold' : statusColors[status]
             )}
           >
-            {statusLabels[status]}
+            {availabilityText && status !== 'available' ? availabilityText : statusLabels[status]}
           </span>
 
           {/* Featured Badge */}

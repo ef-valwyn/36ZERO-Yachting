@@ -403,7 +403,7 @@ const vesselsData = [
     beamMeters: '7.90',
     draftMeters: '1.30',
     grossTonnage: 28000,
-    maxSpeed: 32,
+    maxSpeed: 18,
     cruisingSpeed: 24,
     fuelCapacity: 3000,
     waterCapacity: 800,
@@ -453,7 +453,7 @@ const vesselsData = [
     beamMeters: '7.90',
     draftMeters: '1.40',
     grossTonnage: 30000,
-    maxSpeed: 28,
+    maxSpeed: 14,
     cruisingSpeed: 22,
     fuelCapacity: 4000,
     waterCapacity: 1000,
@@ -461,7 +461,7 @@ const vesselsData = [
     guestCapacity: 10,
     cabins: 4,
     crewCapacity: 2,
-    price: '3250000',
+    price: '2950000',
     currency: 'USD',
     status: 'reserved' as const,
     location: 'Phuket, Thailand',
@@ -476,8 +476,8 @@ const vesselsData = [
     isVisible: true,
     isAdventureYacht: true,
     variant: 'Hybrid Inboard Version',
-    availabilityText: 'Q3 2026',
-    availabilityDate: '2026-07-01',
+    availabilityText: 'Q2 2026',
+    availabilityDate: '2026-04-01',
     sortOrder: 2,
     specs: {
       engines: 'Twin Volvo D6 440hp + Electric Hybrid',
@@ -500,7 +500,7 @@ const vesselsData = [
     beamMeters: '7.90',
     draftMeters: '1.30',
     grossTonnage: 28000,
-    maxSpeed: 32,
+    maxSpeed: 18,
     cruisingSpeed: 24,
     fuelCapacity: 3000,
     waterCapacity: 800,
@@ -522,8 +522,8 @@ const vesselsData = [
     isVisible: true,
     isAdventureYacht: true,
     variant: 'Outboard Version',
-    availabilityText: 'Q3 2026',
-    availabilityDate: '2026-07-01',
+    availabilityText: 'Q2 2026',
+    availabilityDate: '2026-04-01',
     sortOrder: 3,
     specs: {
       engines: 'Triple Mercury V12 600hp Outboards',
@@ -543,7 +543,7 @@ const vesselsData = [
     beamMeters: '7.90',
     draftMeters: '1.30',
     grossTonnage: 28000,
-    maxSpeed: 30,
+    maxSpeed: 18,
     cruisingSpeed: 22,
     fuelCapacity: 4500,
     waterCapacity: 1200,
@@ -810,10 +810,47 @@ async function seed() {
       console.log(`  ✓ Stage ${stageData.stageNumber}: ${stageData.routeName}`);
     }
 
-    // Seed Vessels
+    // Seed Vessels (upsert to allow updates)
     console.log('\n🚢 Seeding vessels...');
     for (const vesselData of vesselsData) {
-      await db.insert(schema.vessels).values(vesselData).onConflictDoNothing();
+      await db.insert(schema.vessels).values(vesselData).onConflictDoUpdate({
+        target: schema.vessels.slug,
+        set: {
+          name: vesselData.name,
+          manufacturer: vesselData.manufacturer,
+          model: vesselData.model,
+          year: vesselData.year,
+          lengthMeters: vesselData.lengthMeters,
+          beamMeters: vesselData.beamMeters,
+          draftMeters: vesselData.draftMeters,
+          grossTonnage: vesselData.grossTonnage,
+          maxSpeed: vesselData.maxSpeed,
+          cruisingSpeed: vesselData.cruisingSpeed,
+          fuelCapacity: vesselData.fuelCapacity,
+          waterCapacity: vesselData.waterCapacity,
+          range: vesselData.range,
+          guestCapacity: vesselData.guestCapacity,
+          cabins: vesselData.cabins,
+          crewCapacity: vesselData.crewCapacity,
+          price: vesselData.price,
+          currency: vesselData.currency,
+          status: vesselData.status,
+          location: vesselData.location,
+          description: vesselData.description,
+          shortDescription: vesselData.shortDescription,
+          featuredImageUrl: vesselData.featuredImageUrl,
+          galleryImages: vesselData.galleryImages,
+          isFeatured: vesselData.isFeatured,
+          isVisible: vesselData.isVisible,
+          isAdventureYacht: vesselData.isAdventureYacht,
+          variant: vesselData.variant,
+          availabilityText: vesselData.availabilityText,
+          availabilityDate: vesselData.availabilityDate,
+          sortOrder: vesselData.sortOrder,
+          specs: vesselData.specs,
+          updatedAt: new Date(),
+        },
+      });
       console.log(`  ✓ ${vesselData.name}`);
     }
 

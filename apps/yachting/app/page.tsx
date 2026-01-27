@@ -51,6 +51,7 @@ interface Vessel {
   imageUrl: string;
   status: string;
   isFeatured: boolean;
+  availabilityText?: string | null;
 }
 
 export default function HomePage() {
