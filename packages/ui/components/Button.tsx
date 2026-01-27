@@ -1,10 +1,12 @@
 'use client';
 
 import React from 'react';
-import { motion, type HTMLMotionProps } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { cn } from '../lib/utils';
 
-export interface ButtonProps extends Omit<HTMLMotionProps<'button'>, 'ref'> {
+type ButtonHTMLProps = Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'onDrag' | 'onDragStart' | 'onDragEnd' | 'onAnimationStart' | 'onAnimationEnd'>;
+
+export interface ButtonProps extends ButtonHTMLProps {
   variant?: 'primary' | 'secondary' | 'ghost';
   size?: 'sm' | 'md' | 'lg';
   isLoading?: boolean;
@@ -50,9 +52,8 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 
     if (asChild && React.isValidElement(children)) {
       // When asChild is true, clone the child and merge props
-      const { disabled: _, asChild: __, ...restProps } = props;
       return React.cloneElement(children as React.ReactElement<any>, {
-        ...restProps,
+        ...props,
         className: cn(buttonClassName, (children as any).props?.className),
         ref,
       });

@@ -1,10 +1,12 @@
 'use client';
 
 import React from 'react';
-import { motion, type HTMLMotionProps } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { cn } from '../lib/utils';
 
-export interface GlassCardProps extends Omit<HTMLMotionProps<'div'>, 'ref'> {
+type DivHTMLProps = Omit<React.HTMLAttributes<HTMLDivElement>, 'onDrag' | 'onDragStart' | 'onDragEnd' | 'onAnimationStart' | 'onAnimationEnd'>;
+
+export interface GlassCardProps extends DivHTMLProps {
   variant?: 'default' | 'blue' | 'hover';
   padding?: 'none' | 'sm' | 'md' | 'lg';
   withOverlay?: boolean;

@@ -19,7 +19,7 @@ export interface VesselCardProps {
   capacity: number;
   maxSpeed?: number | null; // in knots
   imageUrl: string;
-  status?: 'available' | 'under-contract' | 'sold';
+  status?: 'available' | 'reserved' | 'under-contract' | 'sold';
   availabilityText?: string | null; // Custom text to show instead of status (e.g. "Q2 2026")
   isFeatured?: boolean;
   className?: string;
@@ -27,12 +27,14 @@ export interface VesselCardProps {
 
 const statusLabels = {
   available: 'Available',
+  reserved: 'Reserved',
   'under-contract': 'Under Contract',
   sold: 'Sold',
 };
 
 const statusColors = {
   available: 'bg-accent-teal',
+  reserved: 'bg-accent-gold',
   'under-contract': 'bg-accent-gold',
   sold: 'bg-accent-coral',
 };
