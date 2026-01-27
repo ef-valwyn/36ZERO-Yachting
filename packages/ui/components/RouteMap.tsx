@@ -121,8 +121,8 @@ const mapStyle = {
 export const RouteMap: React.FC<RouteMapProps> = ({
   stages,
   mapboxToken,
-  initialCenter = [100, 0], // Center on Indian Ocean for global view
-  initialZoom = 2,
+  initialCenter = [-61.0, 14.0], // Center on Saint Lucia (start point)
+  initialZoom = 3,
   onStageSelect,
   className,
   totalDistance,
