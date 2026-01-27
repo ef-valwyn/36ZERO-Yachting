@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { X, Calendar, MapPin, Mail, ChevronLeft, User, Phone, Globe, Building2 } from 'lucide-react';
 import { Button, GlassCard } from '@36zero/ui';
 import Image from 'next/image';
+import { useUser, useSignIn, useSignUp } from '@clerk/nextjs';
 
 const COOKIE_POPUP_SEEN = '36zero_premiere_seen';
 const COOKIE_MINIMIZED_CLOSED = '36zero_premiere_minimized_closed';
@@ -92,10 +93,15 @@ function getCookie(name: string): string | null {
 }
 
 export default function WorldPremierePopup() {
+  const { isLoaded: isUserLoaded, isSignedIn, user } = useUser();
+  const { signIn, isLoaded: isSignInLoaded } = useSignIn();
+  const { signUp, isLoaded: isSignUpLoaded } = useSignUp();
+  
   const [isVisible, setIsVisible] = useState(false);
   const [isMinimized, setIsMinimized] = useState(false);
   const [wasReopenedFromMinimized, setWasReopenedFromMinimized] = useState(false);
   const [currentView, setCurrentView] = useState<'updates' | 'tour'>('updates');
+  const [isGoogleLoading, setIsGoogleLoading] = useState(false);
   
   // Email signup form state
   const [email, setEmail] = useState('');
@@ -117,6 +123,54 @@ export default function WorldPremierePopup() {
   const [tourSubmitting, setTourSubmitting] = useState(false);
   const [tourSubmitted, setTourSubmitted] = useState(false);
   const [tourError, setTourError] = useState<string | null>(null);
+  const [tourFormTouched, setTourFormTouched] = useState(false);
+
+  // Prefill form data when user is signed in
+  useEffect(() => {
+    if (isUserLoaded && isSignedIn && user) {
+      // Prefill email for updates form
+      if (user.primaryEmailAddress?.emailAddress) {
+        setEmail(user.primaryEmailAddress.emailAddress);
+      }
+      
+      // Prefill tour form
+      setTourForm(prev => ({
+        ...prev,
+        fullName: user.fullName || `${user.firstName || ''} ${user.lastName || ''}`.trim(),
+        email: user.primaryEmailAddress?.emailAddress || '',
+      }));
+    }
+  }, [isUserLoaded, isSignedIn, user]);
+
+  // Handle Google Sign In/Up
+  const handleGoogleAuth = async () => {
+    if (!isSignInLoaded || !isSignUpLoaded) return;
+    
+    setIsGoogleLoading(true);
+    setError(null);
+    
+    try {
+      // Try sign in first
+      await signIn?.authenticateWithRedirect({
+        strategy: 'oauth_google',
+        redirectUrl: '/sso-callback',
+        redirectUrlComplete: window.location.pathname,
+      });
+    } catch (err: unknown) {
+      // If sign in fails, try sign up
+      try {
+        await signUp?.authenticateWithRedirect({
+          strategy: 'oauth_google',
+          redirectUrl: '/sso-callback',
+          redirectUrlComplete: window.location.pathname,
+        });
+      } catch (signUpErr: unknown) {
+        const errorMessage = signUpErr instanceof Error ? signUpErr.message : 'Failed to authenticate with Google';
+        setError(errorMessage);
+        setIsGoogleLoading(false);
+      }
+    }
+  };
 
   useEffect(() => {
     const hasSeenPopup = getCookie(COOKIE_POPUP_SEEN);
@@ -182,33 +236,36 @@ export default function WorldPremierePopup() {
     }
   };
 
+  // Helper to check if a tour field is invalid
+  const isTourFieldInvalid = (field: string) => {
+    if (!tourFormTouched) return false;
+    switch (field) {
+      case 'fullName': return !tourForm.fullName.trim();
+      case 'email': return !tourForm.email || !tourForm.email.includes('@');
+      case 'phone': return !tourForm.phone.trim();
+      case 'country': return !tourForm.country;
+      case 'interest': return !tourForm.interest;
+      case 'otherInterest': return tourForm.interest === 'other' && !tourForm.otherInterest.trim();
+      default: return false;
+    }
+  };
+
   const handleTourSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setTourFormTouched(true);
     setTourError(null);
 
-    // Validation
-    if (!tourForm.fullName.trim()) {
-      setTourError('Please enter your full name');
-      return;
-    }
-    if (!tourForm.email || !tourForm.email.includes('@')) {
-      setTourError('Please enter a valid email address');
-      return;
-    }
-    if (!tourForm.phone.trim()) {
-      setTourError('Please enter your phone number');
-      return;
-    }
-    if (!tourForm.country) {
-      setTourError('Please select your country of residence');
-      return;
-    }
-    if (!tourForm.interest) {
-      setTourError('Please select your interest');
-      return;
-    }
-    if (tourForm.interest === 'other' && !tourForm.otherInterest.trim()) {
-      setTourError('Please specify your interest');
+    // Validation - check all fields
+    const hasErrors = 
+      !tourForm.fullName.trim() ||
+      !tourForm.email || !tourForm.email.includes('@') ||
+      !tourForm.phone.trim() ||
+      !tourForm.country ||
+      !tourForm.interest ||
+      (tourForm.interest === 'other' && !tourForm.otherInterest.trim());
+
+    if (hasErrors) {
+      setTourError('Please complete required fields.');
       return;
     }
 
@@ -218,6 +275,7 @@ export default function WorldPremierePopup() {
       // TODO: Connect to CRM/email service
       await new Promise(resolve => setTimeout(resolve, 1000));
       setTourSubmitted(true);
+      setTourFormTouched(false);
       setTimeout(() => {
         handleClose();
       }, 2000);
@@ -228,8 +286,8 @@ export default function WorldPremierePopup() {
     }
   };
 
-  const inputClasses = "w-full px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white text-sm placeholder:text-white/40 focus:outline-none focus:ring-2 focus:ring-brand-blue/50 focus:border-brand-blue/50 transition-all";
-  const selectClasses = "w-full px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white text-sm focus:outline-none focus:ring-2 focus:ring-brand-blue/50 focus:border-brand-blue/50 transition-all appearance-none cursor-pointer";
+  const inputClasses = "w-full px-3 py-2 rounded-lg bg-white/5 border border-white/10 text-white text-sm placeholder:text-white/40 focus:outline-none focus:ring-2 focus:ring-brand-blue/50 focus:border-brand-blue/50 transition-all";
+  const selectClasses = "w-full px-3 py-2 rounded-lg bg-white/5 border border-white/10 text-white text-sm focus:outline-none focus:ring-2 focus:ring-brand-blue/50 focus:border-brand-blue/50 transition-all appearance-none cursor-pointer";
 
   return (
     <AnimatePresence>
@@ -251,9 +309,9 @@ export default function WorldPremierePopup() {
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.9, y: 20 }}
             transition={{ duration: 0.4, ease: 'easeOut' }}
-            className="fixed inset-0 z-50 flex items-center justify-center p-4 pointer-events-none overflow-y-auto"
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 pointer-events-none"
           >
-            <div className="pointer-events-auto w-full max-w-lg my-8">
+            <div className="pointer-events-auto w-full max-w-lg max-h-[90vh] overflow-y-auto">
               <GlassCard variant="blue" padding="none" className="relative overflow-hidden">
                 {/* Close Button */}
                 <button
@@ -333,54 +391,124 @@ export default function WorldPremierePopup() {
 
                         {/* Form Section */}
                         {!isSubmitted ? (
-                          <form onSubmit={handleSubmit} className="space-y-4">
-                            <div>
-                              <label htmlFor="popup-email" className="block text-sm font-medium text-white/80 mb-2">
-                                Sign up for updates
-                              </label>
-                              <div className="relative">
-                                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-white/40" />
-                                <input
-                                  id="popup-email"
-                                  type="email"
-                                  value={email}
-                                  onChange={(e) => setEmail(e.target.value)}
-                                  placeholder="Enter your email"
-                                  className="w-full pl-12 pr-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder:text-white/40
-                                           focus:outline-none focus:ring-2 focus:ring-brand-blue/50 focus:border-brand-blue/50 transition-all"
-                                  required
-                                />
-                              </div>
-                            </div>
+                          <div className="space-y-4">
+                            {/* Google Sign In - only show if not signed in */}
+                            {!isSignedIn && (
+                              <>
+                                <button
+                                  onClick={handleGoogleAuth}
+                                  disabled={isGoogleLoading || !isSignInLoaded}
+                                  className="w-full flex items-center justify-center gap-3 px-4 py-3 rounded-xl bg-white/10 border border-white/20 text-white font-medium hover:bg-white/20 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                                >
+                                  {isGoogleLoading ? (
+                                    <motion.div
+                                      className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full"
+                                      animate={{ rotate: 360 }}
+                                      transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
+                                    />
+                                  ) : (
+                                    <svg className="w-5 h-5" viewBox="0 0 24 24">
+                                      <path
+                                        fill="currentColor"
+                                        d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
+                                      />
+                                      <path
+                                        fill="currentColor"
+                                        d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
+                                      />
+                                      <path
+                                        fill="currentColor"
+                                        d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"
+                                      />
+                                      <path
+                                        fill="currentColor"
+                                        d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
+                                      />
+                                    </svg>
+                                  )}
+                                  Continue with Google
+                                </button>
 
-                            {error && (
-                              <p className="text-sm text-red-400">{error}</p>
+                                <div className="flex items-center gap-3">
+                                  <div className="flex-1 h-px bg-white/20" />
+                                  <span className="text-xs text-white/40">or</span>
+                                  <div className="flex-1 h-px bg-white/20" />
+                                </div>
+                              </>
                             )}
 
-                            <Button
-                              type="submit"
-                              variant="primary"
-                              className="w-full"
-                              disabled={isSubmitting}
-                            >
-                              {isSubmitting ? (
-                                <>
-                                  <motion.div
-                                    className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full mr-2"
-                                    animate={{ rotate: 360 }}
-                                    transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
+                            {/* Signed in user greeting */}
+                            {isSignedIn && user && (
+                              <div className="flex items-center gap-3 p-3 rounded-xl bg-accent-teal/10 border border-accent-teal/30 mb-2">
+                                {user.imageUrl && (
+                                  <Image
+                                    src={user.imageUrl}
+                                    alt="Profile"
+                                    width={32}
+                                    height={32}
+                                    className="rounded-full"
                                   />
-                                  Subscribing...
-                                </>
-                              ) : (
-                                'Get Updates'
-                              )}
-                            </Button>
+                                )}
+                                <div className="flex-1 min-w-0">
+                                  <p className="text-sm font-medium text-white truncate">
+                                    {user.fullName || user.firstName || 'Welcome back!'}
+                                  </p>
+                                  <p className="text-xs text-white/60 truncate">
+                                    {user.primaryEmailAddress?.emailAddress}
+                                  </p>
+                                </div>
+                              </div>
+                            )}
 
-                            <p className="text-xs text-white/40 text-center">
-                              We respect your privacy. Unsubscribe at any time.
-                            </p>
-                          </form>
+                            <form onSubmit={handleSubmit} className="space-y-4">
+                              <div>
+                                <label htmlFor="popup-email" className="block text-sm font-medium text-white/80 mb-2">
+                                  {isSignedIn ? 'Confirm your email for updates' : 'Sign up for updates'}
+                                </label>
+                                <div className="relative">
+                                  <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-white/40" />
+                                  <input
+                                    id="popup-email"
+                                    type="email"
+                                    value={email}
+                                    onChange={(e) => setEmail(e.target.value)}
+                                    placeholder="Enter your email"
+                                    className="w-full pl-12 pr-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder:text-white/40
+                                             focus:outline-none focus:ring-2 focus:ring-brand-blue/50 focus:border-brand-blue/50 transition-all"
+                                    required
+                                  />
+                                </div>
+                              </div>
+
+                              {error && (
+                                <p className="text-sm text-red-400">{error}</p>
+                              )}
+
+                              <Button
+                                type="submit"
+                                variant="primary"
+                                className="w-full"
+                                disabled={isSubmitting}
+                              >
+                                {isSubmitting ? (
+                                  <>
+                                    <motion.div
+                                      className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full mr-2"
+                                      animate={{ rotate: 360 }}
+                                      transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
+                                    />
+                                    Subscribing...
+                                  </>
+                                ) : (
+                                  'Get Updates'
+                                )}
+                              </Button>
+
+                              <p className="text-xs text-white/40 text-center">
+                                We respect your privacy. Unsubscribe at any time.
+                              </p>
+                            </form>
+                          </div>
                         ) : (
                           <motion.div
                             initial={{ opacity: 0, scale: 0.9 }}
@@ -410,221 +538,285 @@ export default function WorldPremierePopup() {
                         animate={{ x: 0, opacity: 1 }}
                         exit={{ x: 300, opacity: 0 }}
                         transition={{ duration: 0.3, ease: 'easeInOut' }}
-                        className="p-6 md:p-8"
+                        className="p-5 md:p-6"
                       >
                         {/* Back Button */}
                         <button
                           onClick={() => setCurrentView('updates')}
-                          className="flex items-center gap-1 text-white/60 hover:text-white transition-colors mb-4 text-sm"
+                          className="flex items-center gap-1 text-white/60 hover:text-white transition-colors mb-3 text-sm"
                         >
                           <ChevronLeft className="w-4 h-4" />
                           Back
                         </button>
 
                         {/* Tour Form Header */}
-                        <div className="text-center mb-6">
-                          <h3 className="text-xl font-bold text-white mb-2">
+                        <div className="text-center mb-4">
+                          <h3 className="text-lg font-bold text-white mb-1">
                             Request a Tour
                           </h3>
-                          <p className="text-white/60 text-sm">
+                          <p className="text-white/60 text-xs">
                             Meet us at La Grande Motte and experience the AY60 Sport firsthand
                           </p>
                         </div>
 
                         {/* Tour Form */}
                         {!tourSubmitted ? (
-                          <form onSubmit={handleTourSubmit} className="space-y-4">
-                            {/* Full Name */}
-                            <div>
-                              <label className="block text-xs font-medium text-white/60 mb-1.5">
-                                Full Name <span className="text-red-400">*</span>
-                              </label>
-                              <div className="relative">
-                                <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/40" />
-                                <input
-                                  type="text"
-                                  value={tourForm.fullName}
-                                  onChange={(e) => setTourForm({ ...tourForm, fullName: e.target.value })}
-                                  placeholder="John Smith"
-                                  className={`${inputClasses} pl-10`}
-                                  required
-                                />
-                              </div>
-                            </div>
+                          <div className="space-y-3">
+                            {/* Google Sign In - only show if not signed in */}
+                            {!isSignedIn && (
+                              <>
+                                <button
+                                  onClick={handleGoogleAuth}
+                                  disabled={isGoogleLoading || !isSignInLoaded}
+                                  className="w-full flex items-center justify-center gap-3 px-4 py-2 rounded-xl bg-white/10 border border-white/20 text-white text-sm font-medium hover:bg-white/20 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                                >
+                                  {isGoogleLoading ? (
+                                    <motion.div
+                                      className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full"
+                                      animate={{ rotate: 360 }}
+                                      transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
+                                    />
+                                  ) : (
+                                    <svg className="w-4 h-4" viewBox="0 0 24 24">
+                                      <path
+                                        fill="currentColor"
+                                        d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
+                                      />
+                                      <path
+                                        fill="currentColor"
+                                        d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
+                                      />
+                                      <path
+                                        fill="currentColor"
+                                        d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"
+                                      />
+                                      <path
+                                        fill="currentColor"
+                                        d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
+                                      />
+                                    </svg>
+                                  )}
+                                  Continue with Google
+                                </button>
 
-                            {/* Email */}
-                            <div>
-                              <label className="block text-xs font-medium text-white/60 mb-1.5">
-                                Email <span className="text-red-400">*</span>
-                              </label>
-                              <div className="relative">
-                                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/40" />
-                                <input
-                                  type="email"
-                                  value={tourForm.email}
-                                  onChange={(e) => setTourForm({ ...tourForm, email: e.target.value })}
-                                  placeholder="john@example.com"
-                                  className={`${inputClasses} pl-10`}
-                                  required
-                                />
-                              </div>
-                            </div>
+                                <div className="flex items-center gap-3">
+                                  <div className="flex-1 h-px bg-white/20" />
+                                  <span className="text-xs text-white/40">or fill in your details</span>
+                                  <div className="flex-1 h-px bg-white/20" />
+                                </div>
+                              </>
+                            )}
 
-                            {/* Phone with Country Code */}
-                            <div>
-                              <label className="block text-xs font-medium text-white/60 mb-1.5">
-                                Phone <span className="text-red-400">*</span>
-                              </label>
-                              <div className="flex gap-2">
-                                <div className="relative w-28">
+                            {/* Signed in user info */}
+                            {isSignedIn && user && (
+                              <div className="flex items-center gap-2 p-2 rounded-lg bg-accent-teal/10 border border-accent-teal/30">
+                                {user.imageUrl && (
+                                  <Image
+                                    src={user.imageUrl}
+                                    alt="Profile"
+                                    width={28}
+                                    height={28}
+                                    className="rounded-full"
+                                  />
+                                )}
+                                <div className="flex-1 min-w-0">
+                                  <p className="text-xs font-medium text-white truncate">
+                                    {user.fullName || user.firstName || 'Welcome!'}
+                                  </p>
+                                  <p className="text-[10px] text-white/60 truncate">
+                                    {user.primaryEmailAddress?.emailAddress}
+                                  </p>
+                                </div>
+                              </div>
+                            )}
+
+                            <form onSubmit={handleTourSubmit} noValidate className="space-y-3">
+                              {/* Full Name */}
+                              <div>
+                                <label className="block text-xs font-medium text-white/60 mb-1">
+                                  Full Name <span className="text-red-400">*</span>
+                                </label>
+                                <div className="relative">
+                                  <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/40" />
+                                  <input
+                                    type="text"
+                                    value={tourForm.fullName}
+                                    onChange={(e) => setTourForm({ ...tourForm, fullName: e.target.value })}
+                                    placeholder="John Smith"
+                                    className={`${inputClasses} pl-10 ${isSignedIn && tourForm.fullName ? 'bg-white/10' : ''} ${isTourFieldInvalid('fullName') ? 'border-red-500' : ''}`}
+                                  />
+                                </div>
+                              </div>
+
+                              {/* Email */}
+                              <div>
+                                <label className="block text-xs font-medium text-white/60 mb-1">
+                                  Email <span className="text-red-400">*</span>
+                                </label>
+                                <div className="relative">
+                                  <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/40" />
+                                  <input
+                                    type="email"
+                                    value={tourForm.email}
+                                    onChange={(e) => setTourForm({ ...tourForm, email: e.target.value })}
+                                    placeholder="john@example.com"
+                                    className={`${inputClasses} pl-10 ${isSignedIn && tourForm.email ? 'bg-white/10' : ''} ${isTourFieldInvalid('email') ? 'border-red-500' : ''}`}
+                                  />
+                                </div>
+                              </div>
+
+                              {/* Phone with Country Code */}
+                              <div>
+                                <label className="block text-xs font-medium text-white/60 mb-1">
+                                  Phone <span className="text-red-400">*</span>
+                                </label>
+                                <div className="flex gap-2">
+                                  <div className="relative w-28">
+                                    <select
+                                      value={tourForm.countryCode}
+                                      onChange={(e) => setTourForm({ ...tourForm, countryCode: e.target.value })}
+                                      className={selectClasses}
+                                    >
+                                      {countryCodes.map((cc) => (
+                                        <option key={cc.code} value={cc.code} className="bg-brand-navy">
+                                          {cc.code} {cc.country}
+                                        </option>
+                                      ))}
+                                    </select>
+                                  </div>
+                                  <div className="relative flex-1">
+                                    <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/40" />
+                                    <input
+                                      type="tel"
+                                      value={tourForm.phone}
+                                      onChange={(e) => setTourForm({ ...tourForm, phone: e.target.value })}
+                                      placeholder="123 456 7890"
+                                      className={`${inputClasses} pl-10 ${isTourFieldInvalid('phone') ? 'border-red-500' : ''}`}
+                                    />
+                                  </div>
+                                </div>
+                              </div>
+
+                              {/* Country of Residence */}
+                              <div>
+                                <label className="block text-xs font-medium text-white/60 mb-1">
+                                  Country of Residence <span className="text-red-400">*</span>
+                                </label>
+                                <div className="relative">
+                                  <Globe className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/40 pointer-events-none" />
                                   <select
-                                    value={tourForm.countryCode}
-                                    onChange={(e) => setTourForm({ ...tourForm, countryCode: e.target.value })}
-                                    className={selectClasses}
+                                    value={tourForm.country}
+                                    onChange={(e) => setTourForm({ ...tourForm, country: e.target.value })}
+                                    className={`${selectClasses} pl-10 ${isTourFieldInvalid('country') ? 'border-red-500' : ''}`}
                                   >
-                                    {countryCodes.map((cc) => (
-                                      <option key={cc.code} value={cc.code} className="bg-brand-navy">
-                                        {cc.code} {cc.country}
+                                    <option value="" className="bg-brand-navy">Select country...</option>
+                                    {countries.map((country) => (
+                                      <option key={country} value={country} className="bg-brand-navy">
+                                        {country}
                                       </option>
                                     ))}
                                   </select>
                                 </div>
-                                <div className="relative flex-1">
-                                  <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/40" />
-                                  <input
-                                    type="tel"
-                                    value={tourForm.phone}
-                                    onChange={(e) => setTourForm({ ...tourForm, phone: e.target.value })}
-                                    placeholder="123 456 7890"
-                                    className={`${inputClasses} pl-10`}
-                                    required
-                                  />
-                                </div>
                               </div>
-                            </div>
 
-                            {/* Country of Residence */}
-                            <div>
-                              <label className="block text-xs font-medium text-white/60 mb-1.5">
-                                Country of Residence <span className="text-red-400">*</span>
-                              </label>
-                              <div className="relative">
-                                <Globe className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/40 pointer-events-none" />
+                              {/* Interest */}
+                              <div>
+                                <label className="block text-xs font-medium text-white/60 mb-1">
+                                  Interest <span className="text-red-400">*</span>
+                                </label>
                                 <select
-                                  value={tourForm.country}
-                                  onChange={(e) => setTourForm({ ...tourForm, country: e.target.value })}
-                                  className={`${selectClasses} pl-10`}
-                                  required
+                                  value={tourForm.interest}
+                                  onChange={(e) => setTourForm({ ...tourForm, interest: e.target.value, otherInterest: '' })}
+                                  className={`${selectClasses} ${isTourFieldInvalid('interest') ? 'border-red-500' : ''}`}
                                 >
-                                  <option value="" className="bg-brand-navy">Select country...</option>
-                                  {countries.map((country) => (
-                                    <option key={country} value={country} className="bg-brand-navy">
-                                      {country}
+                                  <option value="" className="bg-brand-navy">Select your interest...</option>
+                                  {interestOptions.map((option) => (
+                                    <option key={option.value} value={option.value} className="bg-brand-navy">
+                                      {option.label}
                                     </option>
                                   ))}
                                 </select>
                               </div>
-                            </div>
 
-                            {/* Interest */}
-                            <div>
-                              <label className="block text-xs font-medium text-white/60 mb-1.5">
-                                Interest <span className="text-red-400">*</span>
-                              </label>
-                              <select
-                                value={tourForm.interest}
-                                onChange={(e) => setTourForm({ ...tourForm, interest: e.target.value, otherInterest: '' })}
-                                className={selectClasses}
-                                required
-                              >
-                                <option value="" className="bg-brand-navy">Select your interest...</option>
-                                {interestOptions.map((option) => (
-                                  <option key={option.value} value={option.value} className="bg-brand-navy">
-                                    {option.label}
-                                  </option>
-                                ))}
-                              </select>
-                            </div>
-
-                            {/* Other Interest (conditional) */}
-                            {tourForm.interest === 'other' && (
-                              <motion.div
-                                initial={{ opacity: 0, height: 0 }}
-                                animate={{ opacity: 1, height: 'auto' }}
-                                exit={{ opacity: 0, height: 0 }}
-                              >
-                                <label className="block text-xs font-medium text-white/60 mb-1.5">
-                                  Please Specify <span className="text-red-400">*</span>
-                                </label>
-                                <input
-                                  type="text"
-                                  value={tourForm.otherInterest}
-                                  onChange={(e) => setTourForm({ ...tourForm, otherInterest: e.target.value.slice(0, 32) })}
-                                  placeholder="Your interest..."
-                                  maxLength={32}
-                                  className={inputClasses}
-                                  required
-                                />
-                                <p className="text-xs text-white/40 mt-1 text-right">
-                                  {tourForm.otherInterest.length}/32
-                                </p>
-                              </motion.div>
-                            )}
-
-                            {/* Company (optional) */}
-                            <div>
-                              <label className="block text-xs font-medium text-white/60 mb-1.5">
-                                Company <span className="text-white/30">(optional)</span>
-                              </label>
-                              <div className="relative">
-                                <Building2 className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/40" />
-                                <input
-                                  type="text"
-                                  value={tourForm.company}
-                                  onChange={(e) => setTourForm({ ...tourForm, company: e.target.value })}
-                                  placeholder="Company name"
-                                  className={`${inputClasses} pl-10`}
-                                />
-                              </div>
-                            </div>
-
-                            {tourError && (
-                              <p className="text-sm text-red-400">{tourError}</p>
-                            )}
-
-                            <Button
-                              type="submit"
-                              variant="primary"
-                              className="w-full"
-                              disabled={tourSubmitting}
-                            >
-                              {tourSubmitting ? (
-                                <>
-                                  <motion.div
-                                    className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full mr-2"
-                                    animate={{ rotate: 360 }}
-                                    transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
+                              {/* Other Interest (conditional) */}
+                              {tourForm.interest === 'other' && (
+                                <motion.div
+                                  initial={{ opacity: 0, height: 0 }}
+                                  animate={{ opacity: 1, height: 'auto' }}
+                                  exit={{ opacity: 0, height: 0 }}
+                                >
+                                  <label className="block text-xs font-medium text-white/60 mb-1">
+                                    Please Specify <span className="text-red-400">*</span>
+                                  </label>
+                                  <input
+                                    type="text"
+                                    value={tourForm.otherInterest}
+                                    onChange={(e) => setTourForm({ ...tourForm, otherInterest: e.target.value.slice(0, 32) })}
+                                    placeholder="Your interest..."
+                                    maxLength={32}
+                                    className={`${inputClasses} ${isTourFieldInvalid('otherInterest') ? 'border-red-500' : ''}`}
                                   />
-                                  Submitting...
-                                </>
-                              ) : (
-                                'Request Tour'
+                                  <p className="text-xs text-white/40 mt-1 text-right">
+                                    {tourForm.otherInterest.length}/32
+                                  </p>
+                                </motion.div>
                               )}
-                            </Button>
 
-                            <p className="text-xs text-white/40 text-center leading-relaxed">
-                              By submitting this request you consent to receiving communications from 36ZERO Yachting. We will never share your personal data without consent.
-                            </p>
-                          </form>
+                              {/* Company (optional) */}
+                              <div>
+                                <label className="block text-xs font-medium text-white/60 mb-1">
+                                  Company <span className="text-white/30">(optional)</span>
+                                </label>
+                                <div className="relative">
+                                  <Building2 className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/40" />
+                                  <input
+                                    type="text"
+                                    value={tourForm.company}
+                                    onChange={(e) => setTourForm({ ...tourForm, company: e.target.value })}
+                                    placeholder="Company name"
+                                    className={`${inputClasses} pl-10`}
+                                  />
+                                </div>
+                              </div>
+
+                              <Button
+                                type="submit"
+                                variant="primary"
+                                className="w-full"
+                                disabled={tourSubmitting}
+                              >
+                                {tourSubmitting ? (
+                                  <>
+                                    <motion.div
+                                      className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full mr-2"
+                                      animate={{ rotate: 360 }}
+                                      transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
+                                    />
+                                    Submitting...
+                                  </>
+                                ) : (
+                                  'Request Tour'
+                                )}
+                              </Button>
+
+                              {tourError && (
+                                <p className="text-sm text-red-500 text-center">{tourError}</p>
+                              )}
+
+                              <p className="text-[10px] text-white/40 text-center leading-relaxed">
+                                By submitting this request you consent to receiving communications from 36ZERO Yachting. We will never share your personal data without consent.
+                              </p>
+                            </form>
+                          </div>
                         ) : (
                           <motion.div
                             initial={{ opacity: 0, scale: 0.9 }}
                             animate={{ opacity: 1, scale: 1 }}
-                            className="text-center py-8"
+                            className="text-center py-6"
                           >
-                            <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-accent-teal/20 flex items-center justify-center">
+                            <div className="w-14 h-14 mx-auto mb-3 rounded-full bg-accent-teal/20 flex items-center justify-center">
                               <motion.svg
-                                className="w-8 h-8 text-accent-teal"
+                                className="w-7 h-7 text-accent-teal"
                                 fill="none"
                                 viewBox="0 0 24 24"
                                 stroke="currentColor"
@@ -633,7 +825,7 @@ export default function WorldPremierePopup() {
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                               </motion.svg>
                             </div>
-                            <h3 className="text-xl font-semibold text-white mb-2">Tour Requested!</h3>
+                            <h3 className="text-lg font-semibold text-white mb-1">Tour Requested!</h3>
                             <p className="text-white/60 text-sm">We&apos;ll be in touch shortly to confirm your visit.</p>
                           </motion.div>
                         )}

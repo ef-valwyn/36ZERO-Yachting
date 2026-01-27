@@ -281,11 +281,12 @@ See `.env.example` for all required variables:
    - [x] Design system
    - [x] Database schema
    - [x] Brand logos and icons
+   - [x] Popup for La Grande Motte (World Premiere with Google OAuth, sign-up & tour request forms)
+   - [ ] Configure inbound request handling (connect email service/CRM for form submissions)
    - [ ] Update home landing text
    - [ ] Switch order of LAP section and Available Vessels on home page
    - [ ] Remove About from nav bar, add About 36ZERO section on home page
    - [ ] Payload CMS integration
-   - [ ] Popup for La Grande Motte
 
 2. **Phase 2**: Brokerage & Assets
    - [x] Vessel listings page
