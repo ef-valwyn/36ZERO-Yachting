@@ -19,7 +19,7 @@ export interface RouteStage {
   arrivalDate: string;
   departureDate?: string;
   distanceNm: number;
-  type: 'hub' | 'stop';
+  type: 'hub' | 'stop' | 'transit';
   logistics?: {
     flightHub?: string;
     transfer?: string;
@@ -36,6 +36,7 @@ export interface RouteMapProps {
   initialZoom?: number;
   onStageSelect?: (stage: RouteStage) => void;
   className?: string;
+  totalDistance?: number;
 }
 
 // Custom dark map style matching 36ZERO brand
@@ -124,6 +125,7 @@ export const RouteMap: React.FC<RouteMapProps> = ({
   initialZoom = 2,
   onStageSelect,
   className,
+  totalDistance,
 }) => {
   const mapRef = useRef<MapRef>(null);
   const [selectedStage, setSelectedStage] = useState<RouteStage | null>(null);
@@ -133,26 +135,102 @@ export const RouteMap: React.FC<RouteMapProps> = ({
     zoom: initialZoom,
   });
 
-  // Generate GeoJSON for the route line
-  const routeGeoJSON = {
-    type: 'Feature' as const,
-    properties: {},
-    geometry: {
-      type: 'LineString' as const,
-      coordinates: stages.map((stage) => stage.coordinates),
-    },
+  // Helper function to handle antimeridian crossing
+  // Splits line segments that cross the date line into two segments
+  const splitAtAntimeridian = (coords: [number, number][]): [number, number][][] => {
+    const segments: [number, number][][] = [];
+    let currentSegment: [number, number][] = [];
+
+    for (let i = 0; i < coords.length; i++) {
+      const current = coords[i];
+      
+      if (i === 0) {
+        currentSegment.push(current);
+        continue;
+      }
+
+      const prev = coords[i - 1];
+      const lonDiff = Math.abs(current[0] - prev[0]);
+
+      // If longitude difference > 180, we're crossing the antimeridian
+      if (lonDiff > 180) {
+        // Calculate the latitude at the crossing point
+        const prevLon = prev[0];
+        const currLon = current[0];
+        const prevLat = prev[1];
+        const currLat = current[1];
+
+        // Determine crossing direction
+        const crossingLon = prevLon > 0 ? 180 : -180;
+        const oppositelon = prevLon > 0 ? -180 : 180;
+
+        // Linear interpolation to find latitude at crossing
+        const adjustedCurrLon = currLon + (prevLon > 0 ? 360 : -360);
+        const t = (crossingLon - prevLon) / (adjustedCurrLon - prevLon);
+        const crossingLat = prevLat + t * (currLat - prevLat);
+
+        // End current segment at the crossing
+        currentSegment.push([crossingLon, crossingLat]);
+        segments.push(currentSegment);
+
+        // Start new segment from the opposite side
+        currentSegment = [[oppositelon, crossingLat], current];
+      } else {
+        currentSegment.push(current);
+      }
+    }
+
+    if (currentSegment.length > 0) {
+      segments.push(currentSegment);
+    }
+
+    return segments;
   };
 
-  // Generate GeoJSON for completed segments
+  // Generate GeoJSON for the route line (handles antimeridian crossing)
+  const routeCoords = stages.map((stage) => stage.coordinates);
+  const routeSegments = splitAtAntimeridian(routeCoords);
+  
+  const routeGeoJSON = routeSegments.length === 1
+    ? {
+        type: 'Feature' as const,
+        properties: {},
+        geometry: {
+          type: 'LineString' as const,
+          coordinates: routeSegments[0],
+        },
+      }
+    : {
+        type: 'Feature' as const,
+        properties: {},
+        geometry: {
+          type: 'MultiLineString' as const,
+          coordinates: routeSegments,
+        },
+      };
+
+  // Generate GeoJSON for completed segments (handles antimeridian crossing)
   const completedStages = stages.filter((s) => s.isCompleted);
-  const completedGeoJSON = {
-    type: 'Feature' as const,
-    properties: {},
-    geometry: {
-      type: 'LineString' as const,
-      coordinates: completedStages.map((stage) => stage.coordinates),
-    },
-  };
+  const completedCoords = completedStages.map((stage) => stage.coordinates);
+  const completedSegments = splitAtAntimeridian(completedCoords);
+  
+  const completedGeoJSON = completedSegments.length === 1
+    ? {
+        type: 'Feature' as const,
+        properties: {},
+        geometry: {
+          type: 'LineString' as const,
+          coordinates: completedSegments[0] || [],
+        },
+      }
+    : {
+        type: 'Feature' as const,
+        properties: {},
+        geometry: {
+          type: 'MultiLineString' as const,
+          coordinates: completedSegments,
+        },
+      };
 
   const handleStageClick = useCallback(
     (stage: RouteStage) => {
@@ -256,7 +334,7 @@ export const RouteMap: React.FC<RouteMapProps> = ({
             <motion.div
               className={cn(
                 'cursor-pointer transition-transform',
-                stage.type === 'hub' ? 'marker-hub' : 'marker-stop',
+                stage.type === 'hub' ? 'marker-hub' : stage.type === 'stop' ? 'marker-stop' : 'marker-transit',
                 selectedStage?.id === stage.id && 'ring-2 ring-white ring-offset-2 ring-offset-brand-navy'
               )}
               initial={{ scale: 0, opacity: 0 }}
@@ -264,11 +342,11 @@ export const RouteMap: React.FC<RouteMapProps> = ({
               transition={{ delay: index * 0.05, duration: 0.3 }}
               whileHover={{ scale: 1.2 }}
               style={{
-                width: stage.type === 'hub' ? 20 : 12,
-                height: stage.type === 'hub' ? 20 : 12,
+                width: stage.type === 'hub' ? 20 : stage.type === 'stop' ? 12 : 8,
+                height: stage.type === 'hub' ? 20 : stage.type === 'stop' ? 12 : 8,
                 borderRadius: '50%',
-                backgroundColor: stage.isCompleted ? '#2f97dd' : stage.isActive ? '#c9a962' : 'rgba(255,255,255,0.6)',
-                border: stage.type === 'hub' ? '3px solid #2f97dd' : '2px solid rgba(255,255,255,0.4)',
+                backgroundColor: stage.isCompleted ? '#2f97dd' : stage.isActive ? '#c9a962' : stage.type === 'transit' ? 'rgba(255,255,255,0.4)' : 'rgba(255,255,255,0.6)',
+                border: stage.type === 'hub' ? '3px solid #2f97dd' : stage.type === 'stop' ? '2px solid rgba(255,255,255,0.4)' : '1px solid rgba(255,255,255,0.3)',
                 boxShadow: stage.isActive ? '0 0 20px rgba(201, 169, 98, 0.6)' : 'none',
               }}
             />
@@ -295,6 +373,13 @@ export const RouteMap: React.FC<RouteMapProps> = ({
             <span className="text-xs text-white/80">Stop</span>
           </div>
           <div className="flex items-center gap-2">
+            <div 
+              className="w-2 h-2 rounded-full bg-white/40" 
+              style={{ border: '1px solid rgba(255,255,255,0.3)' }} 
+            />
+            <span className="text-xs text-white/80">Transit</span>
+          </div>
+          <div className="flex items-center gap-2">
             <div className="w-6 h-0.5 bg-brand-blue" />
             <span className="text-xs text-white/80">Completed</span>
           </div>
@@ -310,7 +395,7 @@ export const RouteMap: React.FC<RouteMapProps> = ({
         <GlassCard padding="sm">
           <p className="text-xs text-white/60 mb-1">Total Distance</p>
           <p className="text-lg font-bold text-brand-blue">
-            {stages.reduce((acc, s) => acc + s.distanceNm, 0).toLocaleString()} NM
+            {(totalDistance ?? stages.reduce((acc, s) => acc + s.distanceNm, 0)).toLocaleString()} NM
           </p>
         </GlassCard>
       </div>
@@ -350,7 +435,7 @@ export const RouteMap: React.FC<RouteMapProps> = ({
                   <div>
                     <h3 className="text-lg font-semibold text-white">{selectedStage.name}</h3>
                     <p className="text-sm text-white/60">
-                      {selectedStage.type === 'hub' ? 'Major Hub' : 'Intermediary Stop'}
+                      {selectedStage.type === 'hub' ? 'Major Hub' : selectedStage.type === 'stop' ? 'Intermediary Stop' : 'Transit Point'}
                     </p>
                   </div>
                 </div>
