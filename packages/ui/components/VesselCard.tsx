@@ -17,7 +17,7 @@ export interface VesselCardProps {
   currency?: string;
   length: number; // in meters
   capacity: number;
-  maxSpeed?: number; // in knots
+  maxSpeed?: number | null; // in knots
   imageUrl: string;
   status?: 'available' | 'under-contract' | 'sold';
   availabilityText?: string | null; // Custom text to show instead of status (e.g. "Q2 2026")
