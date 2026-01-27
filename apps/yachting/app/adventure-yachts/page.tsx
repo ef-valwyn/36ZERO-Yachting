@@ -78,13 +78,28 @@ interface AdventureYacht {
 }
 
 // Gallery images for AY60 showcase
+const BLOB_BASE = 'https://yyofqqbn0jyxo9dg.public.blob.vercel-storage.com/yachts/adventure-one';
 const galleryImages = [
-  { id: 1, url: '/images/ay60-gallery-1.png', alt: 'AY60 Exterior' },
-  { id: 2, url: 'https://images.unsplash.com/photo-1540946485063-a40da27545f8?w=1200&q=80', alt: 'AY60 Bow View' },
-  { id: 3, url: 'https://images.unsplash.com/photo-1605281317010-fe5ffe798166?w=1200&q=80', alt: 'AY60 Interior' },
-  { id: 4, url: 'https://images.unsplash.com/photo-1569263979104-865ab7cd8d13?w=1200&q=80', alt: 'AY60 Cockpit' },
-  { id: 5, url: 'https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=1200&q=80', alt: 'AY60 Flybridge' },
-  { id: 6, url: 'https://images.unsplash.com/photo-1500514966906-fe245eea9344?w=1200&q=80', alt: 'AY60 At Sea' },
+  { id: 1, url: `${BLOB_BASE}/hero-landing.png`, alt: 'AY60 Hero - Exterior View' },
+  { id: 2, url: `${BLOB_BASE}/ay60-gallery-1.png`, alt: 'AY60 Gallery - At Sea' },
+  { id: 3, url: `${BLOB_BASE}/front.jpeg`, alt: 'AY60 Front View' },
+  { id: 4, url: `${BLOB_BASE}/side.jpeg`, alt: 'AY60 Side Profile' },
+  { id: 5, url: `${BLOB_BASE}/sideaft.jpeg`, alt: 'AY60 Side Aft View' },
+  { id: 6, url: `${BLOB_BASE}/portthreequarter.jpeg`, alt: 'AY60 Port Three-Quarter' },
+  { id: 7, url: `${BLOB_BASE}/afterthreequarter.jpeg`, alt: 'AY60 Aft Three-Quarter' },
+  { id: 8, url: `${BLOB_BASE}/cockpitmain.jpg`, alt: 'AY60 Main Cockpit' },
+  { id: 9, url: `${BLOB_BASE}/cockpit1.jpg`, alt: 'AY60 Cockpit View 1' },
+  { id: 10, url: `${BLOB_BASE}/cockpit2.jpg`, alt: 'AY60 Cockpit View 2' },
+  { id: 11, url: `${BLOB_BASE}/cockpit3.jpg`, alt: 'AY60 Cockpit View 3' },
+  { id: 12, url: `${BLOB_BASE}/kitchen.jpg`, alt: 'AY60 Kitchen' },
+  { id: 13, url: `${BLOB_BASE}/kitchen2.jpg`, alt: 'AY60 Kitchen Detail' },
+  { id: 14, url: `${BLOB_BASE}/grill.jpg`, alt: 'AY60 Outdoor Grill' },
+  { id: 15, url: `${BLOB_BASE}/bedroomforward.jpg`, alt: 'AY60 Forward Cabin' },
+  { id: 16, url: `${BLOB_BASE}/bedroomaft.jpg`, alt: 'AY60 Aft Cabin' },
+  { id: 17, url: `${BLOB_BASE}/head1.jpg`, alt: 'AY60 Bathroom 1' },
+  { id: 18, url: `${BLOB_BASE}/head2.jpg`, alt: 'AY60 Bathroom 2' },
+  { id: 19, url: `${BLOB_BASE}/head3.jpg`, alt: 'AY60 Bathroom 3' },
+  { id: 20, url: `${BLOB_BASE}/head4.jpg`, alt: 'AY60 Bathroom 4' },
 ];
 
 // AY60 Specifications
@@ -108,7 +123,7 @@ const vesselAreas = [
   {
     id: 'cockpit',
     name: 'Cockpit',
-    imageUrl: 'https://images.unsplash.com/photo-1569263979104-865ab7cd8d13?w=1920&q=80',
+    imageUrl: `${BLOB_BASE}/cockpitmain.jpg`,
     hotspots: [
       { id: 1, x: 25, y: 30, label: 'Rain Shower' },
       { id: 2, x: 70, y: 45, label: 'Helm Controls' },
@@ -118,7 +133,7 @@ const vesselAreas = [
   {
     id: 'outdoor-deck',
     name: 'Outdoor Deck',
-    imageUrl: 'https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=1920&q=80',
+    imageUrl: `${BLOB_BASE}/cockpit3.jpg`,
     hotspots: [
       { id: 1, x: 30, y: 40, label: 'Sun Loungers' },
       { id: 2, x: 65, y: 35, label: 'Dining Area' },
@@ -128,7 +143,7 @@ const vesselAreas = [
   {
     id: 'saloon',
     name: 'Saloon',
-    imageUrl: 'https://images.unsplash.com/photo-1605281317010-fe5ffe798166?w=1920&q=80',
+    imageUrl: `${BLOB_BASE}/kitchen2.jpg`,
     hotspots: [
       { id: 1, x: 20, y: 50, label: 'Entertainment System' },
       { id: 2, x: 55, y: 40, label: 'L-Shaped Sofa' },
@@ -138,7 +153,7 @@ const vesselAreas = [
   {
     id: 'kitchen',
     name: 'Kitchen',
-    imageUrl: 'https://images.unsplash.com/photo-1540946485063-a40da27545f8?w=1920&q=80',
+    imageUrl: `${BLOB_BASE}/kitchen.jpg`,
     hotspots: [
       { id: 1, x: 25, y: 45, label: 'Induction Cooktop' },
       { id: 2, x: 60, y: 35, label: 'Wine Cooler' },
@@ -148,7 +163,7 @@ const vesselAreas = [
   {
     id: 'helm',
     name: 'Helm',
-    imageUrl: 'https://images.unsplash.com/photo-1567899378494-47b22a2ae96a?w=1920&q=80',
+    imageUrl: `${BLOB_BASE}/cockpit2.jpg`,
     hotspots: [
       { id: 1, x: 35, y: 40, label: 'Glass Cockpit Displays' },
       { id: 2, x: 65, y: 50, label: 'Joystick Control' },
@@ -158,7 +173,7 @@ const vesselAreas = [
   {
     id: 'beach-club',
     name: 'Beach Club',
-    imageUrl: 'https://images.unsplash.com/photo-1500514966906-fe245eea9344?w=1920&q=80',
+    imageUrl: `${BLOB_BASE}/front.jpeg`,
     hotspots: [
       { id: 1, x: 30, y: 55, label: 'Swim Platform' },
       { id: 2, x: 70, y: 40, label: 'Tender Garage' },
@@ -168,7 +183,7 @@ const vesselAreas = [
   {
     id: 'berths',
     name: 'Berths',
-    imageUrl: 'https://images.unsplash.com/photo-1569263979104-865ab7cd8d13?w=1920&q=80',
+    imageUrl: `${BLOB_BASE}/bedroomaft.jpg`,
     hotspots: [
       { id: 1, x: 40, y: 45, label: 'King-Size Bed' },
       { id: 2, x: 25, y: 60, label: 'En-Suite Bathroom' },
