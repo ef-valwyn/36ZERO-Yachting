@@ -145,9 +145,9 @@ const vesselAreas = [
     name: 'Saloon',
     imageUrl: `${BLOB_BASE}/kitchen2.jpg`,
     hotspots: [
-      { id: 1, x: 20, y: 50, label: 'Entertainment System' },
-      { id: 2, x: 55, y: 40, label: 'L-Shaped Sofa' },
-      { id: 3, x: 75, y: 65, label: 'Panoramic Windows' },
+      { id: 1, x: 20, y: 50, label: 'Forward Deck Access' },
+      { id: 2, x: 55, y: 40, label: 'Bar Service Area' },
+      { id: 3, x: 45, y: 90, label: 'U-Shaped Dining' },
     ],
   },
   {
