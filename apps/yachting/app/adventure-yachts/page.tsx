@@ -155,8 +155,8 @@ const vesselAreas = [
     name: 'Kitchen',
     imageUrl: `${BLOB_BASE}/kitchen.jpg`,
     hotspots: [
-      { id: 1, x: 25, y: 45, label: 'Panoramic Windows' },
-      { id: 2, x: 75, y: 55, label: 'Convection Stove and Oven' },
+      { id: 1, x: 25, y: 45, label: 'Panoramic Windows', tooltipPosition: 'left' as const },
+      { id: 2, x: 75, y: 55, label: 'Convection Stove and Oven', tooltipPosition: 'left' as const },
       { id: 3, x: 89, y: 80, label: 'Dual Fridge/Freezer', tooltipPosition: 'left' as const },
     ],
   },
