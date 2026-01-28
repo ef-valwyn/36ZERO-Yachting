@@ -105,16 +105,16 @@ const galleryImages = [
 // AY60 Specifications
 const specifications = [
   { label: 'Length Overall', value: '60 ft / 18.3m' },
-  { label: 'Beam', value: '26 ft / 7.9m' },
-  { label: 'Draft', value: '4.2 ft / 1.3m' },
-  { label: 'Displacement', value: '28,000 kg' },
-  { label: 'Fuel Capacity', value: '3,000 L' },
-  { label: 'Water Capacity', value: '800 L' },
-  { label: 'Max Speed', value: '32 knots' },
-  { label: 'Cruising Speed', value: '24 knots' },
-  { label: 'Range', value: '400+ nm' },
+  { label: 'Beam', value: '30 ft / 8.47m' },
+  { label: 'Draft', value: '2.8 ft / 0.9m' },
+  { label: 'Displacement', value: '18,500 kg' },
+  { label: 'Fuel Capacity', value: '1,660 L' },
+  { label: 'Water Capacity', value: '1,290 L' },
+  { label: 'Max Speed', value: '18 knots' },
+  { label: 'Cruising Speed', value: '14 knots' },
+  { label: 'Range', value: '2,000+ nm' },
   { label: 'Guests', value: '8-10' },
-  { label: 'Cabins', value: '4' },
+  { label: 'Cabins', value: '4+2' },
   { label: 'Crew', value: '2' },
 ];
 
