@@ -125,8 +125,8 @@ const vesselAreas = [
     name: 'Cockpit',
     imageUrl: `${BLOB_BASE}/cockpitmain.jpg`,
     hotspots: [
-      { id: 1, x: 25, y: 30, label: 'Rain Shower' },
-      { id: 2, x: 70, y: 45, label: 'Helm Controls' },
+      { id: 1, x: 92, y: 10, label: 'Rain Shower' },
+      { id: 2, x: 55, y: 40, label: 'Helm Controls' },
       { id: 3, x: 50, y: 70, label: 'Seating Area' },
     ],
   },
