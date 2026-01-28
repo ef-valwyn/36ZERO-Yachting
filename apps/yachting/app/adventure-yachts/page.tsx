@@ -135,9 +135,9 @@ const vesselAreas = [
     name: 'Outdoor Deck',
     imageUrl: `${BLOB_BASE}/cockpit3.jpg`,
     hotspots: [
-      { id: 1, x: 28, y: 42, label: 'Electric Storage Lockers' },
-      { id: 2, x: 62, y: 35, label: 'BBQ Grill Station' },
-      { id: 3, x: 78, y: 60, label: 'Day Bed' },
+      { id: 1, x: 28, y: 10, label: 'Electric Storage Lockers' },
+      { id: 2, x: 65, y: 45, label: 'BBQ Grill Station' },
+      { id: 3, x: 84, y: 45, label: 'Day Bed' },
     ],
   },
   {
