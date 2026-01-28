@@ -175,9 +175,9 @@ const vesselAreas = [
     name: 'Berths',
     imageUrl: `${BLOB_BASE}/bedroomaft.jpg`,
     hotspots: [
-      { id: 1, x: 40, y: 45, label: 'King-Size Bed' },
-      { id: 2, x: 25, y: 60, label: 'En-Suite Bathroom' },
-      { id: 3, x: 70, y: 35, label: 'Walk-In Wardrobe' },
+      { id: 1, x: 40, y: 45, label: 'Convertible Queen-Size Bed' },
+      { id: 2, x: 20, y: 45, label: 'Sliding Door' },
+      { id: 3, x: 70, y: 35, label: 'Large Windows' },
     ],
   },
 ];
