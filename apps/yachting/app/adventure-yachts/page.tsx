@@ -161,23 +161,13 @@ const vesselAreas = [
     ],
   },
   {
-    id: 'helm',
-    name: 'Helm',
-    imageUrl: `${BLOB_BASE}/cockpit2.jpg`,
-    hotspots: [
-      { id: 1, x: 35, y: 40, label: 'Glass Cockpit Displays' },
-      { id: 2, x: 65, y: 50, label: 'Joystick Control' },
-      { id: 3, x: 50, y: 25, label: 'Chart Plotter' },
-    ],
-  },
-  {
     id: 'beach-club',
     name: 'Beach Club',
     imageUrl: `${BLOB_BASE}/front.jpeg`,
     hotspots: [
-      { id: 1, x: 30, y: 55, label: 'Swim Platform' },
-      { id: 2, x: 70, y: 40, label: 'Tender Garage' },
-      { id: 3, x: 50, y: 75, label: 'Freshwater Shower' },
+      { id: 1, x: 40, y: 55, label: 'Dual Anchor System' },
+      { id: 2, x: 70, y: 45, label: 'Large Trampolines' },
+      { id: 3, x: 50, y: 75, label: 'Electric Folding Stairway' },
     ],
   },
   {
