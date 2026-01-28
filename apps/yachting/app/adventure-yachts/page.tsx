@@ -125,7 +125,7 @@ const vesselAreas = [
     name: 'Cockpit',
     imageUrl: `${BLOB_BASE}/cockpitmain.jpg`,
     hotspots: [
-      { id: 1, x: 92, y: 10, label: 'Rain Shower' },
+      { id: 1, x: 92, y: 10, label: 'Rain Shower', tooltipPosition: 'left' as const },
       { id: 2, x: 55, y: 40, label: 'Helm Controls' },
       { id: 3, x: 50, y: 70, label: 'Seating Area' },
     ],
@@ -157,7 +157,7 @@ const vesselAreas = [
     hotspots: [
       { id: 1, x: 25, y: 45, label: 'Panoramic Windows' },
       { id: 2, x: 75, y: 55, label: 'Convection Stove and Oven' },
-      { id: 3, x: 85, y: 90, label: 'Dual Fridge/Freezer' },
+      { id: 3, x: 89, y: 80, label: 'Dual Fridge/Freezer', tooltipPosition: 'left' as const },
     ],
   },
   {
@@ -725,8 +725,14 @@ export default function AdventureYachtsPage() {
                           </div>
 
                           {/* Expandable Label */}
-                          <div className="absolute left-6 top-1/2 -translate-y-1/2 pointer-events-none">
-                            <div className="bg-brand-navy/95 backdrop-blur-md rounded-lg px-4 py-2 border border-white/20 shadow-xl whitespace-nowrap opacity-0 group-hover:opacity-100 translate-x-2 group-hover:translate-x-0 transition-all duration-300">
+                          <div className={`absolute top-1/2 -translate-y-1/2 pointer-events-none ${
+                            hotspot.tooltipPosition === 'left' ? 'right-6' : 'left-6'
+                          }`}>
+                            <div className={`bg-brand-navy/95 backdrop-blur-md rounded-lg px-4 py-2 border border-white/20 shadow-xl whitespace-nowrap opacity-0 group-hover:opacity-100 transition-all duration-300 ${
+                              hotspot.tooltipPosition === 'left' 
+                                ? '-translate-x-2 group-hover:translate-x-0' 
+                                : 'translate-x-2 group-hover:translate-x-0'
+                            }`}>
                               <p className="text-white text-sm font-medium">{hotspot.label}</p>
                             </div>
                           </div>
