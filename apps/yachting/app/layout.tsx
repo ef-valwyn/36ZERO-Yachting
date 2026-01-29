@@ -3,6 +3,7 @@ import { ClerkProvider } from '@clerk/nextjs';
 import '@36zero/ui/styles';
 import './globals.css';
 import WorldPremierePopup from '@/components/WorldPremierePopup';
+import GoogleAnalytics from '@/components/GoogleAnalytics';
 
 // Force dynamic rendering to fix Clerk + Next.js 15 compatibility
 export const dynamic = 'force-dynamic';
@@ -50,6 +51,9 @@ export default function RootLayout({
   return (
     <ClerkProvider publishableKey={process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY}>
       <html lang="en" className="scroll-smooth">
+        <head>
+          <GoogleAnalytics />
+        </head>
         <body className="bg-brand-navy text-white antialiased">
           {children}
           <WorldPremierePopup />
