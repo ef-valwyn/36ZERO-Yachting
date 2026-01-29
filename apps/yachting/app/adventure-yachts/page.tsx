@@ -909,8 +909,7 @@ export default function AdventureYachtsPage() {
               Reserve Your Next Vessel
             </h2>
             <p className="text-lg text-white/60 font-light max-w-2xl mx-auto">
-              Join the exclusive group of Adventure Yachts owners. Each vessel is 
-              individually crafted to meet your exacting standards.
+              Join the exclusive group of Adventure Yachts owners. Whether you&apos;re an owner-operator or a charter operator, the AY60 production series has hulls available immediately.
             </p>
           </motion.div>
 
@@ -946,28 +945,30 @@ export default function AdventureYachtsPage() {
                   transition={{ duration: 0.5, delay: index * 0.1 }}
                 >
                   <GlassCard variant="hover" padding="none" className="overflow-hidden group">
-                    {/* Image */}
-                    <div className="relative aspect-[16/10] overflow-hidden">
-                      <Image
-                        src={vessel.imageUrl}
-                        alt={vessel.name}
-                        fill
-                        className="object-cover transition-transform duration-700 group-hover:scale-110"
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-brand-navy via-transparent to-transparent" />
-                      
-                      {/* Availability Badge */}
-                      <div className={`absolute top-4 right-4 px-3 py-1.5 rounded-full text-sm font-medium ${
-                        vessel.status === 'available' 
-                          ? 'bg-accent-teal text-white' 
-                          : 'bg-accent-gold/90 text-brand-navy'
-                      }`}>
-                        <div className="flex items-center gap-1.5">
-                          <Calendar className="w-3.5 h-3.5" />
-                          {vessel.availability}
+                    {/* Image - Clickable */}
+                    <Link href={`/adventure-yachts/select-your-build?vessel=${vessel.slug}`}>
+                      <div className="relative aspect-[16/10] overflow-hidden cursor-pointer">
+                        <Image
+                          src={vessel.imageUrl}
+                          alt={vessel.name}
+                          fill
+                          className="object-cover transition-transform duration-700 group-hover:scale-110"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-brand-navy via-transparent to-transparent" />
+                        
+                        {/* Availability Badge */}
+                        <div className={`absolute top-4 right-4 px-3 py-1.5 rounded-full text-sm font-medium ${
+                          vessel.status === 'available' 
+                            ? 'bg-accent-teal text-white' 
+                            : 'bg-accent-gold/90 text-brand-navy'
+                        }`}>
+                          <div className="flex items-center gap-1.5">
+                            <Calendar className="w-3.5 h-3.5" />
+                            {vessel.availability}
+                          </div>
                         </div>
                       </div>
-                    </div>
+                    </Link>
 
                     {/* Content */}
                     <div className="p-6">
@@ -986,13 +987,13 @@ export default function AdventureYachtsPage() {
                           variant={vessel.status === 'available' ? 'primary' : 'secondary'}
                           asChild
                         >
-                          <Link href={`/contact?vessel=${vessel.slug}`}>
+                          <Link href={`/adventure-yachts/select-your-build?vessel=${vessel.slug}`}>
                             {vessel.status === 'available' ? 'Inquire Now' : 'Register Interest'}
                             <ArrowRight className="w-4 h-4 ml-2" />
                           </Link>
                         </Button>
                         <Button variant="ghost" asChild>
-                          <Link href={`/vessels/${vessel.slug}`}>
+                          <Link href={`/adventure-yachts/select-your-build?vessel=${vessel.slug}`}>
                             View Details
                           </Link>
                         </Button>
