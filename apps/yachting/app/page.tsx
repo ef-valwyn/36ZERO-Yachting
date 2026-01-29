@@ -329,22 +329,32 @@ export default function HomePage() {
           {/* Vessels Grid */}
           {!isLoading && vessels.length > 0 && (
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {vessels.map((vessel, index) => (
-                <motion.div
-                  key={vessel.id}
-                  initial={{ opacity: 0, y: 30 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.5, delay: index * 0.1 }}
-                  className={vessel.isFeatured ? 'lg:col-span-2' : ''}
-                >
-                  <VesselCard 
-                    {...vessel} 
-                    maxSpeed={vessel.maxSpeed ?? undefined}
-                    status={vessel.status === 'reserved' ? 'under-contract' : vessel.status as 'available' | 'under-contract' | 'sold'}
-                  />
-                </motion.div>
-              ))}
+              {vessels.map((vessel, index) => {
+                // Adventure Yachts link to the select-your-build page
+                const isAdventureYacht = vessel.manufacturer === 'Adventure Yachts';
+                const vesselSlug = vessel.name.toLowerCase().replace(/\s+/g, '-');
+                const href = isAdventureYacht 
+                  ? `/adventure-yachts/select-your-build?vessel=${vesselSlug}`
+                  : undefined;
+
+                return (
+                  <motion.div
+                    key={vessel.id}
+                    initial={{ opacity: 0, y: 30 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.5, delay: index * 0.1 }}
+                    className={vessel.isFeatured ? 'lg:col-span-2' : ''}
+                  >
+                    <VesselCard 
+                      {...vessel} 
+                      maxSpeed={vessel.maxSpeed ?? undefined}
+                      status={vessel.status === 'reserved' ? 'under-contract' : vessel.status as 'available' | 'under-contract' | 'sold'}
+                      href={href}
+                    />
+                  </motion.div>
+                );
+              })}
             </div>
           )}
 

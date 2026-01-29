@@ -22,6 +22,7 @@ export interface VesselCardProps {
   status?: 'available' | 'reserved' | 'under-contract' | 'sold';
   availabilityText?: string | null; // Custom text to show instead of status (e.g. "Q2 2026")
   isFeatured?: boolean;
+  href?: string; // Custom link URL (defaults to /vessels/{id})
   className?: string;
 }
 
@@ -54,8 +55,11 @@ export const VesselCard: React.FC<VesselCardProps> = ({
   status = 'available',
   availabilityText,
   isFeatured = false,
+  href,
   className,
 }) => {
+  const linkHref = href ?? `/vessels/${id}`;
+  
   return (
     <motion.article
       className={cn(
@@ -66,7 +70,7 @@ export const VesselCard: React.FC<VesselCardProps> = ({
       whileHover={{ y: -4 }}
       transition={{ duration: 0.3 }}
     >
-      <Link href={`/vessels/${id}`} className="block">
+      <Link href={linkHref} className="block">
         {/* Image Container */}
         <div
           className={cn(
