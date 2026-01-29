@@ -744,8 +744,8 @@ export default function AdventureYachtsPage() {
                   </motion.div>
                 </AnimatePresence>
 
-                {/* Area Label */}
-                <div className="absolute bottom-6 left-6">
+                {/* Area Label - Hidden on mobile */}
+                <div className="absolute bottom-6 left-6 hidden md:block">
                   <motion.div
                     key={activeVesselArea.id + '-label'}
                     initial={{ opacity: 0, y: 10 }}
@@ -760,8 +760,8 @@ export default function AdventureYachtsPage() {
                   </motion.div>
                 </div>
 
-                {/* Instruction hint */}
-                <div className="absolute bottom-6 right-6">
+                {/* Instruction hint - Hidden on mobile */}
+                <div className="absolute bottom-6 right-6 hidden md:block">
                   <div className="bg-brand-navy/60 backdrop-blur-sm rounded-full px-4 py-2 border border-white/10">
                     <p className="text-white/60 text-xs">Hover over markers to explore features</p>
                   </div>
