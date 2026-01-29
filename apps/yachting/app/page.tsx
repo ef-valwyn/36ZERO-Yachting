@@ -114,9 +114,9 @@ export default function HomePage() {
               variants={itemVariants}
               className="text-5xl md:text-7xl font-extrabold uppercase tracking-tighter text-white leading-[0.9] mb-6"
             >
-              Your Horizon
+              Bringing The
               <br />
-              <span className="text-gradient">Office Awaits</span>
+              <span className="text-gradient">Horizon Closer</span>
             </motion.h1>
             <motion.p
               variants={itemVariants}
