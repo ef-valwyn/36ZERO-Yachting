@@ -7,7 +7,7 @@ import Image from 'next/image';
 import { 
   ArrowRight, 
   Download, 
-  Play, 
+  // Play, // Uncomment when video section is enabled
   ChevronLeft, 
   ChevronRight,
   Calendar,
@@ -190,7 +190,8 @@ export default function AdventureYachtsPage() {
 
   const [activeGalleryIndex, setActiveGalleryIndex] = React.useState(0);
   const [slideDirection, setSlideDirection] = React.useState<'left' | 'right'>('right');
-  const [isVideoPlaying, setIsVideoPlaying] = React.useState(false);
+  // Video state - uncomment when video section is enabled
+  // const [isVideoPlaying, setIsVideoPlaying] = React.useState(false);
   const [galleryHoverZone, setGalleryHoverZone] = React.useState<'left' | 'right' | null>(null);
   const [activeVesselArea, setActiveVesselArea] = React.useState(vesselAreas[0]);
 
@@ -554,7 +555,7 @@ export default function AdventureYachtsPage() {
             </div>
           </motion.div>
 
-          {/* Video Section */}
+          {/* Video Section - Hidden until video is ready
           <motion.div
             className="mb-16"
             initial={{ opacity: 0, y: 30 }}
@@ -595,6 +596,7 @@ export default function AdventureYachtsPage() {
               </div>
             </GlassCard>
           </motion.div>
+          */}
 
           {/* Specifications */}
           <motion.div
@@ -988,7 +990,7 @@ export default function AdventureYachtsPage() {
                           asChild
                         >
                           <Link href={`/adventure-yachts/select-your-build?vessel=${vessel.slug}`}>
-                            {vessel.status === 'available' ? 'Inquire Now' : 'Register Interest'}
+                            {vessel.status === 'available' ? 'Enquire Now' : 'Register Interest'}
                             <ArrowRight className="w-4 h-4 ml-2" />
                           </Link>
                         </Button>
