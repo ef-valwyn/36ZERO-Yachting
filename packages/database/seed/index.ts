@@ -514,9 +514,9 @@ const vesselsData = [
     location: 'Phuket, Thailand',
     description: 'Another stunning AY60 Sport ready for customization to your exact specifications. Work with our design team to create your perfect ocean-going vessel.',
     shortDescription: 'AY60 Sport ready for full customization',
-    featuredImageUrl: 'https://images.unsplash.com/photo-1605281317010-fe5ffe798166?w=800&q=80',
+    featuredImageUrl: 'https://yyofqqbn0jyxo9dg.public.blob.vercel-storage.com/yachts/adventure-one/side.jpeg',
     galleryImages: [
-      'https://images.unsplash.com/photo-1605281317010-fe5ffe798166?w=1200&q=80',
+      'https://yyofqqbn0jyxo9dg.public.blob.vercel-storage.com/yachts/adventure-one/side.jpeg',
     ],
     isFeatured: false,
     isVisible: true,
@@ -557,9 +557,9 @@ const vesselsData = [
     location: 'Phuket, Thailand',
     description: 'Extended fuel capacity and range optimization for serious ocean passages. The Long-Range variant sacrifices some guest capacity for additional tankage and provisions storage.',
     shortDescription: 'Long-range variant for serious ocean passages',
-    featuredImageUrl: 'https://images.unsplash.com/photo-1569263979104-865ab7cd8d13?w=800&q=80',
+    featuredImageUrl: 'https://yyofqqbn0jyxo9dg.public.blob.vercel-storage.com/yachts/adventure-one/portthreequarter.jpeg',
     galleryImages: [
-      'https://images.unsplash.com/photo-1569263979104-865ab7cd8d13?w=1200&q=80',
+      'https://yyofqqbn0jyxo9dg.public.blob.vercel-storage.com/yachts/adventure-one/portthreequarter.jpeg',
     ],
     isFeatured: false,
     isVisible: true,
