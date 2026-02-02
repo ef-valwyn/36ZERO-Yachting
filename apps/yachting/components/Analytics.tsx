@@ -1,6 +1,6 @@
 'use client';
 
-import { Clarity } from '@microsoft/clarity';
+import Clarity from '@microsoft/clarity';
 import posthog from 'posthog-js';
 import { PostHogProvider as PHProvider } from 'posthog-js/react';
 import { useEffect, useState } from 'react';
