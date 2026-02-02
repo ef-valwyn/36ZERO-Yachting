@@ -290,6 +290,8 @@ See `.env.example` for all required variables:
    - [x] Brand logos and icons
    - [x] Popup for La Grande Motte (World Premiere with Google OAuth, sign-up & tour request forms)
    - [ ] Configure inbound request handling (connect email service/CRM for form submissions)
+   - [ ] Create contact us form for the CTA
+   - [ ] Test for dead links, especially in the footer
    - [ ] Update home landing text
    - [ ] Switch order of LAP section and Available Vessels on home page
    - [ ] Remove About from nav bar, add About 36ZERO section on home page
@@ -301,6 +303,7 @@ See `.env.example` for all required variables:
    - [x] AY60 showcase with gallery & specs
    - [x] Unified CMS for vessels (isAdventureYacht flag, isVisible control, API routes)
    - [ ] Create detail pages for each vessel, backed by CMS
+   - [ ] Add partnerships page (brand submission form for partnership/platform consideration)
    - [ ] Upload spec sheet to Vercel Blob storage
    - [ ] Upload all visual collateral to Vercel Blob storage, refresh code for url to point all images to this storage
    - [ ] Search with Meilisearch
