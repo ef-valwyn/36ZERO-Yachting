@@ -486,17 +486,17 @@ export default function SelectYourBuildPage() {
               Ready to Begin?
             </p>
             <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-6">
-              Configure Your {selectedBuild.model}
+              Reserve Your {selectedBuild.model}
             </h2>
             <p className="text-lg text-white/60 font-light max-w-2xl mx-auto mb-10">
-              Work with our team to customise every detail of your {selectedBuild.name}. 
-              From propulsion to interior finishes, we&apos;ll help bring your vision to life.
+              36ZERO Yachting prides itself on a seamless purchase process, delivery and 
+              after-sales support. Submit your enquiry and we&apos;ll bring you closer to your horizon.
             </p>
             
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
               <Button variant="primary" size="lg" asChild>
                 <Link href={`/contact?vessel=${selectedBuild.id}`}>
-                  Start Configuration
+                  Enquire Now
                   <ArrowRight className="w-4 h-4 ml-2" />
                 </Link>
               </Button>
