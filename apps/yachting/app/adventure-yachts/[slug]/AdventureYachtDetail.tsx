@@ -1,6 +1,7 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -76,6 +77,20 @@ const specItemVariants = {
 
 export default function AdventureYachtDetail({ build, allBuilds }: Props) {
   const [isEnquireModalOpen, setIsEnquireModalOpen] = useState(false);
+  const searchParams = useSearchParams();
+
+  // Auto-scroll to specs section when navigating between builds
+  useEffect(() => {
+    const shouldScroll = searchParams.get('scroll') === 'specs';
+    if (shouldScroll) {
+      // Small delay to ensure page is rendered
+      const timer = setTimeout(() => {
+        const element = document.getElementById('specs-section');
+        element?.scrollIntoView({ behavior: 'smooth' });
+      }, 100);
+      return () => clearTimeout(timer);
+    }
+  }, [searchParams]);
 
   const scrollToSpecs = () => {
     const element = document.getElementById('specs-section');
@@ -144,7 +159,7 @@ export default function AdventureYachtDetail({ build, allBuilds }: Props) {
               {allBuilds.map((variant) => (
                 <Link
                   key={variant.id}
-                  href={`/adventure-yachts/${variant.slug}`}
+                  href={build.id === variant.id ? '#' : `/adventure-yachts/${variant.slug}?scroll=specs`}
                   className={`group relative px-5 md:px-8 py-4 md:py-5 rounded-2xl transition-all duration-500 ${
                     build.id === variant.id
                       ? 'bg-brand-blue shadow-glow'
