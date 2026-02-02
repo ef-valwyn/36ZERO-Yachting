@@ -948,7 +948,7 @@ export default function AdventureYachtsPage() {
                 >
                   <GlassCard variant="hover" padding="none" className="overflow-hidden group">
                     {/* Image - Clickable */}
-                    <Link href={`/adventure-yachts/select-your-build?vessel=${vessel.slug}`}>
+                    <Link href={`/adventure-yachts/${vessel.slug}`}>
                       <div className="relative aspect-[16/10] overflow-hidden cursor-pointer">
                         <Image
                           src={vessel.imageUrl}
@@ -989,13 +989,13 @@ export default function AdventureYachtsPage() {
                           variant={vessel.status === 'available' ? 'primary' : 'secondary'}
                           asChild
                         >
-                          <Link href={`/adventure-yachts/select-your-build?vessel=${vessel.slug}`}>
+                          <Link href={`/adventure-yachts/${vessel.slug}`}>
                             {vessel.status === 'available' ? 'Enquire Now' : 'Register Interest'}
                             <ArrowRight className="w-4 h-4 ml-2" />
                           </Link>
                         </Button>
                         <Button variant="ghost" asChild>
-                          <Link href={`/adventure-yachts/select-your-build?vessel=${vessel.slug}`}>
+                          <Link href={`/adventure-yachts/${vessel.slug}`}>
                             View Details
                           </Link>
                         </Button>
