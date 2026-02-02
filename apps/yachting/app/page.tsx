@@ -51,6 +51,7 @@ interface Vessel {
   imageUrl: string;
   status: string;
   isFeatured: boolean;
+  isAdventureYacht?: boolean;
   availabilityText?: string | null;
 }
 
@@ -330,12 +331,11 @@ export default function HomePage() {
           {!isLoading && vessels.length > 0 && (
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
               {vessels.map((vessel, index) => {
-                // Adventure Yachts link to the select-your-build page
-                const isAdventureYacht = vessel.manufacturer === 'Adventure Yachts';
+                // Adventure Yachts link to the select-your-build page with matching build ID
                 const vesselSlug = vessel.name.toLowerCase().replace(/\s+/g, '-');
-                const href = isAdventureYacht 
+                const href = vessel.isAdventureYacht 
                   ? `/adventure-yachts/select-your-build?vessel=${vesselSlug}`
-                  : undefined;
+                  : `/vessels/${vessel.id}`;
 
                 return (
                   <motion.div
