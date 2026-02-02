@@ -37,6 +37,7 @@ export const Navigation: React.FC<NavigationProps> = ({
   const [isCompact, setIsCompact] = useState(true); // Default to true for SSR
   const [showScrollArrow, setShowScrollArrow] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(false);
+  const [logoCenterOffset, setLogoCenterOffset] = useState(0);
   const navScrollRef = useRef<HTMLDivElement>(null);
   const navContainerRef = useRef<HTMLDivElement>(null);
   const logoRef = useRef<HTMLDivElement>(null);
@@ -97,6 +98,14 @@ export const Navigation: React.FC<NavigationProps> = ({
         setIsCollapsed(false);
       }
       checkOverflow();
+      
+      // Calculate logo center offset for collapsed state
+      if (logoRef.current) {
+        const logoRect = logoRef.current.getBoundingClientRect();
+        const logoCenter = logoRect.left + logoRect.width / 2;
+        const viewportCenter = window.innerWidth / 2;
+        setLogoCenterOffset(viewportCenter - logoCenter);
+      }
     };
 
     handleResize();
@@ -167,7 +176,7 @@ export const Navigation: React.FC<NavigationProps> = ({
               className="relative z-10 flex-shrink-0"
               initial={false}
               animate={{
-                x: showCollapsed ? 'calc(50vw - 120px)' : 0,
+                x: showCollapsed ? logoCenterOffset : 0,
                 scale: showCollapsed ? 0.7 : 1,
               }}
               transition={{ duration: 0.4, ease: [0.4, 0, 0.2, 1] }}
