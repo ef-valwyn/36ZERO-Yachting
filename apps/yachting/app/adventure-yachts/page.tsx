@@ -229,7 +229,7 @@ export default function AdventureYachtsPage() {
   }, []);
 
   const handleDownloadSpecSheet = () => {
-    const specSheetUrl = '/documents/ay60-spec-sheet.pdf';
+    const specSheetUrl = 'https://yyofqqbn0jyxo9dg.public.blob.vercel-storage.com/pdf/AY60%20Specs.pdf';
     window.open(specSheetUrl, '_blank');
   };
 

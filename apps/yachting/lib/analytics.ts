@@ -1,5 +1,5 @@
 /**
- * Google Analytics 4 Event Tracking Utilities
+ * Analytics Utilities for PostHog
  *
  * Usage:
  *   import { trackEvent, trackYachtInquiry, trackConfiguratorStep } from '@/lib/analytics';
@@ -14,48 +14,54 @@
  *   trackConfiguratorStep('hull_selection', 'AY60', { hull_type: 'performance' });
  */
 
-declare global {
-  interface Window {
-    gtag: (
-      command: 'config' | 'event' | 'js' | 'set',
-      targetId: string,
-      config?: Record<string, unknown>
-    ) => void;
-    dataLayer: unknown[];
-  }
-}
-
-const GA_MEASUREMENT_ID = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
+import posthog from 'posthog-js';
 
 /**
- * Check if Google Analytics is available
+ * Check if PostHog is available
  */
-export function isGAEnabled(): boolean {
-  return typeof window !== 'undefined' && !!GA_MEASUREMENT_ID && !!window.gtag;
+export function isAnalyticsEnabled(): boolean {
+  return typeof window !== 'undefined' && posthog.__loaded;
 }
 
 /**
- * Track a custom event in Google Analytics
+ * Track a custom event
  */
 export function trackEvent(
   eventName: string,
-  eventParams?: Record<string, string | number | boolean>
+  properties?: Record<string, string | number | boolean>
 ): void {
-  if (!isGAEnabled()) return;
-
-  window.gtag('event', eventName, eventParams);
+  if (!isAnalyticsEnabled()) return;
+  posthog.capture(eventName, properties);
 }
 
 /**
  * Track a page view (useful for SPA navigation or virtual page views)
  */
 export function trackPageView(url: string, title?: string): void {
-  if (!isGAEnabled()) return;
-
-  window.gtag('event', 'page_view', {
-    page_path: url,
-    page_title: title,
+  if (!isAnalyticsEnabled()) return;
+  posthog.capture('$pageview', {
+    $current_url: url,
+    $title: title,
   });
+}
+
+/**
+ * Identify a user (call after authentication)
+ */
+export function identifyUser(
+  userId: string,
+  traits?: Record<string, string | number | boolean>
+): void {
+  if (!isAnalyticsEnabled()) return;
+  posthog.identify(userId, traits);
+}
+
+/**
+ * Reset user identity (call on logout)
+ */
+export function resetUser(): void {
+  if (!isAnalyticsEnabled()) return;
+  posthog.reset();
 }
 
 // ============================================
@@ -70,7 +76,7 @@ export function trackYachtView(
   yachtId?: string,
   listingType?: 'brokerage' | 'new_build'
 ): void {
-  trackEvent('view_yacht', {
+  trackEvent('yacht_viewed', {
     yacht_model: yachtModel,
     yacht_id: yachtId || '',
     listing_type: listingType || 'brokerage',
@@ -94,7 +100,7 @@ export function trackYachtInquiry(
  * Track yacht gallery interactions
  */
 export function trackGalleryView(yachtModel: string, imageIndex: number): void {
-  trackEvent('gallery_view', {
+  trackEvent('gallery_viewed', {
     yacht_model: yachtModel,
     image_index: imageIndex,
   });
@@ -112,7 +118,7 @@ export function trackConfiguratorStep(
   yachtModel: string,
   selections?: Record<string, string | number | boolean>
 ): void {
-  trackEvent('configurator_step', {
+  trackEvent('configurator_step_completed', {
     step_name: stepName,
     yacht_model: yachtModel,
     ...selections,
@@ -127,7 +133,7 @@ export function trackConfiguratorComplete(
   totalPrice?: number,
   configurationId?: string
 ): void {
-  trackEvent('configurator_complete', {
+  trackEvent('configurator_completed', {
     yacht_model: yachtModel,
     total_price: totalPrice || 0,
     configuration_id: configurationId || '',
@@ -164,7 +170,7 @@ export function trackNewsletterSignup(source: string): void {
  * Track brochure downloads
  */
 export function trackBrochureDownload(yachtModel: string): void {
-  trackEvent('brochure_download', {
+  trackEvent('brochure_downloaded', {
     yacht_model: yachtModel,
   });
 }
@@ -176,14 +182,29 @@ export function trackFinancingCalculator(
   yachtModel: string,
   estimatedPrice: number
 ): void {
-  trackEvent('financing_calculator_start', {
+  trackEvent('financing_calculator_started', {
     yacht_model: yachtModel,
     estimated_price: estimatedPrice,
   });
 }
 
+/**
+ * Track lead form submissions
+ */
+export function trackLeadSubmission(
+  leadType: string,
+  value?: number,
+  currency?: string
+): void {
+  trackEvent('lead_submitted', {
+    lead_type: leadType,
+    value: value || 0,
+    currency: currency || 'USD',
+  });
+}
+
 // ============================================
-// E-commerce Events (GA4 Enhanced)
+// E-commerce Events
 // ============================================
 
 /**
@@ -194,28 +215,9 @@ export function trackAddToWishlist(
   yachtId: string,
   value?: number
 ): void {
-  trackEvent('add_to_wishlist', {
-    items: JSON.stringify([
-      {
-        item_id: yachtId,
-        item_name: yachtModel,
-        price: value,
-      },
-    ]),
-  });
-}
-
-/**
- * Track lead form submissions (GA4 generate_lead event)
- */
-export function trackLeadSubmission(
-  leadType: string,
-  value?: number,
-  currency?: string
-): void {
-  trackEvent('generate_lead', {
-    lead_type: leadType,
+  trackEvent('yacht_added_to_wishlist', {
+    yacht_model: yachtModel,
+    yacht_id: yachtId,
     value: value || 0,
-    currency: currency || 'USD',
   });
 }
