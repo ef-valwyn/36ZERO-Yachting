@@ -57,7 +57,7 @@ export function VesselSchema({ vessel }: VesselSchemaProps) {
         seller: {
           '@type': 'Organization',
           name: '36ZERO Yachting',
-          url: 'https://36zeroyachting.com',
+          url: 'https://www.36zeroyachting.com',
         },
         ...(vessel.location && {
           availableAtOrFrom: {

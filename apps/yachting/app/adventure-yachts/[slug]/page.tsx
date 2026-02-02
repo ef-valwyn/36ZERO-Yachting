@@ -166,7 +166,7 @@ export default async function AdventureYachtPage({ params }: Props) {
     image: build.imageUrl,
     length: build.specs.lengthOverall.value,
     location: build.location,
-    url: `https://36zeroyachting.com/adventure-yachts/${build.slug}`,
+    url: `https://www.36zeroyachting.com/adventure-yachts/${build.slug}`,
     availability: 'PreOrder' as const,
   };
 

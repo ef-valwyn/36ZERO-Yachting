@@ -10,7 +10,7 @@ import { OrganizationSchema, WebSiteSchema } from '@/components/OrganizationSche
 export const dynamic = 'force-dynamic';
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://36zeroyachting.com'),
+  metadataBase: new URL('https://www.36zeroyachting.com'),
   title: {
     default: '36ZERO Yachting | Adventure Yacht Brokerage',
     template: '%s | 36ZERO Yachting',

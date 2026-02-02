@@ -8,18 +8,18 @@ export function OrganizationSchema() {
   const schema = {
     '@context': 'https://schema.org',
     '@type': ['Organization', 'LocalBusiness'],
-    '@id': 'https://36zeroyachting.com/#organization',
+    '@id': 'https://www.36zeroyachting.com/#organization',
     name: '36ZERO Yachting',
     alternateName: '36ZERO',
     description: 'Premium yacht brokerage and circumnavigation experiences. Official Adventure Yachts dealer featuring the AY60 power catamaran.',
-    url: 'https://36zeroyachting.com',
+    url: 'https://www.36zeroyachting.com',
     logo: {
       '@type': 'ImageObject',
-      url: 'https://36zeroyachting.com/images/logo.png',
+      url: 'https://www.36zeroyachting.com/images/logo.png',
       width: 512,
       height: 512,
     },
-    image: 'https://36zeroyachting.com/images/ay60-gallery-1.png',
+    image: 'https://www.36zeroyachting.com/images/ay60-gallery-1.png',
     // Business type
     '@additionalType': 'https://schema.org/BoatDealer',
     // Services offered
@@ -110,17 +110,17 @@ export function WebSiteSchema() {
   const schema = {
     '@context': 'https://schema.org',
     '@type': 'WebSite',
-    '@id': 'https://36zeroyachting.com/#website',
+    '@id': 'https://www.36zeroyachting.com/#website',
     name: '36ZERO Yachting',
-    url: 'https://36zeroyachting.com',
+    url: 'https://www.36zeroyachting.com',
     publisher: {
-      '@id': 'https://36zeroyachting.com/#organization',
+      '@id': 'https://www.36zeroyachting.com/#organization',
     },
     potentialAction: {
       '@type': 'SearchAction',
       target: {
         '@type': 'EntryPoint',
-        urlTemplate: 'https://36zeroyachting.com/vessels?search={search_term_string}',
+        urlTemplate: 'https://www.36zeroyachting.com/vessels?search={search_term_string}',
       },
       'query-input': 'required name=search_term_string',
     },

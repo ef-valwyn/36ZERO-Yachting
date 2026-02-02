@@ -13,6 +13,6 @@ export default function robots(): MetadataRoute.Robots {
         '/upload/',
       ],
     },
-    sitemap: 'https://36zeroyachting.com/sitemap.xml',
+    sitemap: 'https://www.36zeroyachting.com/sitemap.xml',
   };
 }
