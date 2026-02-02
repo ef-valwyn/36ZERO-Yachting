@@ -48,3 +48,6 @@ next-env.d.ts
 # Drizzle
 drizzle/meta
 .env*.local
+
+# HubSpot
+hubspot.config.yml

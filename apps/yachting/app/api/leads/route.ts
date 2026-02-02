@@ -68,74 +68,6 @@ export async function POST(request: NextRequest) {
       properties.company = body.company;
     }
 
-    // Set lead source based on form type
-    if (body.leadSource === 'premiere_updates') {
-      properties.leadsource = 'AY60 Premiere - Email Updates';
-      properties.hs_analytics_source = 'ORGANIC_SEARCH';
-    } else if (body.leadSource === 'premiere_tour_request') {
-      properties.leadsource = 'AY60 Premiere - Tour Request';
-      properties.hs_analytics_source = 'DIRECT_TRAFFIC';
-      
-      // Add interest as a custom note
-      if (body.interest) {
-        properties.message = `Interest: ${body.interest}`;
-      }
-    }
-
-    // First, try to find existing contact by email
-    const searchResponse = await fetch(
-      `https://api.hubapi.com/crm/v3/objects/contacts/search`,
-      {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${HUBSPOT_ACCESS_TOKEN}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          filterGroups: [{
-            filters: [{
-              propertyName: 'email',
-              operator: 'EQ',
-              value: body.email,
-            }],
-          }],
-        }),
-      }
-    );
-
-    const searchData = await searchResponse.json();
-
-    if (searchData.total > 0) {
-      // Contact exists, update them
-      const contactId = searchData.results[0].id;
-      
-      const updateResponse = await fetch(
-        `https://api.hubapi.com/crm/v3/objects/contacts/${contactId}`,
-        {
-          method: 'PATCH',
-          headers: {
-            'Authorization': `Bearer ${HUBSPOT_ACCESS_TOKEN}`,
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ properties }),
-        }
-      );
-
-      if (!updateResponse.ok) {
-        const errorData = await updateResponse.json();
-        console.error('HubSpot update error:', errorData);
-        return NextResponse.json(
-          { error: 'Failed to update contact' },
-          { status: 500 }
-        );
-      }
-
-      return NextResponse.json({ 
-        success: true, 
-        message: 'Contact updated',
-        contactId,
-      });
-    }
 
     // Create new contact
     const createResponse = await fetch(HUBSPOT_API_URL, {
@@ -148,10 +80,21 @@ export async function POST(request: NextRequest) {
     });
 
     if (!createResponse.ok) {
-      const errorData = await createResponse.json();
+      const errorText = await createResponse.text();
+      let errorData;
+      try {
+        errorData = JSON.parse(errorText);
+      } catch {
+        console.error('HubSpot create error (non-JSON):', errorText);
+        return NextResponse.json(
+          { error: 'Failed to create contact' },
+          { status: 500 }
+        );
+      }
+      
       console.error('HubSpot create error:', errorData);
       
-      // Handle duplicate email error gracefully
+      // Handle duplicate email error gracefully - contact already exists
       if (errorData.category === 'CONFLICT') {
         return NextResponse.json({ 
           success: true, 
