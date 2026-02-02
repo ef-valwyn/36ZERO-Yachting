@@ -382,18 +382,25 @@ export default function VesselsPage() {
                   layout
                 >
                   <AnimatePresence mode="popLayout">
-                    {filteredVessels.map((vessel, index) => (
-                      <motion.div
-                        key={vessel.id}
-                        layout
-                        initial={{ opacity: 0, scale: 0.9 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        exit={{ opacity: 0, scale: 0.9 }}
-                        transition={{ duration: 0.3, delay: index * 0.05 }}
-                      >
-                        <VesselCard {...vessel} />
-                      </motion.div>
-                    ))}
+                    {filteredVessels.map((vessel, index) => {
+                      // Adventure Yachts link to individual detail pages
+                      const href = vessel.isAdventureYacht 
+                        ? `/adventure-yachts/${vessel.id}`
+                        : `/vessels/${vessel.id}`;
+                      
+                      return (
+                        <motion.div
+                          key={vessel.id}
+                          layout
+                          initial={{ opacity: 0, scale: 0.9 }}
+                          animate={{ opacity: 1, scale: 1 }}
+                          exit={{ opacity: 0, scale: 0.9 }}
+                          transition={{ duration: 0.3, delay: index * 0.05 }}
+                        >
+                          <VesselCard {...vessel} href={href} />
+                        </motion.div>
+                      );
+                    })}
                   </AnimatePresence>
                 </motion.div>
               ) : (

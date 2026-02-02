@@ -331,10 +331,10 @@ export default function HomePage() {
           {!isLoading && vessels.length > 0 && (
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
               {vessels.map((vessel, index) => {
-                // Adventure Yachts link to the select-your-build page with matching build ID
+                // Adventure Yachts link to individual detail pages
                 const vesselSlug = vessel.name.toLowerCase().replace(/\s+/g, '-');
                 const href = vessel.isAdventureYacht 
-                  ? `/adventure-yachts/select-your-build?vessel=${vesselSlug}`
+                  ? `/adventure-yachts/${vesselSlug}`
                   : `/vessels/${vessel.id}`;
 
                 return (
