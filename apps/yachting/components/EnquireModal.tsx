@@ -68,6 +68,7 @@ export function EnquireModal({ isOpen, onClose, vesselId, vesselName, vesselMode
     phone: '',
     company: '',
     deliveryRegion: '',
+    message: '',
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
@@ -83,6 +84,7 @@ export function EnquireModal({ isOpen, onClose, vesselId, vesselName, vesselMode
         phone: '',
         company: '',
         deliveryRegion: '',
+        message: '',
       });
       setSubmitStatus('idle');
       setErrorMessage('');
@@ -126,6 +128,7 @@ export function EnquireModal({ isOpen, onClose, vesselId, vesselName, vesselMode
           vesselName,
           vesselModel,
           deliveryRegion: formData.deliveryRegion,
+          message: formData.message || undefined,
         }),
       });
 
@@ -145,7 +148,7 @@ export function EnquireModal({ isOpen, onClose, vesselId, vesselName, vesselMode
     }
   };
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
@@ -315,6 +318,22 @@ export function EnquireModal({ isOpen, onClose, vesselId, vesselName, vesselMode
                           </option>
                         ))}
                       </select>
+                    </div>
+
+                    {/* Message */}
+                    <div>
+                      <label htmlFor="message" className="block text-sm font-medium text-white/80 mb-2">
+                        Message <span className="text-white/40">(Optional)</span>
+                      </label>
+                      <textarea
+                        id="message"
+                        name="message"
+                        rows={4}
+                        value={formData.message}
+                        onChange={handleInputChange}
+                        className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-white/40 focus:outline-none focus:border-brand-blue focus:ring-1 focus:ring-brand-blue transition-colors resize-none"
+                        placeholder="Tell us about your interest in the AY60"
+                      />
                     </div>
 
                     {/* Error Message */}

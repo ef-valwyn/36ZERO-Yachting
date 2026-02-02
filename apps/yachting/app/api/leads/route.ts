@@ -17,6 +17,7 @@ interface LeadData {
   vesselName?: string;
   vesselModel?: string;
   deliveryRegion?: string;
+  message?: string;
 }
 
 export async function POST(request: NextRequest) {
@@ -89,6 +90,9 @@ export async function POST(request: NextRequest) {
           'middle-east': 'Middle East',
         };
         notes.push(`Preferred Delivery Region: ${regionLabels[body.deliveryRegion] || body.deliveryRegion}`);
+      }
+      if (body.message) {
+        notes.push(`Message: ${body.message}`);
       }
     } else if (body.leadSource === 'premiere_updates') {
       notes.push('Source: AY60 Premiere - Email Updates');
