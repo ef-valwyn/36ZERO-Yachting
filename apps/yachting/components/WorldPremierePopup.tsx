@@ -223,8 +223,19 @@ export default function WorldPremierePopup() {
     setIsSubmitting(true);
 
     try {
-      // TODO: Connect to email service (Resend, HubSpot, etc.)
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      const response = await fetch('/api/leads', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email,
+          leadSource: 'premiere_updates',
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to submit');
+      }
+
       setIsSubmitted(true);
       setTimeout(() => {
         handleClose();
@@ -272,8 +283,35 @@ export default function WorldPremierePopup() {
     setTourSubmitting(true);
 
     try {
-      // TODO: Connect to CRM/email service
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      // Parse full name into first/last
+      const nameParts = tourForm.fullName.trim().split(' ');
+      const firstName = nameParts[0] || '';
+      const lastName = nameParts.slice(1).join(' ') || '';
+
+      // Determine interest text
+      const interestText = tourForm.interest === 'other' 
+        ? tourForm.otherInterest 
+        : interestOptions.find(o => o.value === tourForm.interest)?.label || tourForm.interest;
+
+      const response = await fetch('/api/leads', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email: tourForm.email,
+          firstName,
+          lastName,
+          phone: `${tourForm.countryCode} ${tourForm.phone}`,
+          country: tourForm.country,
+          company: tourForm.company || undefined,
+          interest: interestText,
+          leadSource: 'premiere_tour_request',
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to submit');
+      }
+
       setTourSubmitted(true);
       setTourFormTouched(false);
       setTimeout(() => {
