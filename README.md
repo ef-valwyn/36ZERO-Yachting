@@ -209,46 +209,61 @@ Transactional emails:
 | `develop` | Staging | Neon `development` | dev.36zeroyachting.com |
 | `feature/*` | Preview | Neon PR branch (auto) | Vercel preview URL |
 
-**Workflow:**
-1. Create feature branch from `develop`
-2. Push feature branch → opens PR to `develop`
-3. PR triggers Neon preview branch + Vercel preview deployment
-4. Review & test on preview URL
-5. Merge PR to `develop` → deploys to staging (dev.36zeroyachting.com)
-6. Test on staging environment
-7. Open PR from `develop` → `main`
-8. Merge to `main` → deploys to production
+### Day-to-Day Workflow
 
-**Commands:**
+#### 1. Start Work
 ```bash
-# Start new feature
 git checkout develop
 git pull origin develop
-git checkout -b feature/my-feature
+git checkout -b feature/<short-name>
+```
 
-# Work on feature, then push
+#### 2. Push + Preview
+```bash
 git add .
 git commit -m "feat: description"
-git push -u origin feature/my-feature
-# → Go to GitHub and create PR to develop
-
-# After PR is merged to develop and staging is verified
-# → Go to GitHub and create PR from develop to main
+git push -u origin feature/<short-name>
 ```
+- Vercel auto-creates a Preview deployment URL for that branch
+- Neon auto-creates a preview database branch (via GitHub Actions)
+
+#### 3. Merge to Staging
+- Open PR: `feature/*` → `develop`
+- Review and merge
+- Vercel auto-deploys to `dev.36zeroyachting.com`
+- Verify on staging
+
+#### 4. Promote to Production
+- Open PR: `develop` → `main`
+- Review and merge
+- Vercel auto-deploys to `36zeroyachting.com`
+
+### Verification Checklist (One-Time Setup)
+
+#### Confirm DB Routing
+- [ ] Production site (`36zeroyachting.com`) uses Neon `production` branch
+- [ ] Staging site (`dev.36zeroyachting.com`) uses Neon `development` branch
+
+#### Confirm Vercel Environment Variables
+You should see:
+- `DATABASE_URL` (Production) → Neon production pooled URL
+- `DATABASE_URL_UNPOOLED` (Production) → Neon production direct URL
+- `DATABASE_URL` (Preview) → Neon development pooled URL
+- `DATABASE_URL_UNPOOLED` (Preview) → Neon development direct URL
+
+**No extra `PROD_*` or `STAGE_*` variables.**
 
 ### GitHub Branch Protection
 
-Configure these rules in GitHub Settings → Branches:
+Configure in GitHub repo → Settings → Branches:
 
 **`main` branch:**
-- ✅ Require pull request before merging
-- ✅ Require approvals (1+)
+- ✅ Require a pull request before merging
 - ✅ Require status checks to pass
-- ✅ Require branches to be up to date
-- ✅ Do not allow bypassing the above settings
+- ✅ Block force pushes
 
 **`develop` branch:**
-- ✅ Require pull request before merging
+- ✅ Require a pull request before merging
 - ✅ Require status checks to pass
 
 ### Vercel Setup
