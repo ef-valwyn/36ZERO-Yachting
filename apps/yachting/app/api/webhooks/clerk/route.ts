@@ -3,6 +3,99 @@ import { headers } from 'next/headers';
 import { WebhookEvent } from '@clerk/nextjs/server';
 import { db, schema, eq } from '@36zero/database';
 
+const HUBSPOT_ACCESS_TOKEN = process.env.HUBSPOT_ACCESS_TOKEN;
+const HUBSPOT_API_URL = 'https://api.hubapi.com/crm/v3/objects/contacts';
+
+interface HubSpotContactData {
+  email: string;
+  firstname?: string;
+  lastname?: string;
+  phone?: string;
+  clerk_user_id?: string;
+}
+
+async function syncToHubSpot(data: HubSpotContactData, action: 'create' | 'update' | 'delete'): Promise<void> {
+  if (!HUBSPOT_ACCESS_TOKEN) {
+    console.log('HubSpot not configured, skipping sync');
+    return;
+  }
+
+  const properties: Record<string, string> = {
+    email: data.email,
+    hs_lead_status: 'OPEN',
+    lifecyclestage: 'customer',
+  };
+
+  if (data.firstname) properties.firstname = data.firstname;
+  if (data.lastname) properties.lastname = data.lastname;
+  if (data.phone) properties.phone = data.phone;
+
+  try {
+    if (action === 'create') {
+      const response = await fetch(HUBSPOT_API_URL, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${HUBSPOT_ACCESS_TOKEN}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ properties }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        // If contact already exists (CONFLICT), that's OK
+        if (errorData.category !== 'CONFLICT') {
+          console.error('HubSpot create error:', errorData);
+        }
+      } else {
+        console.log(`HubSpot: Contact created for ${data.email}`);
+      }
+    } else if (action === 'update') {
+      // Search for existing contact by email
+      const searchResponse = await fetch(
+        'https://api.hubapi.com/crm/v3/objects/contacts/search',
+        {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${HUBSPOT_ACCESS_TOKEN}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            filterGroups: [{
+              filters: [{
+                propertyName: 'email',
+                operator: 'EQ',
+                value: data.email,
+              }],
+            }],
+          }),
+        }
+      );
+
+      if (searchResponse.ok) {
+        const searchData = await searchResponse.json();
+        if (searchData.total > 0) {
+          const contactId = searchData.results[0].id;
+          const updateResponse = await fetch(`${HUBSPOT_API_URL}/${contactId}`, {
+            method: 'PATCH',
+            headers: {
+              'Authorization': `Bearer ${HUBSPOT_ACCESS_TOKEN}`,
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ properties }),
+          });
+
+          if (updateResponse.ok) {
+            console.log(`HubSpot: Contact updated for ${data.email}`);
+          }
+        }
+      }
+    }
+  } catch (error) {
+    console.error('HubSpot sync error:', error);
+  }
+}
+
 export async function POST(req: Request) {
   // Get the webhook secret from environment variables
   const WEBHOOK_SECRET = process.env.CLERK_WEBHOOK_SECRET;
@@ -58,14 +151,25 @@ export async function POST(req: Request) {
       
       const primaryEmail = email_addresses.find((e) => e.id === evt.data.primary_email_address_id);
       const primaryPhone = phone_numbers?.find((p) => p.id === evt.data.primary_phone_number_id);
+      const email = primaryEmail?.email_address || email_addresses[0]?.email_address || '';
 
+      // Sync to database
       await db.insert(schema.users).values({
         clerkUserId: id,
-        email: primaryEmail?.email_address || email_addresses[0]?.email_address || '',
+        email,
         firstName: first_name || null,
         lastName: last_name || null,
         phone: primaryPhone?.phone_number || null,
       });
+
+      // Sync to HubSpot
+      await syncToHubSpot({
+        email,
+        firstname: first_name || undefined,
+        lastname: last_name || undefined,
+        phone: primaryPhone?.phone_number || undefined,
+        clerk_user_id: id,
+      }, 'create');
 
       console.log(`User created: ${id}`);
       break;
@@ -76,17 +180,28 @@ export async function POST(req: Request) {
 
       const primaryEmail = email_addresses.find((e) => e.id === evt.data.primary_email_address_id);
       const primaryPhone = phone_numbers?.find((p) => p.id === evt.data.primary_phone_number_id);
+      const email = primaryEmail?.email_address || email_addresses[0]?.email_address || '';
 
+      // Sync to database
       await db
         .update(schema.users)
         .set({
-          email: primaryEmail?.email_address || email_addresses[0]?.email_address || '',
+          email,
           firstName: first_name || null,
           lastName: last_name || null,
           phone: primaryPhone?.phone_number || null,
           updatedAt: new Date(),
         })
         .where(eq(schema.users.clerkUserId, id));
+
+      // Sync to HubSpot
+      await syncToHubSpot({
+        email,
+        firstname: first_name || undefined,
+        lastname: last_name || undefined,
+        phone: primaryPhone?.phone_number || undefined,
+        clerk_user_id: id,
+      }, 'update');
 
       console.log(`User updated: ${id}`);
       break;
