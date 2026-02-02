@@ -1,7 +1,4 @@
 import { MetadataRoute } from 'next';
-import { db } from '@36zero/database';
-import { vessels } from '@36zero/database/schema';
-import { eq, and } from 'drizzle-orm';
 
 // Adventure Yacht slugs for individual detail pages
 const adventureYachtSlugs = [
@@ -11,7 +8,7 @@ const adventureYachtSlugs = [
   'adventure-four',
 ];
 
-export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = 'https://36zeroyachting.com';
 
   // Static pages
@@ -50,30 +47,5 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.85,
   }));
 
-  // Dynamic brokerage vessel pages (non-Adventure Yachts)
-  try {
-    const brokerageVessels = await db.query.vessels.findMany({
-      where: and(
-        eq(vessels.isVisible, true),
-        eq(vessels.isAdventureYacht, false)
-      ),
-      columns: {
-        slug: true,
-        updatedAt: true,
-      },
-    });
-
-    const vesselPages: MetadataRoute.Sitemap = brokerageVessels.map((vessel) => ({
-      url: `${baseUrl}/vessels/${vessel.slug}`,
-      lastModified: vessel.updatedAt,
-      changeFrequency: 'monthly' as const,
-      priority: 0.7,
-    }));
-
-    return [...staticPages, ...adventureYachtPages, ...vesselPages];
-  } catch (error) {
-    console.error('Error fetching vessels for sitemap:', error);
-    // Return static + adventure yacht pages if database fetch fails
-    return [...staticPages, ...adventureYachtPages];
-  }
+  return [...staticPages, ...adventureYachtPages];
 }
