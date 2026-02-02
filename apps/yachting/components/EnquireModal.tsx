@@ -74,6 +74,10 @@ export function EnquireModal({ isOpen, onClose, vesselId, vesselName, vesselMode
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
   const [errorMessage, setErrorMessage] = useState('');
 
+  // Anti-bot measures
+  const [honeypot, setHoneypot] = useState('');
+  const [loadTime, setLoadTime] = useState<number>(0);
+
   // Reset form when modal opens
   useEffect(() => {
     if (isOpen) {
@@ -88,6 +92,9 @@ export function EnquireModal({ isOpen, onClose, vesselId, vesselName, vesselMode
       });
       setSubmitStatus('idle');
       setErrorMessage('');
+      // Reset anti-bot measures
+      setHoneypot('');
+      setLoadTime(Date.now());
     }
   }, [isOpen]);
 
@@ -105,6 +112,22 @@ export function EnquireModal({ isOpen, onClose, vesselId, vesselName, vesselMode
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    // Anti-bot validation: honeypot check
+    if (honeypot) {
+      // Silently reject - don't tell the bot it failed
+      setSubmitStatus('success');
+      return;
+    }
+
+    // Anti-bot validation: time check (reject if submitted in less than 3 seconds)
+    const timeSpent = Date.now() - loadTime;
+    if (timeSpent < 3000) {
+      // Silently reject - likely a bot
+      setSubmitStatus('success');
+      return;
+    }
+
     setIsSubmitting(true);
     setErrorMessage('');
 
@@ -215,6 +238,18 @@ export function EnquireModal({ isOpen, onClose, vesselId, vesselName, vesselMode
                   </motion.div>
                 ) : (
                   <form onSubmit={handleSubmit} className="space-y-6">
+                    {/* Honeypot field - hidden from humans, visible to bots */}
+                    <input
+                      type="text"
+                      name="website"
+                      value={honeypot}
+                      onChange={(e) => setHoneypot(e.target.value)}
+                      style={{ position: 'absolute', left: '-9999px' }}
+                      tabIndex={-1}
+                      autoComplete="off"
+                      aria-hidden="true"
+                    />
+
                     {/* Full Name */}
                     <div>
                       <label htmlFor="fullName" className="block text-sm font-medium text-white/80 mb-2">
