@@ -62,7 +62,7 @@ export const passages = pgTable('passages', {
   startHub: varchar('start_hub', { length: 255 }).notNull(),
   endHub: varchar('end_hub', { length: 255 }).notNull(),
   pricePerPerson: decimal('price_per_person', { precision: 10, scale: 2 }).notNull(),
-  maxGuests: integer('max_guests').notNull().default(4),
+  maxGuests: integer('max_guests').notNull().default(8),
   status: passageStatusEnum('status').notNull().default('upcoming'),
   requiresOffshoreCompetency: boolean('requires_offshore_competency').notNull().default(false),
   heroImageUrl: varchar('hero_image_url', { length: 500 }),

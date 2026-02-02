@@ -25,7 +25,7 @@ const passagesData = [
     startHub: 'Tahiti, French Polynesia',
     endHub: 'Fiji',
     pricePerPerson: '45000',
-    maxGuests: 4,
+    maxGuests: 8,
     status: 'upcoming' as const,
     requiresOffshoreCompetency: false,
     metadata: {
@@ -52,7 +52,7 @@ const passagesData = [
     startHub: 'Fiji',
     endHub: 'Cairns, Australia',
     pricePerPerson: '52000',
-    maxGuests: 4,
+    maxGuests: 8,
     status: 'upcoming' as const,
     requiresOffshoreCompetency: true,
     metadata: {
@@ -77,7 +77,7 @@ const passagesData = [
     startHub: 'Cairns, Australia',
     endHub: 'Djibouti',
     pricePerPerson: '68000',
-    maxGuests: 4,
+    maxGuests: 8,
     status: 'upcoming' as const,
     requiresOffshoreCompetency: true,
     metadata: {
@@ -102,7 +102,7 @@ const passagesData = [
     startHub: 'Djibouti',
     endHub: 'Antigua',
     pricePerPerson: '72000',
-    maxGuests: 4,
+    maxGuests: 8,
     status: 'upcoming' as const,
     requiresOffshoreCompetency: true,
     metadata: {

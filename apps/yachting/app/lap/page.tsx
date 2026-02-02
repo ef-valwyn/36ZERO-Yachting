@@ -37,7 +37,7 @@ const passages: Passage[] = [
     endDate: '8 May 2027',
     distanceNm: 6100, // 2,100 + 3,000 + 1,000
     pricePerPerson: 45000,
-    maxGuests: 4,
+    maxGuests: 8,
     requiresOffshoreCompetency: false,
   },
   {
@@ -48,7 +48,7 @@ const passages: Passage[] = [
     endDate: '14 Sep 2027',
     distanceNm: 5600, // 1,300 + 1,900 + 2,400
     pricePerPerson: 52000,
-    maxGuests: 4,
+    maxGuests: 8,
     requiresOffshoreCompetency: true,
   },
   {
@@ -59,7 +59,7 @@ const passages: Passage[] = [
     endDate: '15 Dec 2027',
     distanceNm: 5740, // 1,150 + 2,500 + 1,370 + 720
     pricePerPerson: 68000,
-    maxGuests: 4,
+    maxGuests: 8,
     requiresOffshoreCompetency: true,
   },
   {
@@ -70,7 +70,7 @@ const passages: Passage[] = [
     endDate: '15 Apr 2028',
     distanceNm: 6000, // 3,000 + 2,300 + 700
     pricePerPerson: 72000,
-    maxGuests: 4,
+    maxGuests: 8,
     requiresOffshoreCompetency: true,
   },
 ];
