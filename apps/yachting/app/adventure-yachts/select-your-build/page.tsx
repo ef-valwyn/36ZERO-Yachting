@@ -294,9 +294,18 @@ export default function SelectYourBuildPage() {
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ duration: 0.6 }}
                   >
-                    <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4 tracking-tight">
-                      {selectedBuild.model}
-                    </h2>
+                    {/* Title row with CTA */}
+                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4">
+                      <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white tracking-tight">
+                        {selectedBuild.model}
+                      </h2>
+                      <Button variant="primary" asChild className="shrink-0">
+                        <Link href={`/contact?vessel=${selectedBuild.id}`}>
+                          Enquire Now
+                          <ArrowRight className="w-4 h-4 ml-2" />
+                        </Link>
+                      </Button>
+                    </div>
                     <p className="text-xl md:text-2xl text-white/60 font-light mb-4">
                       {selectedBuild.tagline}
                     </p>
