@@ -10,8 +10,13 @@ interface LeadData {
   phone?: string;
   country?: string;
   company?: string;
-  leadSource: 'premiere_updates' | 'premiere_tour_request';
+  leadSource: 'premiere_updates' | 'premiere_tour_request' | 'vessel_enquiry';
   interest?: string;
+  // Vessel enquiry specific fields
+  vesselId?: string;
+  vesselName?: string;
+  vesselModel?: string;
+  deliveryRegion?: string;
 }
 
 export async function POST(request: NextRequest) {
@@ -68,6 +73,37 @@ export async function POST(request: NextRequest) {
       properties.company = body.company;
     }
 
+    // Build notes based on lead source
+    const notes: string[] = [];
+    
+    if (body.leadSource === 'vessel_enquiry' && body.vesselName) {
+      notes.push(`Vessel Enquiry: ${body.vesselName} (${body.vesselModel || 'N/A'})`);
+      notes.push(`Vessel ID: ${body.vesselId || 'N/A'}`);
+      if (body.deliveryRegion) {
+        const regionLabels: Record<string, string> = {
+          'asia': 'Asia',
+          'europe': 'Europe',
+          'us': 'United States',
+          'caribbean': 'Caribbean',
+          'australia-nz': 'Australia / New Zealand',
+          'middle-east': 'Middle East',
+        };
+        notes.push(`Preferred Delivery Region: ${regionLabels[body.deliveryRegion] || body.deliveryRegion}`);
+      }
+    } else if (body.leadSource === 'premiere_updates') {
+      notes.push('Source: AY60 Premiere - Email Updates');
+    } else if (body.leadSource === 'premiere_tour_request') {
+      notes.push('Source: AY60 Premiere - Tour Request');
+      if (body.interest) {
+        notes.push(`Interest: ${body.interest}`);
+      }
+    }
+
+    // Add notes to a standard HubSpot field if we have any
+    if (notes.length > 0) {
+      // Using hs_content_membership_notes as it's a standard text field
+      properties.hs_content_membership_notes = notes.join(' | ');
+    }
 
     // Create new contact
     const createResponse = await fetch(HUBSPOT_API_URL, {

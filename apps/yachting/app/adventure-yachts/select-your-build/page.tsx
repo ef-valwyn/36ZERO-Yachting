@@ -10,6 +10,7 @@ import { Button, GlassCard } from '@36zero/ui';
 import Header from '@/components/Header';
 import SiteFooter from '@/components/SiteFooter';
 import AdventureYachtsLogoMark from '@/components/AdventureYachtsLogoMark';
+import EnquireModal from '@/components/EnquireModal';
 
 // Build variants data
 const buildVariants = [
@@ -128,6 +129,7 @@ const specItemVariants = {
 export default function SelectYourBuildPage() {
   const searchParams = useSearchParams();
   const [selectedBuild, setSelectedBuild] = useState(buildVariants[0]);
+  const [isEnquireModalOpen, setIsEnquireModalOpen] = useState(false);
 
   // Handle vessel query parameter to pre-select the build
   useEffect(() => {
@@ -299,11 +301,13 @@ export default function SelectYourBuildPage() {
                       <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white tracking-tight">
                         {selectedBuild.model}
                       </h2>
-                      <Button variant="primary" asChild className="shrink-0">
-                        <Link href={`/contact?vessel=${selectedBuild.id}`}>
-                          Enquire Now
-                          <ArrowRight className="w-4 h-4 ml-2" />
-                        </Link>
+                      <Button 
+                        variant="primary" 
+                        className="shrink-0"
+                        onClick={() => setIsEnquireModalOpen(true)}
+                      >
+                        Enquire Now
+                        <ArrowRight className="w-4 h-4 ml-2" />
                       </Button>
                     </div>
                     <p className="text-xl md:text-2xl text-white/60 font-light mb-4">
@@ -519,11 +523,13 @@ export default function SelectYourBuildPage() {
             </p>
             
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-              <Button variant="primary" size="lg" asChild>
-                <Link href={`/contact?vessel=${selectedBuild.id}`}>
-                  Enquire Now
-                  <ArrowRight className="w-4 h-4 ml-2" />
-                </Link>
+              <Button 
+                variant="primary" 
+                size="lg"
+                onClick={() => setIsEnquireModalOpen(true)}
+              >
+                Enquire Now
+                <ArrowRight className="w-4 h-4 ml-2" />
               </Button>
               <Button variant="secondary" size="lg" asChild>
                 <Link href="/adventure-yachts">
@@ -536,6 +542,15 @@ export default function SelectYourBuildPage() {
       </section>
 
       <SiteFooter />
+
+      {/* Enquire Modal */}
+      <EnquireModal
+        isOpen={isEnquireModalOpen}
+        onClose={() => setIsEnquireModalOpen(false)}
+        vesselId={selectedBuild.id}
+        vesselName={selectedBuild.name}
+        vesselModel={selectedBuild.model}
+      />
     </main>
   );
 }
