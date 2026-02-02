@@ -292,8 +292,8 @@ See `.env.example` for all required variables:
    - [ ] Configure inbound request handling (connect email service/CRM for form submissions)
    - [ ] Create contact us form for the CTA
    - [ ] Test for dead links, especially in the footer
-   - [ ] Update home landing text
-   - [ ] Switch order of LAP section and Available Vessels on home page
+   - [x] Update home landing text
+   - [x] Switch order of LAP section and Available Vessels on home page
    - [ ] Remove About from nav bar, add About 36ZERO section on home page
    - [ ] Payload CMS integration
 
@@ -304,8 +304,8 @@ See `.env.example` for all required variables:
    - [x] Unified CMS for vessels (isAdventureYacht flag, isVisible control, API routes)
    - [ ] Create detail pages for each vessel, backed by CMS
    - [ ] Add partnerships page (brand submission form for partnership/platform consideration)
-   - [ ] Upload spec sheet to Vercel Blob storage
-   - [ ] Upload all visual collateral to Vercel Blob storage, refresh code for url to point all images to this storage
+   - [x] Upload spec sheet to Vercel Blob storage
+   - [x] Upload all visual collateral to Vercel Blob storage, refresh code for url to point all images to this storage
    - [ ] Search with Meilisearch
    - [ ] Inquiry form
 
@@ -313,7 +313,7 @@ See `.env.example` for all required variables:
    - [x] Route visualization
    - [x] Booking flow
    - [x] 36ZERO LAP™ branding
-   - [ ] Connect Mapbox and update the 36ZERO LAP route map
+   - [x] Connect Mapbox and update the 36ZERO LAP route map
    - [ ] Create detailed pages/subpages for the 4 passages
    - [ ] Configure account management page
    - [ ] User document vault

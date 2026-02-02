@@ -55,7 +55,7 @@ export const Footer: React.FC<FooterProps> = ({
             <Link href="/">{logo}</Link>
             <p className="text-white/60 text-sm leading-relaxed max-w-sm">
               Redefining ocean ownership and adventure. From brokerage to circumnavigation, 
-              36ZERO brings the horizon to your office.
+              36ZERO is your key to the horizon.
             </p>
 
             {/* Social Links */}
