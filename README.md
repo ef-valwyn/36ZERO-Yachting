@@ -199,6 +199,40 @@ Transactional emails:
 
 ## 🌐 Deployment
 
+### Git Workflow
+
+We use a staging-first deployment workflow:
+
+| Branch | Environment | Database | URL |
+|--------|-------------|----------|-----|
+| `develop` | Staging | Neon preview branch | Vercel preview URL |
+| `main` | Production | Neon main branch | 36zeroyachting.com |
+
+**Workflow:**
+1. Create feature branches from `develop`
+2. Open PR to `develop` → triggers Neon preview branch creation
+3. Test on staging environment (Vercel preview deployment)
+4. Merge to `develop` when ready
+5. When staging is verified, open PR from `develop` → `main`
+6. Merge to `main` → deploys to production
+
+**Commands:**
+```bash
+# Start new feature
+git checkout develop
+git pull origin develop
+git checkout -b feature/my-feature
+
+# After work is done, push and create PR to develop
+git push -u origin feature/my-feature
+
+# When staging is ready for production
+git checkout main
+git pull origin main
+git merge develop
+git push origin main
+```
+
 ### Vercel Setup
 
 1. Import the monorepo to Vercel
@@ -207,8 +241,8 @@ Transactional emails:
    - **LAP**: `apps/lap` (or use rewrites)
 3. Add environment variables
 4. Configure domains:
-   - `36zeroyachting.com` → Yachting app
-   - `36zeroyachting.com/lap` → LAP routes
+   - `36zeroyachting.com` → Yachting app (Production: `main` branch)
+   - Preview deployments auto-generated for PRs
 
 ### Domain Configuration
 
