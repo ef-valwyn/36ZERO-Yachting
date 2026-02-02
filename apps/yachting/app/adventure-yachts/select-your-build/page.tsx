@@ -450,12 +450,12 @@ export default function SelectYourBuildPage() {
                     className="object-cover"
                     priority
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-brand-navy/60 via-transparent to-brand-navy/20" />
+                  <div className="absolute inset-0 bg-gradient-to-b from-brand-navy/40 via-transparent to-brand-navy/20" />
                   
                   {/* Vessel Label */}
-                  <div className="absolute bottom-6 left-6 md:bottom-8 md:left-8">
+                  <div className="absolute top-6 left-6 md:top-8 md:left-8">
                     <motion.div
-                      initial={{ opacity: 0, y: 10 }}
+                      initial={{ opacity: 0, y: -10 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.4, delay: 0.3 }}
                       className="bg-brand-navy/80 backdrop-blur-md rounded-xl px-5 py-3 border border-white/10"
