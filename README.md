@@ -201,20 +201,23 @@ Transactional emails:
 
 ### Git Workflow
 
-We use a staging-first deployment workflow:
+**No direct pushes to `main` or `develop`.** All changes go through Pull Requests.
 
 | Branch | Environment | Database | URL |
 |--------|-------------|----------|-----|
-| `develop` | Staging | Neon preview branch | Vercel preview URL |
-| `main` | Production | Neon main branch | 36zeroyachting.com |
+| `main` | Production | Neon `production` | 36zeroyachting.com |
+| `develop` | Staging | Neon `development` | dev.36zeroyachting.com |
+| `feature/*` | Preview | Neon PR branch (auto) | Vercel preview URL |
 
 **Workflow:**
-1. Create feature branches from `develop`
-2. Open PR to `develop` → triggers Neon preview branch creation
-3. Test on staging environment (Vercel preview deployment)
-4. Merge to `develop` when ready
-5. When staging is verified, open PR from `develop` → `main`
-6. Merge to `main` → deploys to production
+1. Create feature branch from `develop`
+2. Push feature branch → opens PR to `develop`
+3. PR triggers Neon preview branch + Vercel preview deployment
+4. Review & test on preview URL
+5. Merge PR to `develop` → deploys to staging (dev.36zeroyachting.com)
+6. Test on staging environment
+7. Open PR from `develop` → `main`
+8. Merge to `main` → deploys to production
 
 **Commands:**
 ```bash
@@ -223,40 +226,73 @@ git checkout develop
 git pull origin develop
 git checkout -b feature/my-feature
 
-# After work is done, push and create PR to develop
+# Work on feature, then push
+git add .
+git commit -m "feat: description"
 git push -u origin feature/my-feature
+# → Go to GitHub and create PR to develop
 
-# When staging is ready for production
-git checkout main
-git pull origin main
-git merge develop
-git push origin main
+# After PR is merged to develop and staging is verified
+# → Go to GitHub and create PR from develop to main
 ```
+
+### GitHub Branch Protection
+
+Configure these rules in GitHub Settings → Branches:
+
+**`main` branch:**
+- ✅ Require pull request before merging
+- ✅ Require approvals (1+)
+- ✅ Require status checks to pass
+- ✅ Require branches to be up to date
+- ✅ Do not allow bypassing the above settings
+
+**`develop` branch:**
+- ✅ Require pull request before merging
+- ✅ Require status checks to pass
 
 ### Vercel Setup
 
-1. Import the monorepo to Vercel
-2. Configure build settings:
-   - **Yachting**: `apps/yachting`
-   - **LAP**: `apps/lap` (or use rewrites)
-3. Add environment variables
-4. Configure domains:
-   - `36zeroyachting.com` → Yachting app (Production: `main` branch)
-   - Preview deployments auto-generated for PRs
+| Setting | Value |
+|---------|-------|
+| Production Branch | `main` |
+| Preview Branches | All other branches |
+| Root Directory | `apps/yachting` |
 
-### Domain Configuration
+**Domains:**
+- `36zeroyachting.com` → Production (`main`)
+- `www.36zeroyachting.com` → Production (`main`)
+- `dev.36zeroyachting.com` → Preview, linked to `develop` branch
 
-```js
-// next.config.ts - Path-based routing
-// LAP routes are handled via /lap path within the main app
-// Domain: 36zeroyachting.com/lap
-async rewrites() {
-  return [
-    // All routes are handled within the same app
-    // /lap/* routes are available at 36zeroyachting.com/lap
-  ];
-}
-```
+### Neon Database Branches
+
+| Neon Branch | Purpose | Used By |
+|-------------|---------|---------|
+| `production` | Production data | Vercel Production (`main`) |
+| `development` | Staging data | Vercel Preview (`develop`) |
+| `preview/pr-*` | PR testing (auto-created) | Vercel Preview (feature branches) |
+| `vercel-dev` | Local development (optional) | Local `npm run dev` |
+
+**GitHub Actions** automatically create/delete Neon branches for PRs (see `.github/workflows/neon_workflow.yml`).
+
+### Environment Variables
+
+Use only these standard names across all environments:
+
+| Variable | Description |
+|----------|-------------|
+| `DATABASE_URL` | Pooled connection (host contains `-pooler`) |
+| `DATABASE_URL_UNPOOLED` | Direct connection (no pooler) |
+
+**Vercel Environment Variable Setup:**
+
+| Environment | DATABASE_URL | DATABASE_URL_UNPOOLED |
+|-------------|--------------|----------------------|
+| Production | `production` branch pooled URL | `production` branch direct URL |
+| Preview | `development` branch pooled URL | `development` branch direct URL |
+| Development | `vercel-dev` branch pooled URL | `vercel-dev` branch direct URL |
+
+> ⚠️ Delete any legacy variable names like `PROD_DATABASE_URL`, `STAGE_DATABASE_URL`, etc.
 
 ## 📁 Key Files
 
