@@ -54,6 +54,16 @@ export const Navigation: React.FC<NavigationProps> = ({
     }
   }, []);
 
+  // Calculate logo center offset for collapsed state
+  const calculateLogoCenterOffset = useCallback(() => {
+    if (logoRef.current) {
+      const logoRect = logoRef.current.getBoundingClientRect();
+      const logoCenter = logoRect.left + logoRect.width / 2;
+      const viewportCenter = window.innerWidth / 2;
+      setLogoCenterOffset(viewportCenter - logoCenter);
+    }
+  }, []);
+
   // Scroll nav items to the right
   const scrollNavRight = () => {
     if (navScrollRef.current) {
@@ -98,20 +108,22 @@ export const Navigation: React.FC<NavigationProps> = ({
         setIsCollapsed(false);
       }
       checkOverflow();
-      
-      // Calculate logo center offset for collapsed state
-      if (logoRef.current) {
-        const logoRect = logoRef.current.getBoundingClientRect();
-        const logoCenter = logoRect.left + logoRect.width / 2;
-        const viewportCenter = window.innerWidth / 2;
-        setLogoCenterOffset(viewportCenter - logoCenter);
-      }
+      calculateLogoCenterOffset();
     };
 
     handleResize();
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
-  }, [checkOverflow]);
+  }, [checkOverflow, calculateLogoCenterOffset]);
+
+  // Recalculate logo center when logo changes (e.g., switching between pages)
+  useEffect(() => {
+    // Small delay to ensure logo has rendered with new dimensions
+    const timer = setTimeout(() => {
+      calculateLogoCenterOffset();
+    }, 50);
+    return () => clearTimeout(timer);
+  }, [logo, calculateLogoCenterOffset]);
 
   // Check overflow on mount and when items change
   useEffect(() => {
