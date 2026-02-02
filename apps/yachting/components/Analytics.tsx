@@ -3,7 +3,7 @@
 import Clarity from '@microsoft/clarity';
 import posthog from 'posthog-js';
 import { PostHogProvider as PHProvider } from 'posthog-js/react';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 
 // Environment variables
 const POSTHOG_KEY = process.env.NEXT_PUBLIC_POSTHOG_KEY;
@@ -15,13 +15,15 @@ const CLARITY_PROJECT_ID = process.env.NEXT_PUBLIC_CLARITY_PROJECT_ID;
  */
 function PostHogProvider({ children }: { children: React.ReactNode }) {
   const [isInitialized, setIsInitialized] = useState(false);
+  const clarityInitialized = useRef(false);
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
 
-    // Initialize Microsoft Clarity
-    if (CLARITY_PROJECT_ID && !Clarity.hasStarted()) {
+    // Initialize Microsoft Clarity (only once)
+    if (CLARITY_PROJECT_ID && !clarityInitialized.current) {
       Clarity.init(CLARITY_PROJECT_ID);
+      clarityInitialized.current = true;
     }
 
     // Initialize PostHog
