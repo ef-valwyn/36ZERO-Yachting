@@ -45,7 +45,8 @@ jobs:
         uses: neondatabase/create-branch-action@v6
         with:
           project_id: ${{ vars.NEON_PROJECT_ID }}
-          branch_name: preview-pr-${{ github.event.number }}-${{ needs.setup.outputs.branch }}
+          # Use PR number only to avoid 422 (Neon branch names: lowercase, numbers, hyphens)
+          branch_name: pr-${{ github.event.number }}
           api_key: ${{ secrets.NEON_API_KEY }}
 
 # The step above creates a new Neon branch.
@@ -81,7 +82,7 @@ jobs:
 #        uses: neondatabase/schema-diff-action@v1
 #        with:
 #          project_id: ${{ vars.NEON_PROJECT_ID }}
-#          compare_branch: preview-pr-${{ github.event.number }}-${{ needs.setup.outputs.branch }}
+#          compare_branch: pr-${{ github.event.number }}
 #          api_key: ${{ secrets.NEON_API_KEY }}
 
   delete_neon_branch:
@@ -94,5 +95,5 @@ jobs:
         uses: neondatabase/delete-branch-action@v3
         with:
           project_id: ${{ vars.NEON_PROJECT_ID }}
-          branch: preview-pr-${{ github.event.number }}-${{ needs.setup.outputs.branch }}
+          branch: pr-${{ github.event.number }}
           api_key: ${{ secrets.NEON_API_KEY }}
