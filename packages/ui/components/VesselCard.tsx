@@ -63,18 +63,18 @@ export const VesselCard: React.FC<VesselCardProps> = ({
   return (
     <motion.article
       className={cn(
-        'vessel-card group',
+        'vessel-card group h-full flex flex-col',
         isFeatured && 'lg:col-span-2',
         className
       )}
       whileHover={{ y: -4 }}
       transition={{ duration: 0.3 }}
     >
-      <Link href={linkHref} className="block">
+      <Link href={linkHref} className="block h-full flex flex-col">
         {/* Image Container */}
         <div
           className={cn(
-            'vessel-card-image',
+            'vessel-card-image flex-shrink-0',
             isFeatured && 'lg:aspect-[21/9]'
           )}
         >
@@ -116,7 +116,7 @@ export const VesselCard: React.FC<VesselCardProps> = ({
         </div>
 
         {/* Content */}
-        <div className="vessel-card-content">
+        <div className="vessel-card-content flex-1 flex flex-col">
           {/* Manufacturer & Model */}
           <div className="space-y-1">
             <p className="text-sm font-medium text-brand-blue uppercase tracking-wider">
@@ -149,7 +149,7 @@ export const VesselCard: React.FC<VesselCardProps> = ({
           </div>
 
           {/* Price */}
-          <div className="pt-3">
+          <div className="pt-3 mt-auto">
             <div className="price-tag">
               <span className="price-currency">{currency}</span>
               <span className="price-value">
