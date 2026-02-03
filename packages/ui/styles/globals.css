@@ -218,7 +218,9 @@
   }
 
   .vessel-card-image {
-    @apply relative aspect-[4/3] overflow-hidden rounded-t-2xl flex-shrink-0;
+    @apply relative overflow-hidden rounded-t-2xl;
+    flex: 0 0 auto;
+    aspect-ratio: 4 / 3;
   }
 
   .vessel-card-image img {
