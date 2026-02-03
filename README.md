@@ -199,30 +199,115 @@ Transactional emails:
 
 ## 🌐 Deployment
 
+### Git Workflow
+
+**No direct pushes to `main` or `develop`.** All changes go through Pull Requests.
+
+| Branch | Environment | Database | URL |
+|--------|-------------|----------|-----|
+| `main` | Production | Neon `production` | 36zeroyachting.com |
+| `develop` | Staging | Neon `development` | dev.36zeroyachting.com |
+| `feature/*` | Preview | Neon PR branch (auto) | Vercel preview URL |
+
+### Day-to-Day Workflow
+
+#### 1. Start Work
+```bash
+git checkout develop
+git pull origin develop
+git checkout -b feature/<short-name>
+```
+
+#### 2. Push + Preview
+```bash
+git add .
+git commit -m "feat: description"
+git push -u origin feature/<short-name>
+```
+- Vercel auto-creates a Preview deployment URL for that branch
+- Neon auto-creates a preview database branch (via GitHub Actions)
+
+#### 3. Merge to Staging
+- Open PR: `feature/*` → `develop`
+- Review and merge
+- Vercel auto-deploys to `dev.36zeroyachting.com`
+- Verify on staging
+
+#### 4. Promote to Production
+- Open PR: `develop` → `main`
+- Review and merge
+- Vercel auto-deploys to `36zeroyachting.com`
+
+### Verification Checklist (One-Time Setup)
+
+#### Confirm DB Routing
+- [ ] Production site (`36zeroyachting.com`) uses Neon `production` branch
+- [ ] Staging site (`dev.36zeroyachting.com`) uses Neon `development` branch
+
+#### Confirm Vercel Environment Variables
+You should see:
+- `DATABASE_URL` (Production) → Neon production pooled URL
+- `DATABASE_URL_UNPOOLED` (Production) → Neon production direct URL
+- `DATABASE_URL` (Preview) → Neon development pooled URL
+- `DATABASE_URL_UNPOOLED` (Preview) → Neon development direct URL
+
+**No extra `PROD_*` or `STAGE_*` variables.**
+
+### GitHub Branch Protection
+
+Configure in GitHub repo → Settings → Branches:
+
+**`main` branch:**
+- ✅ Require a pull request before merging
+- ✅ Require status checks to pass
+- ✅ Block force pushes
+
+**`develop` branch:**
+- ✅ Require a pull request before merging
+- ✅ Require status checks to pass
+
 ### Vercel Setup
 
-1. Import the monorepo to Vercel
-2. Configure build settings:
-   - **Yachting**: `apps/yachting`
-   - **LAP**: `apps/lap` (or use rewrites)
-3. Add environment variables
-4. Configure domains:
-   - `36zeroyachting.com` → Yachting app
-   - `36zeroyachting.com/lap` → LAP routes
+| Setting | Value |
+|---------|-------|
+| Production Branch | `main` |
+| Preview Branches | All other branches |
+| Root Directory | `apps/yachting` |
 
-### Domain Configuration
+**Domains:**
+- `36zeroyachting.com` → Production (`main`)
+- `www.36zeroyachting.com` → Production (`main`)
+- `dev.36zeroyachting.com` → Preview, linked to `develop` branch
 
-```js
-// next.config.ts - Path-based routing
-// LAP routes are handled via /lap path within the main app
-// Domain: 36zeroyachting.com/lap
-async rewrites() {
-  return [
-    // All routes are handled within the same app
-    // /lap/* routes are available at 36zeroyachting.com/lap
-  ];
-}
-```
+### Neon Database Branches
+
+| Neon Branch | Purpose | Used By |
+|-------------|---------|---------|
+| `production` | Production data | Vercel Production (`main`) |
+| `development` | Staging data | Vercel Preview (`develop`) |
+| `preview/pr-*` | PR testing (auto-created) | Vercel Preview (feature branches) |
+| `vercel-dev` | Local development (optional) | Local `npm run dev` |
+
+**GitHub Actions** automatically create/delete Neon branches for PRs (see `.github/workflows/neon_workflow.yml`).
+
+### Environment Variables
+
+Use only these standard names across all environments:
+
+| Variable | Description |
+|----------|-------------|
+| `DATABASE_URL` | Pooled connection (host contains `-pooler`) |
+| `DATABASE_URL_UNPOOLED` | Direct connection (no pooler) |
+
+**Vercel Environment Variable Setup:**
+
+| Environment | DATABASE_URL | DATABASE_URL_UNPOOLED |
+|-------------|--------------|----------------------|
+| Production | `production` branch pooled URL | `production` branch direct URL |
+| Preview | `development` branch pooled URL | `development` branch direct URL |
+| Development | `vercel-dev` branch pooled URL | `vercel-dev` branch direct URL |
+
+> ⚠️ Delete any legacy variable names like `PROD_DATABASE_URL`, `STAGE_DATABASE_URL`, etc.
 
 ## 📁 Key Files
 
