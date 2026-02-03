@@ -67,8 +67,8 @@ export default function HomePage() {
         const response = await fetch('/api/vessels');
         if (!response.ok) throw new Error('Failed to fetch');
         const data = await response.json();
-        // Take first 3 vessels for featured section
-        setVessels(data.slice(0, 3));
+        // Take first 4 vessels for featured section
+        setVessels(data.slice(0, 4));
       } catch (err) {
         console.error('Error fetching vessels:', err);
       } finally {
@@ -329,7 +329,7 @@ export default function HomePage() {
 
           {/* Vessels Grid */}
           {!isLoading && vessels.length > 0 && (
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
               {vessels.map((vessel, index) => {
                 // Adventure Yachts link to individual detail pages
                 const vesselSlug = vessel.name.toLowerCase().replace(/\s+/g, '-');
