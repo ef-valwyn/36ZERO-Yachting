@@ -70,7 +70,7 @@ export const VesselCard: React.FC<VesselCardProps> = ({
       whileHover={{ y: -4 }}
       transition={{ duration: 0.3 }}
     >
-      <Link href={linkHref} className="block">
+      <Link href={linkHref} className="flex flex-col h-full">
         {/* Image Container */}
         <div
           className={cn(
@@ -149,7 +149,7 @@ export const VesselCard: React.FC<VesselCardProps> = ({
           </div>
 
           {/* Price */}
-          <div className="pt-3">
+          <div className="pt-3 mt-auto">
             <div className="price-tag">
               <span className="price-currency">{currency}</span>
               <span className="price-value">
