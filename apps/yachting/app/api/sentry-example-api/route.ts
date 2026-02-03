@@ -4,6 +4,7 @@ export const dynamic = "force-dynamic";
 
 // A faulty API route to test Sentry's error monitoring
 export function GET() {
-  throw new Error("Sentry Example API Route Error");
+  // @ts-expect-error - Intentionally calling undefined function to test Sentry
+  myUndefinedFunction();
   return NextResponse.json({ data: "Testing Sentry Error..." });
 }
