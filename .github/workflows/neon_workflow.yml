@@ -37,21 +37,43 @@ jobs:
       || github.event.action == 'reopened')
     runs-on: ubuntu-latest
     steps:
-      - name: Delete existing Neon branch (if any)
-        uses: neondatabase/delete-branch-action@v3
-        continue-on-error: true
-        with:
-          project_id: ${{ vars.NEON_PROJECT_ID }}
-          branch: pr-${{ github.event.number }}
-          api_key: ${{ secrets.NEON_API_KEY }}
-      - name: Create Neon Branch
+      - name: Create Neon Branch via API
         id: create_neon_branch
-        uses: neondatabase/create-branch-action@v6
-        with:
-          project_id: ${{ vars.NEON_PROJECT_ID }}
-          # Use PR number only to avoid 422 (Neon branch names: lowercase, numbers, hyphens)
-          branch_name: pr-${{ github.event.number }}
-          api_key: ${{ secrets.NEON_API_KEY }}
+        env:
+          NEON_API_KEY: ${{ secrets.NEON_API_KEY }}
+          PROJECT_ID: ${{ vars.NEON_PROJECT_ID }}
+          BRANCH_NAME: pr-${{ github.event.number }}
+        run: |
+          # First, try to delete existing branch (ignore errors)
+          curl -s -X DELETE \
+            "https://console.neon.tech/api/v2/projects/${PROJECT_ID}/branches/${BRANCH_NAME}" \
+            -H "Authorization: Bearer ${NEON_API_KEY}" \
+            -H "Content-Type: application/json" || true
+
+          # Create new branch with full error output
+          RESPONSE=$(curl -s -w "\n%{http_code}" -X POST \
+            "https://console.neon.tech/api/v2/projects/${PROJECT_ID}/branches" \
+            -H "Authorization: Bearer ${NEON_API_KEY}" \
+            -H "Content-Type: application/json" \
+            -d "{\"branch\": {\"name\": \"${BRANCH_NAME}\"}}")
+
+          HTTP_CODE=$(echo "$RESPONSE" | tail -n1)
+          BODY=$(echo "$RESPONSE" | sed '$d')
+
+          echo "HTTP Status: $HTTP_CODE"
+          echo "Response: $BODY"
+
+          if [ "$HTTP_CODE" != "201" ]; then
+            echo "::error::Failed to create branch. Status: $HTTP_CODE, Response: $BODY"
+            exit 1
+          fi
+
+          # Extract connection string from response
+          DB_URL=$(echo "$BODY" | jq -r '.connection_uris[0].connection_uri // empty')
+          if [ -n "$DB_URL" ]; then
+            echo "db_url=$DB_URL" >> $GITHUB_OUTPUT
+            echo "db_url_pooled=$DB_URL" >> $GITHUB_OUTPUT
+          fi
 
 # The step above creates a new Neon branch.
 # You may want to do something with the new branch, such as run migrations, run tests
