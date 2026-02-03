@@ -344,7 +344,7 @@ export default function HomePage() {
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                     transition={{ duration: 0.5, delay: index * 0.1 }}
-                    className={vessel.isFeatured ? 'lg:col-span-2' : ''}
+                    className=""
                   >
                     <VesselCard 
                       {...vessel} 
