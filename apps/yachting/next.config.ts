@@ -29,6 +29,15 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  async redirects() {
+    return [
+      {
+        source: '/zerolap',
+        destination: '/lap',
+        permanent: true,
+      },
+    ];
+  },
   async rewrites() {
     return [
       // Rewrite /lap/* to the LAP app (in production, this would be a separate deployment)
