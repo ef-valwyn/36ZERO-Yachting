@@ -308,6 +308,13 @@ export default function LAPPage() {
     alert(`Booking submitted! Total: $${data.totalPrice.toLocaleString()}`);
   };
 
+  // Scroll to booking form when it becomes visible
+  useEffect(() => {
+    if (showBookingForm) {
+      document.getElementById('book')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }, [showBookingForm]);
+
   return (
     <main className="min-h-screen bg-brand-navy">
       <Header variant="solid" />
