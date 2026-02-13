@@ -2,6 +2,7 @@ import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import AdventureYachtDetail from './AdventureYachtDetail';
 import VesselSchema from '@/components/VesselSchema';
+import { BreadcrumbSchema } from '@/components/BreadcrumbSchema';
 import { buildVariants } from './data';
 
 interface Props {
@@ -90,6 +91,13 @@ export default async function AdventureYachtPage({ params }: Props) {
   return (
     <>
       <VesselSchema vessel={vesselSchemaData} />
+      <BreadcrumbSchema
+        items={[
+          { name: 'Home', url: 'https://www.36zeroyachting.com' },
+          { name: 'Adventure Yachts', url: 'https://www.36zeroyachting.com/adventure-yachts' },
+          { name: build.name, url: `https://www.36zeroyachting.com/adventure-yachts/${build.slug}` },
+        ]}
+      />
       <AdventureYachtDetail build={build} allBuilds={buildVariants} />
     </>
   );
