@@ -1,10 +1,9 @@
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import { MDXRemote } from 'next-mdx-remote/rsc';
 import { getAllArticleSlugs, getArticleBySlug } from '@/lib/news';
 import { ArticleSchema } from '@/components/ArticleSchema';
 import { BreadcrumbSchema } from '@/components/BreadcrumbSchema';
-import { mdxComponents } from '@/components/MDXComponents';
+import { ArticleContent } from '@/components/ArticleContent';
 import ArticleClient from './ArticleClient';
 
 interface Props {
@@ -89,7 +88,7 @@ export default async function ArticlePage({ params }: Props) {
         ]}
       />
       <ArticleClient frontmatter={frontmatter}>
-        <MDXRemote source={content} components={mdxComponents} />
+        <ArticleContent content={content} />
       </ArticleClient>
     </>
   );
