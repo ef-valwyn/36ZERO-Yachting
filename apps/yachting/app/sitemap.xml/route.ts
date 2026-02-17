@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { getAllArticles } from '@/lib/news';
 
 const baseUrl = 'https://www.36zeroyachting.com';
 
@@ -18,6 +19,7 @@ export async function GET() {
     { url: baseUrl, priority: '1.0', changefreq: 'weekly' },
     { url: `${baseUrl}/vessels`, priority: '0.9', changefreq: 'weekly' },
     { url: `${baseUrl}/adventure-yachts`, priority: '0.9', changefreq: 'weekly' },
+    { url: `${baseUrl}/news`, priority: '0.8', changefreq: 'daily' },
     { url: `${baseUrl}/lap`, priority: '0.8', changefreq: 'monthly' },
   ];
 
@@ -28,7 +30,15 @@ export async function GET() {
     changefreq: 'weekly',
   }));
 
-  const allPages = [...staticPages, ...adventurePages];
+  // News article pages
+  const articles = getAllArticles();
+  const newsPages = articles.map((article) => ({
+    url: `${baseUrl}/news/${article.frontmatter.slug}`,
+    priority: '0.7',
+    changefreq: 'monthly',
+  }));
+
+  const allPages = [...staticPages, ...adventurePages, ...newsPages];
 
   const xml = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">

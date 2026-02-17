@@ -9,26 +9,21 @@ const footerSections: FooterSection[] = [
     title: 'Brokerage',
     links: [
       { label: 'Available Vessels', href: '/vessels' },
-      { label: 'Sell Your Yacht', href: '/sell' },
-      { label: 'Yacht Valuations', href: '/valuations' },
     ],
   },
   {
     title: '36ZERO LAP™',
     links: [
       { label: 'The Route', href: '/lap' },
-      { label: 'Join a Passage', href: '/lap/passages' },
-      { label: 'Crew Requirements', href: '/lap/requirements' },
-      { label: 'FAQ', href: '/lap/faq' },
+      { label: 'Join a Passage', href: '/lap#passages' },
     ],
   },
   {
     title: 'Company',
     links: [
-      { label: 'About Us', href: '/about' },
       { label: 'Adventure Yachts', href: '/adventure-yachts' },
       { label: 'News & Updates', href: '/news' },
-      { label: 'Careers', href: '/careers' },
+      { label: 'Contact Us', href: '/contact' },
     ],
   },
 ];

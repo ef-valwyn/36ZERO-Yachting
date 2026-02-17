@@ -36,6 +36,11 @@ const nextConfig: NextConfig = {
         destination: '/lap',
         permanent: true,
       },
+      {
+        source: '/ay60',
+        destination: '/adventure-yachts',
+        permanent: true,
+      },
     ];
   },
   async rewrites() {

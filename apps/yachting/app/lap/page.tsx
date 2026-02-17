@@ -628,7 +628,7 @@ export default function LAPPage() {
       )}
 
       {/* Passages Overview */}
-      <section className="py-24 px-6 bg-gradient-to-b from-transparent via-brand-navy-50/5 to-transparent">
+      <section id="passages" className="py-24 px-6 bg-gradient-to-b from-transparent via-brand-navy-50/5 to-transparent">
         <div className="max-w-7xl mx-auto">
           <motion.div
             className="text-center mb-12"

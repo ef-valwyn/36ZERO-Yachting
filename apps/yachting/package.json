@@ -15,11 +15,15 @@
     "@microsoft/clarity": "^1.0.2",
     "@sentry/nextjs": "^10.38.0",
     "framer-motion": "^11.0.3",
+    "gray-matter": "^4.0.3",
     "lucide-react": "^0.312.0",
     "next": "^15.5.11",
+    "next-mdx-remote": "^5.0.0",
     "posthog-js": "^1.336.4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-markdown": "^10.1.0",
+    "remark-gfm": "^4.0.1",
     "svix": "^1.84.1"
   },
   "devDependencies": {

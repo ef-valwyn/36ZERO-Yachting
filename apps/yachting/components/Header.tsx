@@ -17,6 +17,7 @@ const navItems: NavItem[] = [
   { label: 'Home', href: '/' },
   { label: 'Available Vessels', href: '/vessels' },
   { label: 'Adventure Yachts', href: '/adventure-yachts' },
+  { label: 'News', href: '/news' },
   { label: '36ZERO LAP™', href: '/lap' },
 ];
 
