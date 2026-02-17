@@ -3,6 +3,7 @@ import { ClerkProvider } from '@clerk/nextjs';
 import '@36zero/ui/styles';
 import './globals.css';
 import WorldPremierePopup from '@/components/WorldPremierePopup';
+import MOTYVotePopup from '@/components/MOTYVotePopup';
 import { AnalyticsProvider } from '@/components/Analytics';
 import { OrganizationSchema, WebSiteSchema } from '@/components/OrganizationSchema';
 
@@ -79,6 +80,7 @@ export default function RootLayout({
           <AnalyticsProvider>
             {children}
             <WorldPremierePopup />
+            <MOTYVotePopup />
           </AnalyticsProvider>
         </body>
       </html>
