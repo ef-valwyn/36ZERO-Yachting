@@ -30,14 +30,29 @@ const components: Components = {
   p: (props) => (
     <p className="text-white/80 font-light leading-relaxed mb-4" {...props} />
   ),
-  a: ({ href, children }) => (
-    <Link
-      className="text-brand-blue hover:text-brand-blue-400 underline underline-offset-2 transition-colors"
-      href={href || '#'}
-    >
-      {children}
-    </Link>
-  ),
+  a: ({ href, children }) => {
+    const url = href || '#';
+    const isExternal = url.startsWith('http://') || url.startsWith('https://');
+    const className =
+      'text-brand-blue hover:text-brand-blue-400 underline underline-offset-2 transition-colors';
+    if (isExternal) {
+      return (
+        <a
+          href={url}
+          target="_blank"
+          rel="noopener noreferrer"
+          className={className}
+        >
+          {children}
+        </a>
+      );
+    }
+    return (
+      <Link href={url} className={className}>
+        {children}
+      </Link>
+    );
+  },
   ul: (props) => (
     <ul
       className="list-disc list-inside space-y-2 text-white/80 mb-4 ml-4"

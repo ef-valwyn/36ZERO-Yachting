@@ -43,6 +43,21 @@ export default function ArticleClient({
         />
         <div className="absolute inset-0 bg-gradient-to-t from-brand-navy via-brand-navy/60 to-brand-navy/20" />
 
+        {/* Return to News - Top */}
+        <motion.div
+          className="absolute top-6 left-6 z-10"
+          initial={{ opacity: 0, x: -10 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.4 }}
+        >
+          <Link href="/news">
+            <Button variant="ghost" size="md" className="text-white/90 hover:text-white hover:bg-white/10">
+              <ArrowLeft className="w-4 h-4 mr-2" />
+              Return to News
+            </Button>
+          </Link>
+        </motion.div>
+
         <motion.div
           className="absolute bottom-0 left-0 right-0 px-6 pb-10"
           initial={{ opacity: 0, y: 20 }}
