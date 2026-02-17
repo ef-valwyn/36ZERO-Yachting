@@ -20,11 +20,16 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
 
   const { frontmatter } = article;
+  const articleUrl = `https://www.36zeroyachting.com/news/${frontmatter.slug}`;
   return {
     title: frontmatter.title,
     description: frontmatter.excerpt,
     keywords: frontmatter.keywords,
+    alternates: {
+      canonical: articleUrl,
+    },
     openGraph: {
+      url: articleUrl,
       title: frontmatter.title,
       description: frontmatter.excerpt,
       type: 'article',

@@ -2,7 +2,16 @@ import fs from 'fs';
 import path from 'path';
 import matter from 'gray-matter';
 
-const CONTENT_DIR = path.join(process.cwd(), 'content', 'news');
+function getContentDir(): string {
+  const cwd = process.cwd();
+  const direct = path.join(cwd, 'content', 'news');
+  if (fs.existsSync(direct)) return direct;
+  const monorepoPath = path.join(cwd, 'apps', 'yachting', 'content', 'news');
+  if (fs.existsSync(monorepoPath)) return monorepoPath;
+  return direct;
+}
+
+const CONTENT_DIR = getContentDir();
 
 export interface ArticleFrontmatter {
   title: string;

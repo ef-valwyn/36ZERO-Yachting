@@ -5,6 +5,9 @@ import NewsListingClient from './NewsListingClient';
 
 export const metadata: Metadata = {
   title: 'News & Updates',
+  alternates: {
+    canonical: 'https://www.36zeroyachting.com/news',
+  },
   description:
     'Latest news from 36ZERO Yachting. Adventure Yachts AY60 updates, boat show announcements, award nominations, and industry insights.',
   keywords: [
