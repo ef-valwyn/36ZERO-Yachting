@@ -258,7 +258,7 @@ export default function HomePage() {
                       </Link>
                     </Button>
                     <Button variant="secondary" asChild>
-                      <Link href="/lap/passages">View Passages</Link>
+                      <Link href="/lap#passages">View Passages</Link>
                     </Button>
                   </div>
                 </motion.div>

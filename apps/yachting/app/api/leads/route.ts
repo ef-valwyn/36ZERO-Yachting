@@ -10,7 +10,7 @@ interface LeadData {
   phone?: string;
   country?: string;
   company?: string;
-  leadSource: 'premiere_updates' | 'premiere_tour_request' | 'vessel_enquiry';
+  leadSource: 'premiere_updates' | 'premiere_tour_request' | 'vessel_enquiry' | 'contact_form';
   interest?: string;
   // Vessel enquiry specific fields
   vesselId?: string;
@@ -100,6 +100,14 @@ export async function POST(request: NextRequest) {
       notes.push('Source: AY60 Premiere - Tour Request');
       if (body.interest) {
         notes.push(`Interest: ${body.interest}`);
+      }
+    } else if (body.leadSource === 'contact_form') {
+      notes.push('Source: Contact Form');
+      if (body.interest) {
+        notes.push(`Interest: ${body.interest}`);
+      }
+      if (body.message) {
+        notes.push(`Message: ${body.message}`);
       }
     }
 
