@@ -48,6 +48,8 @@ export const passageStatusEnum = pgEnum('passage_status', [
   'completed',
 ]);
 
+export const yachtTypeEnum = pgEnum('yacht_type', ['sail', 'power', 'own_yacht']);
+
 // =========================================
 // PASSAGES TABLE (LAP Circumnavigation)
 // =========================================
@@ -252,21 +254,49 @@ export const documents = pgTable('documents', {
 });
 
 // =========================================
-// INQUIRIES TABLE (Brokerage Leads)
+// INQUIRIES TABLE (AY60 Vessel Enquiries)
 // =========================================
 
 export const inquiries = pgTable('inquiries', {
   id: uuid('id').primaryKey().defaultRandom(),
   vesselId: uuid('vessel_id').references(() => vessels.id),
+  vesselName: varchar('vessel_name', { length: 255 }),
+  vesselModel: varchar('vessel_model', { length: 255 }),
   name: varchar('name', { length: 255 }).notNull(),
   email: varchar('email', { length: 255 }).notNull(),
   phone: varchar('phone', { length: 50 }),
+  countryCode: varchar('country_code', { length: 10 }),
+  company: varchar('company', { length: 255 }),
+  deliveryRegion: varchar('delivery_region', { length: 50 }),
   message: text('message'),
   source: varchar('source', { length: 100 }), // website, referral, etc.
   hubspotContactId: varchar('hubspot_contact_id', { length: 100 }),
   isContacted: boolean('is_contacted').notNull().default(false),
   contactedAt: timestamp('contacted_at'),
   createdAt: timestamp('created_at').defaultNow().notNull(),
+});
+
+// =========================================
+// LAP APPLICATIONS TABLE
+// =========================================
+
+export const lapApplications = pgTable('lap_applications', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  email: varchar('email', { length: 255 }).notNull(),
+  fullName: varchar('full_name', { length: 255 }).notNull(),
+  phone: varchar('phone', { length: 50 }).notNull(),
+  countryCode: varchar('country_code', { length: 10 }).notNull(),
+  countryOfResidence: varchar('country_of_residence', { length: 100 }).notNull(),
+  yachtType: yachtTypeEnum('yacht_type').notNull(),
+  ownYachtDetails: text('own_yacht_details'),
+  crewAugmentationRequired: boolean('crew_augmentation_required').notNull(),
+  selectedPassages: jsonb('selected_passages').$type<string[]>().notNull(),
+  guestCount: integer('guest_count').notNull().default(1),
+  flowCompleted: boolean('flow_completed').notNull().default(false),
+  acceptedBy36ZERO: boolean('accepted_by_36zero').notNull().default(false),
+  hubspotContactId: varchar('hubspot_contact_id', { length: 100 }),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+  updatedAt: timestamp('updated_at').defaultNow().notNull(),
 });
 
 // =========================================
@@ -323,3 +353,5 @@ export const inquiriesRelations = relations(inquiries, ({ one }) => ({
     references: [vessels.id],
   }),
 }));
+
+export const lapApplicationsRelations = relations(lapApplications, ({}) => ({}));

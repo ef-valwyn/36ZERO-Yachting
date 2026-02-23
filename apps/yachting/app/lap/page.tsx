@@ -15,13 +15,14 @@ import {
   CreditCard,
   Play
 } from 'lucide-react';
-import { 
-  Button, 
-  GlassCard, 
-  RouteMap, 
+import {
+  Button,
+  GlassCard,
+  RouteMap,
   StepForm,
   type Passage,
   type RouteStage,
+  type LapUserInfo,
 } from '@36zero/ui';
 import Header from '@/components/Header';
 import SiteFooter from '@/components/SiteFooter';
@@ -35,8 +36,7 @@ const passages: Passage[] = [
     description: 'Saint Lucia to Bora Bora via Galapagos and Marquesas. Pacific trade winds to French Polynesia.',
     startDate: '9 Jan 2027',
     endDate: '8 May 2027',
-    distanceNm: 6100, // 2,100 + 3,000 + 1,000
-    pricePerPerson: 45000,
+    distanceNm: 6100,
     maxGuests: 8,
     requiresOffshoreCompetency: false,
   },
@@ -46,8 +46,7 @@ const passages: Passage[] = [
     description: 'Bora Bora to Lombok via Tonga and Australia. South Pacific islands to Indonesia.',
     startDate: '11 May 2027',
     endDate: '14 Sep 2027',
-    distanceNm: 5600, // 1,300 + 1,900 + 2,400
-    pricePerPerson: 52000,
+    distanceNm: 5600,
     maxGuests: 8,
     requiresOffshoreCompetency: true,
   },
@@ -57,8 +56,7 @@ const passages: Passage[] = [
     description: 'Lombok to Cape Town via Cocos Islands and Réunion. Indian Ocean crossing to South Africa.',
     startDate: '18 Sep 2027',
     endDate: '15 Dec 2027',
-    distanceNm: 5740, // 1,150 + 2,500 + 1,370 + 720
-    pricePerPerson: 68000,
+    distanceNm: 5740,
     maxGuests: 8,
     requiresOffshoreCompetency: true,
   },
@@ -68,8 +66,7 @@ const passages: Passage[] = [
     description: 'Cape Town to Saint Lucia via Recife and Grenada. South Atlantic tradewind crossing.',
     startDate: '16 Jan 2028',
     endDate: '15 Apr 2028',
-    distanceNm: 6000, // 3,000 + 2,300 + 700
-    pricePerPerson: 72000,
+    distanceNm: 6000,
     maxGuests: 8,
     requiresOffshoreCompetency: true,
   },
@@ -290,6 +287,9 @@ const cyclingPhrases = [
 export default function LAPPage() {
   const [showBookingForm, setShowBookingForm] = useState(false);
   const [phraseIndex, setPhraseIndex] = useState(0);
+  const [applicationId, setApplicationId] = useState<string | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [reservationConfirmed, setReservationConfirmed] = useState(false);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -298,14 +298,68 @@ export default function LAPPage() {
     return () => clearInterval(interval);
   }, []);
 
-  const handleBookingSubmit = (data: {
+  const handleStepChange = async (step: number, data: {
     selectedPassages: string[];
     guestCount: number;
-    totalPrice: number;
+    userInfo: LapUserInfo;
   }) => {
-    console.log('Booking submitted:', data);
-    // In production, this would trigger the Stripe checkout flow
-    alert(`Booking submitted! Total: $${data.totalPrice.toLocaleString()}`);
+    if (step === 3 && !applicationId) {
+      try {
+        const response = await fetch('/api/lap/applications', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            ...data.userInfo,
+            selectedPassages: data.selectedPassages,
+            guestCount: data.guestCount,
+            flowCompleted: false,
+          }),
+        });
+        const result = await response.json();
+        if (result.applicationId) {
+          setApplicationId(result.applicationId);
+        }
+      } catch (err) {
+        console.error('Failed to save application:', err);
+      }
+    }
+  };
+
+  const handleBookingSubmit = async (data: {
+    selectedPassages: string[];
+    guestCount: number;
+    userInfo: LapUserInfo;
+  }) => {
+    setIsSubmitting(true);
+    try {
+      if (applicationId) {
+        await fetch('/api/lap/applications', {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ applicationId }),
+        });
+      } else {
+        const response = await fetch('/api/lap/applications', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            ...data.userInfo,
+            selectedPassages: data.selectedPassages,
+            guestCount: data.guestCount,
+            flowCompleted: true,
+          }),
+        });
+        const result = await response.json();
+        if (result.applicationId) {
+          setApplicationId(result.applicationId);
+        }
+      }
+      setReservationConfirmed(true);
+    } catch (err) {
+      console.error('Failed to confirm reservation:', err);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   // Scroll to booking form when it becomes visible
@@ -830,10 +884,21 @@ export default function LAPPage() {
               </h2>
             </motion.div>
 
-            <StepForm
-              passages={passages}
-              onSubmit={handleBookingSubmit}
-            />
+            {reservationConfirmed ? (
+              <GlassCard variant="blue" padding="lg" className="max-w-2xl mx-auto text-center">
+                <CheckCircle className="w-16 h-16 text-brand-blue mx-auto mb-4" />
+                <h3 className="text-2xl font-bold text-white mb-2">Reservation Received</h3>
+                <p className="text-white/60 font-light">
+                  Thank you for your interest in the 36ZERO LAP. Our team will review your application and be in touch shortly.
+                </p>
+              </GlassCard>
+            ) : (
+              <StepForm
+                passages={passages}
+                onSubmit={handleBookingSubmit}
+                onStepChange={handleStepChange}
+              />
+            )}
           </div>
         </section>
       )}

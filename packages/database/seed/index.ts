@@ -11,29 +11,29 @@ const sql = neon(process.env.DATABASE_URL!);
 const db = drizzle(sql, { schema });
 
 // =========================================
-// SEED DATA: 4 PASSAGES & 13 STAGES
-// Based on the 36ZERO LAP circumnavigation route
+// SEED DATA: 4 PASSAGES & 16 STAGES
+// Based on the 36ZERO LAP circumnavigation route (2027-2028)
 // =========================================
 
 const passagesData = [
   {
-    name: 'Passage 1: Pacific Dreams',
-    slug: 'pacific-dreams',
-    description: 'Begin your circumnavigation journey through the stunning South Pacific islands, from French Polynesia to Fiji.',
-    startDate: '2025-04-01',
-    endDate: '2025-06-30',
-    startHub: 'Tahiti, French Polynesia',
-    endHub: 'Fiji',
+    name: 'Passage 1: The Pacific Gateway',
+    slug: 'the-pacific-gateway',
+    description: 'Saint Lucia to Bora Bora via Galapagos and Marquesas. Pacific trade winds to French Polynesia.',
+    startDate: '2027-01-09',
+    endDate: '2027-05-08',
+    startHub: 'Saint Lucia',
+    endHub: 'Bora Bora, French Polynesia',
     pricePerPerson: '45000',
     maxGuests: 8,
     status: 'upcoming' as const,
     requiresOffshoreCompetency: false,
     metadata: {
       highlights: [
+        'Panama Canal transit',
+        'Galápagos Islands stopover',
+        'Marquesas Islands exploration',
         'Bora Bora lagoon anchorage',
-        'Traditional Polynesian villages',
-        'World-class snorkeling in Moorea',
-        'Crossing the International Date Line',
       ],
       included: [
         'All meals onboard',
@@ -46,21 +46,21 @@ const passagesData = [
   {
     name: 'Passage 2: Coral Crossing',
     slug: 'coral-crossing',
-    description: 'Navigate through Vanuatu and into the Coral Sea, experiencing remote island cultures and pristine diving sites.',
-    startDate: '2025-07-15',
-    endDate: '2025-09-30',
-    startHub: 'Fiji',
-    endHub: 'Cairns, Australia',
+    description: 'Bora Bora to Lombok via Tonga and Australia. South Pacific islands to Indonesia.',
+    startDate: '2027-05-11',
+    endDate: '2027-09-14',
+    startHub: 'Bora Bora, French Polynesia',
+    endHub: 'Lombok, Indonesia',
     pricePerPerson: '52000',
     maxGuests: 8,
     status: 'upcoming' as const,
     requiresOffshoreCompetency: true,
     metadata: {
       highlights: [
-        'Vanuatu volcano trekking',
-        'Great Barrier Reef diving',
-        'Indigenous cultural experiences',
-        'Blue hole exploration',
+        'Kingdom of Tonga',
+        'Date Line crossing',
+        'Great Barrier Reef region',
+        'Indonesian archipelago',
       ],
       requirements: [
         'Valid offshore sailing certification',
@@ -71,21 +71,21 @@ const passagesData = [
   {
     name: 'Passage 3: Indian Ocean Odyssey',
     slug: 'indian-ocean-odyssey',
-    description: 'Cross the vast Indian Ocean, visiting Indonesia, the Maldives, and arriving in the Red Sea gateway.',
-    startDate: '2025-10-15',
-    endDate: '2026-02-28',
-    startHub: 'Cairns, Australia',
-    endHub: 'Djibouti',
+    description: 'Lombok to Cape Town via Cocos Islands and Réunion. Indian Ocean crossing to South Africa.',
+    startDate: '2027-09-18',
+    endDate: '2027-12-15',
+    startHub: 'Lombok, Indonesia',
+    endHub: 'Cape Town, South Africa',
     pricePerPerson: '68000',
     maxGuests: 8,
     status: 'upcoming' as const,
     requiresOffshoreCompetency: true,
     metadata: {
       highlights: [
-        'Komodo dragon encounters',
-        'Maldives atoll hopping',
-        'Chagos Archipelago',
-        'Crossing the Equator ceremony',
+        'Cocos (Keeling) Islands',
+        'Réunion Island',
+        'South African coast',
+        'Cape of Good Hope',
       ],
       requirements: [
         'Valid offshore sailing certification',
@@ -96,21 +96,20 @@ const passagesData = [
   {
     name: 'Passage 4: Atlantic Return',
     slug: 'atlantic-return',
-    description: 'Complete the circumnavigation through the Mediterranean, across the Atlantic, and back to the Caribbean.',
-    startDate: '2026-04-01',
-    endDate: '2026-08-31',
-    startHub: 'Djibouti',
-    endHub: 'Antigua',
+    description: 'Cape Town to Saint Lucia via Recife and Grenada. South Atlantic tradewind crossing.',
+    startDate: '2028-01-16',
+    endDate: '2028-04-15',
+    startHub: 'Cape Town, South Africa',
+    endHub: 'Saint Lucia',
     pricePerPerson: '72000',
     maxGuests: 8,
     status: 'upcoming' as const,
     requiresOffshoreCompetency: true,
     metadata: {
       highlights: [
-        'Red Sea passage',
-        'Suez Canal transit',
-        'Mediterranean highlights',
-        'Atlantic crossing',
+        'South Atlantic crossing',
+        'Recife, Brazil',
+        'Caribbean arrival via Grenada',
         'Circumnavigation completion ceremony',
       ],
     },
@@ -118,270 +117,324 @@ const passagesData = [
 ];
 
 const stagesData = [
-  // Passage 1 Stages
+  // Passage 1: The Pacific Gateway (Saint Lucia to Bora Bora)
   {
-    passageSlug: 'pacific-dreams',
+    passageSlug: 'the-pacific-gateway',
     stageNumber: 1,
-    routeName: 'Tahiti to Moorea',
-    startLocation: 'Papeete, Tahiti',
-    endLocation: 'Moorea',
-    arrivalDate: '2025-04-01',
-    departureDate: '2025-04-05',
-    distanceNm: 17,
-    estimatedDays: 1,
+    routeName: 'Saint Lucia Start',
+    startLocation: 'Saint Lucia',
+    endLocation: 'Saint Lucia',
+    arrivalDate: '2027-01-09',
+    departureDate: '2027-01-09',
+    distanceNm: 0,
+    estimatedDays: 0,
     crewRequirement: 2,
     coordinates: {
-      start: [-149.5585, -17.5516],
-      end: [-149.8366, -17.5388],
+      start: [-61.0, 14.0] as [number, number],
+      end: [-61.0, 14.0] as [number, number],
     },
     logisticsNotes: {
-      flightHub: 'Tahiti PPT (Faaa International)',
-      transfer: 'Yacht pickup at Marina Taina',
-      notes: 'Customs clearance required on arrival',
+      flightHub: 'Hewanorra UVF',
+      notes: 'Circumnavigation start',
     },
   },
   {
-    passageSlug: 'pacific-dreams',
+    passageSlug: 'the-pacific-gateway',
     stageNumber: 2,
-    routeName: 'Moorea to Bora Bora',
-    startLocation: 'Moorea',
-    endLocation: 'Bora Bora',
-    arrivalDate: '2025-04-10',
-    departureDate: '2025-04-18',
-    distanceNm: 156,
-    estimatedDays: 2,
-    crewRequirement: 2,
-    coordinates: {
-      start: [-149.8366, -17.5388],
-      end: [-151.7415, -16.5004],
-    },
-    logisticsNotes: {
-      notes: 'Stopover possible at Huahine or Raiatea',
-    },
-  },
-  {
-    passageSlug: 'pacific-dreams',
-    stageNumber: 3,
-    routeName: 'Bora Bora to Fiji',
-    startLocation: 'Bora Bora',
-    endLocation: 'Suva, Fiji',
-    arrivalDate: '2025-06-25',
-    departureDate: '2025-06-30',
-    distanceNm: 1800,
-    estimatedDays: 14,
-    crewRequirement: 3,
-    coordinates: {
-      start: [-151.7415, -16.5004],
-      end: [178.4419, -18.1416],
-    },
-    logisticsNotes: {
-      flightHub: 'Fiji SUV (Nausori International)',
-      notes: 'International Date Line crossing',
-    },
-  },
-  // Passage 2 Stages
-  {
-    passageSlug: 'coral-crossing',
-    stageNumber: 4,
-    routeName: 'Fiji to Vanuatu',
-    startLocation: 'Suva, Fiji',
-    endLocation: 'Port Vila, Vanuatu',
-    arrivalDate: '2025-07-20',
-    departureDate: '2025-07-28',
-    distanceNm: 580,
-    estimatedDays: 5,
-    crewRequirement: 3,
-    coordinates: {
-      start: [178.4419, -18.1416],
-      end: [168.3220, -17.7340],
-    },
-    logisticsNotes: {
-      flightHub: 'Vanuatu VLI (Bauerfield International)',
-      visaRequired: false,
-    },
-  },
-  {
-    passageSlug: 'coral-crossing',
-    stageNumber: 5,
-    routeName: 'Vanuatu to Cairns',
-    startLocation: 'Port Vila, Vanuatu',
-    endLocation: 'Cairns, Australia',
-    arrivalDate: '2025-09-25',
-    departureDate: '2025-09-30',
+    routeName: 'Saint Lucia to Panama Canal',
+    startLocation: 'Saint Lucia',
+    endLocation: 'Panama Canal',
+    arrivalDate: '2027-01-25',
     distanceNm: 1100,
-    estimatedDays: 10,
-    crewRequirement: 3,
-    coordinates: {
-      start: [168.3220, -17.7340],
-      end: [145.7781, -16.9186],
-    },
-    logisticsNotes: {
-      flightHub: 'Cairns CNS',
-      notes: 'Australian customs pre-arrival clearance required',
-      visaRequired: true,
-    },
-  },
-  // Passage 3 Stages
-  {
-    passageSlug: 'indian-ocean-odyssey',
-    stageNumber: 6,
-    routeName: 'Cairns to Lombok',
-    startLocation: 'Cairns, Australia',
-    endLocation: 'Lombok, Indonesia',
-    arrivalDate: '2025-10-25',
-    departureDate: '2025-11-02',
-    distanceNm: 1450,
-    estimatedDays: 12,
-    crewRequirement: 3,
-    coordinates: {
-      start: [145.7781, -16.9186],
-      end: [116.3249, -8.5852],
-    },
-    logisticsNotes: {
-      flightHub: 'Bali DPS + 20min boat to Lombok',
-      transfer: 'Domestic hop from DPS',
-      visaRequired: true,
-    },
-  },
-  {
-    passageSlug: 'indian-ocean-odyssey',
-    stageNumber: 7,
-    routeName: 'Lombok to Maldives',
-    startLocation: 'Lombok, Indonesia',
-    endLocation: 'Male, Maldives',
-    arrivalDate: '2025-12-15',
-    departureDate: '2025-12-28',
-    distanceNm: 2200,
-    estimatedDays: 18,
-    crewRequirement: 4,
-    coordinates: {
-      start: [116.3249, -8.5852],
-      end: [73.5093, 4.1755],
-    },
-    logisticsNotes: {
-      flightHub: 'Male MLE (Velana International)',
-      notes: 'Chagos permit required for stopover',
-    },
-  },
-  {
-    passageSlug: 'indian-ocean-odyssey',
-    stageNumber: 8,
-    routeName: 'Maldives to Djibouti',
-    startLocation: 'Male, Maldives',
-    endLocation: 'Djibouti City',
-    arrivalDate: '2026-02-20',
-    departureDate: '2026-02-28',
-    distanceNm: 1800,
-    estimatedDays: 15,
-    crewRequirement: 4,
-    coordinates: {
-      start: [73.5093, 4.1755],
-      end: [43.1456, 11.5886],
-    },
-    logisticsNotes: {
-      flightHub: 'Djibouti JIB (Djibouti–Ambouli)',
-      notes: 'Security briefing required for Gulf of Aden transit',
-      visaRequired: true,
-    },
-  },
-  // Passage 4 Stages
-  {
-    passageSlug: 'atlantic-return',
-    stageNumber: 9,
-    routeName: 'Djibouti to Suez',
-    startLocation: 'Djibouti City',
-    endLocation: 'Port Said, Egypt',
-    arrivalDate: '2026-04-15',
-    departureDate: '2026-04-20',
-    distanceNm: 1300,
-    estimatedDays: 12,
-    crewRequirement: 4,
-    coordinates: {
-      start: [43.1456, 11.5886],
-      end: [32.3019, 31.2653],
-    },
-    logisticsNotes: {
-      notes: 'Suez Canal transit - agent required',
-      visaRequired: true,
-    },
-  },
-  {
-    passageSlug: 'atlantic-return',
-    stageNumber: 10,
-    routeName: 'Mediterranean Transit',
-    startLocation: 'Port Said, Egypt',
-    endLocation: 'Gibraltar',
-    arrivalDate: '2026-05-25',
-    departureDate: '2026-06-05',
-    distanceNm: 1950,
     estimatedDays: 16,
     crewRequirement: 3,
     coordinates: {
-      start: [32.3019, 31.2653],
-      end: [-5.3536, 36.1408],
+      start: [-61.0, 14.0] as [number, number],
+      end: [-79.5, 9.1] as [number, number],
     },
     logisticsNotes: {
-      flightHub: 'Gibraltar GIB or Malaga AGP',
-      notes: 'Optional stops: Malta, Sicily, Sardinia',
+      notes: 'Canal transit - Atlantic to Pacific',
     },
   },
   {
-    passageSlug: 'atlantic-return',
-    stageNumber: 11,
-    routeName: 'Gibraltar to Canaries',
-    startLocation: 'Gibraltar',
-    endLocation: 'Las Palmas, Gran Canaria',
-    arrivalDate: '2026-06-15',
-    departureDate: '2026-06-22',
-    distanceNm: 650,
+    passageSlug: 'the-pacific-gateway',
+    stageNumber: 3,
+    routeName: 'Panama to Galápagos',
+    startLocation: 'Panama Canal',
+    endLocation: 'Galápagos Islands',
+    arrivalDate: '2027-03-02',
+    departureDate: '2027-03-03',
+    distanceNm: 1000,
+    estimatedDays: 10,
+    crewRequirement: 3,
+    coordinates: {
+      start: [-79.5, 9.1] as [number, number],
+      end: [-90.4, -0.6] as [number, number],
+    },
+    logisticsNotes: {
+      flightHub: 'Baltra GPS',
+      notes: 'Ecuador territory',
+    },
+  },
+  {
+    passageSlug: 'the-pacific-gateway',
+    stageNumber: 4,
+    routeName: 'Galápagos to Marquesas',
+    startLocation: 'Galápagos Islands',
+    endLocation: 'Marquesas Islands',
+    arrivalDate: '2027-03-31',
+    departureDate: '2027-04-01',
+    distanceNm: 3000,
+    estimatedDays: 21,
+    crewRequirement: 3,
+    coordinates: {
+      start: [-90.4, -0.6] as [number, number],
+      end: [-140.1, -8.9] as [number, number],
+    },
+    logisticsNotes: {
+      flightHub: 'Nuku Hiva NHV',
+      notes: 'French Polynesia',
+    },
+  },
+  {
+    passageSlug: 'the-pacific-gateway',
+    stageNumber: 5,
+    routeName: 'Marquesas to Bora Bora',
+    startLocation: 'Marquesas Islands',
+    endLocation: 'Bora Bora',
+    arrivalDate: '2027-05-08',
+    departureDate: '2027-05-11',
+    distanceNm: 1000,
+    estimatedDays: 10,
+    crewRequirement: 3,
+    coordinates: {
+      start: [-140.1, -8.9] as [number, number],
+      end: [-151.8, -16.5] as [number, number],
+    },
+    logisticsNotes: {
+      flightHub: 'Bora Bora BOB via Tahiti PPT',
+    },
+  },
+  // Passage 2: Coral Crossing (Bora Bora to Lombok)
+  {
+    passageSlug: 'coral-crossing',
+    stageNumber: 6,
+    routeName: 'Bora Bora to Tonga',
+    startLocation: 'Bora Bora',
+    endLocation: 'Tonga',
+    arrivalDate: '2027-05-29',
+    departureDate: '2027-06-09',
+    distanceNm: 1300,
+    estimatedDays: 18,
+    crewRequirement: 3,
+    coordinates: {
+      start: [-151.8, -16.5] as [number, number],
+      end: [-174.0, -18.6] as [number, number],
+    },
+    logisticsNotes: {
+      flightHub: 'Tongatapu TBU',
+      notes: 'Kingdom of Tonga',
+    },
+  },
+  {
+    passageSlug: 'coral-crossing',
+    stageNumber: 7,
+    routeName: 'Tonga to Fiji',
+    startLocation: 'Tonga',
+    endLocation: 'Fiji',
+    arrivalDate: '2027-06-21',
+    distanceNm: 450,
     estimatedDays: 5,
     crewRequirement: 3,
     coordinates: {
-      start: [-5.3536, 36.1408],
-      end: [-15.4134, 28.1235],
+      start: [-174.0, -18.6] as [number, number],
+      end: [178.0, -18.0] as [number, number],
     },
     logisticsNotes: {
-      flightHub: 'Las Palmas LPA (Gran Canaria Airport)',
+      notes: 'Date Line crossing',
     },
   },
   {
-    passageSlug: 'atlantic-return',
-    stageNumber: 12,
-    routeName: 'Atlantic Crossing',
-    startLocation: 'Las Palmas, Gran Canaria',
-    endLocation: 'Barbados',
-    arrivalDate: '2026-07-20',
-    departureDate: '2026-07-28',
-    distanceNm: 2700,
+    passageSlug: 'coral-crossing',
+    stageNumber: 8,
+    routeName: 'Fiji to Mackay',
+    startLocation: 'Fiji',
+    endLocation: 'Mackay, Australia',
+    arrivalDate: '2027-07-21',
+    departureDate: '2027-07-22',
+    distanceNm: 1450,
+    estimatedDays: 14,
+    crewRequirement: 3,
+    coordinates: {
+      start: [178.0, -18.0] as [number, number],
+      end: [149.2, -21.1] as [number, number],
+    },
+    logisticsNotes: {
+      flightHub: 'Mackay MKY',
+      notes: 'Great Barrier Reef region',
+      visaRequired: true,
+    },
+  },
+  {
+    passageSlug: 'coral-crossing',
+    stageNumber: 9,
+    routeName: 'Mackay to Lombok',
+    startLocation: 'Mackay, Australia',
+    endLocation: 'Lombok, Indonesia',
+    arrivalDate: '2027-09-14',
+    departureDate: '2027-09-18',
+    distanceNm: 2400,
     estimatedDays: 21,
     crewRequirement: 4,
     coordinates: {
-      start: [-15.4134, 28.1235],
-      end: [-59.5432, 13.1939],
+      start: [149.2, -21.1] as [number, number],
+      end: [116.1, -8.6] as [number, number],
     },
     logisticsNotes: {
-      flightHub: 'Barbados BGI (Grantley Adams)',
-      notes: 'Cape Verde optional stopover',
+      flightHub: 'Bali DPS + ferry',
+      transfer: '2hr ferry from Bali',
+      visaRequired: true,
+    },
+  },
+  // Passage 3: Indian Ocean Odyssey (Lombok to Cape Town)
+  {
+    passageSlug: 'indian-ocean-odyssey',
+    stageNumber: 10,
+    routeName: 'Lombok to Cocos (Keeling) Islands',
+    startLocation: 'Lombok, Indonesia',
+    endLocation: 'Cocos (Keeling) Islands',
+    arrivalDate: '2027-09-30',
+    departureDate: '2027-10-04',
+    distanceNm: 1150,
+    estimatedDays: 12,
+    crewRequirement: 3,
+    coordinates: {
+      start: [116.1, -8.6] as [number, number],
+      end: [96.8, -12.1] as [number, number],
+    },
+    logisticsNotes: {
+      flightHub: 'Cocos CCK via Perth',
+      notes: 'Australian territory',
+    },
+  },
+  {
+    passageSlug: 'indian-ocean-odyssey',
+    stageNumber: 11,
+    routeName: 'Cocos to Réunion',
+    startLocation: 'Cocos (Keeling) Islands',
+    endLocation: 'Réunion',
+    arrivalDate: '2027-10-27',
+    departureDate: '2027-11-03',
+    distanceNm: 2500,
+    estimatedDays: 20,
+    crewRequirement: 4,
+    coordinates: {
+      start: [96.8, -12.1] as [number, number],
+      end: [55.3, -20.9] as [number, number],
+    },
+    logisticsNotes: {
+      flightHub: 'Roland Garros RUN',
+      notes: 'French territory',
+    },
+  },
+  {
+    passageSlug: 'indian-ocean-odyssey',
+    stageNumber: 12,
+    routeName: 'Réunion to Richards Bay',
+    startLocation: 'Réunion',
+    endLocation: 'Richards Bay, South Africa',
+    arrivalDate: '2027-11-14',
+    departureDate: '2027-11-15',
+    distanceNm: 1370,
+    estimatedDays: 11,
+    crewRequirement: 3,
+    coordinates: {
+      start: [55.3, -20.9] as [number, number],
+      end: [32.1, -28.8] as [number, number],
+    },
+    logisticsNotes: {
+      flightHub: 'Richards Bay RCB',
+      notes: 'South Africa',
+    },
+  },
+  {
+    passageSlug: 'indian-ocean-odyssey',
+    stageNumber: 13,
+    routeName: 'Richards Bay to Cape Town',
+    startLocation: 'Richards Bay, South Africa',
+    endLocation: 'Cape Town, South Africa',
+    arrivalDate: '2027-12-15',
+    departureDate: '2028-01-16',
+    distanceNm: 720,
+    estimatedDays: 7,
+    crewRequirement: 3,
+    coordinates: {
+      start: [32.1, -28.8] as [number, number],
+      end: [18.4, -33.9] as [number, number],
+    },
+    logisticsNotes: {
+      flightHub: 'Cape Town CPT',
+      notes: 'Cape of Good Hope',
+    },
+  },
+  // Passage 4: Atlantic Return (Cape Town to Saint Lucia)
+  {
+    passageSlug: 'atlantic-return',
+    stageNumber: 14,
+    routeName: 'Cape Town to Recife',
+    startLocation: 'Cape Town, South Africa',
+    endLocation: 'Recife, Brazil',
+    arrivalDate: '2028-02-13',
+    departureDate: '2028-03-02',
+    distanceNm: 3000,
+    estimatedDays: 28,
+    crewRequirement: 4,
+    coordinates: {
+      start: [18.4, -33.9] as [number, number],
+      end: [-34.9, -8.1] as [number, number],
+    },
+    logisticsNotes: {
+      flightHub: 'Recife REC',
+      notes: 'South Atlantic crossing',
     },
   },
   {
     passageSlug: 'atlantic-return',
-    stageNumber: 13,
-    routeName: 'Final Leg to Antigua',
-    startLocation: 'Barbados',
-    endLocation: 'English Harbour, Antigua',
-    arrivalDate: '2026-08-25',
-    departureDate: '2026-08-31',
-    distanceNm: 180,
-    estimatedDays: 2,
-    crewRequirement: 3,
+    stageNumber: 15,
+    routeName: 'Recife to Grenada',
+    startLocation: 'Recife, Brazil',
+    endLocation: 'Grenada',
+    arrivalDate: '2028-03-23',
+    departureDate: '2028-03-24',
+    distanceNm: 2300,
+    estimatedDays: 21,
+    crewRequirement: 4,
     coordinates: {
-      start: [-59.5432, 13.1939],
-      end: [-61.7648, 17.0078],
+      start: [-34.9, -8.1] as [number, number],
+      end: [-61.8, 12.1] as [number, number],
     },
     logisticsNotes: {
-      flightHub: 'Antigua ANU (V.C. Bird International)',
-      notes: 'Circumnavigation completion ceremony at Nelsons Dockyard',
+      flightHub: 'Maurice Bishop GND',
+      notes: 'Caribbean arrival',
+    },
+  },
+  {
+    passageSlug: 'atlantic-return',
+    stageNumber: 16,
+    routeName: 'Grenada to Saint Lucia',
+    startLocation: 'Grenada',
+    endLocation: 'Saint Lucia',
+    arrivalDate: '2028-04-15',
+    distanceNm: 700,
+    estimatedDays: 5,
+    crewRequirement: 3,
+    coordinates: {
+      start: [-61.8, 12.1] as [number, number],
+      end: [-61.0, 14.0] as [number, number],
+    },
+    logisticsNotes: {
+      flightHub: 'Hewanorra UVF',
+      notes: 'Circumnavigation complete!',
     },
   },
 ];
@@ -782,10 +835,49 @@ async function seed() {
   console.log('🌱 Starting database seed...\n');
 
   try {
-    // Seed Passages
-    console.log('📦 Seeding passages...');
+    // Cleanup: Remove old passages with dates before 2027 and their stages
+    console.log('🧹 Cleaning up old data...');
+    const { lt } = await import('drizzle-orm');
+    const oldPassages = await db.select({ id: schema.passages.id, name: schema.passages.name })
+      .from(schema.passages)
+      .where(lt(schema.passages.startDate, '2027-01-01'));
+
+    for (const oldPassage of oldPassages) {
+      // Stages cascade-delete with passages
+      await db.delete(schema.passages).where(lt(schema.passages.startDate, '2027-01-01'));
+      console.log(`  ✗ Removed old passage: ${oldPassage.name}`);
+    }
+
+    // Also clean up any orphaned stages
+    const allStages = await db.select({ id: schema.stages.id, arrivalDate: schema.stages.arrivalDate }).from(schema.stages);
+    for (const stage of allStages) {
+      if (stage.arrivalDate && stage.arrivalDate < '2027-01-01') {
+        await db.delete(schema.stages).where(lt(schema.stages.arrivalDate, '2027-01-01'));
+        console.log('  ✗ Removed orphaned pre-2027 stages');
+        break;
+      }
+    }
+
+    // Seed Passages (upsert to allow updates)
+    console.log('\n📦 Seeding passages...');
     for (const passageData of passagesData) {
-      await db.insert(schema.passages).values(passageData).onConflictDoNothing();
+      await db.insert(schema.passages).values(passageData).onConflictDoUpdate({
+        target: schema.passages.slug,
+        set: {
+          name: passageData.name,
+          description: passageData.description,
+          startDate: passageData.startDate,
+          endDate: passageData.endDate,
+          startHub: passageData.startHub,
+          endHub: passageData.endHub,
+          pricePerPerson: passageData.pricePerPerson,
+          maxGuests: passageData.maxGuests,
+          status: passageData.status,
+          requiresOffshoreCompetency: passageData.requiresOffshoreCompetency,
+          metadata: passageData.metadata,
+          updatedAt: new Date(),
+        },
+      });
       console.log(`  ✓ ${passageData.name}`);
     }
 
@@ -793,20 +885,25 @@ async function seed() {
     const passages = await db.query.passages.findMany();
     const passageMap = new Map(passages.map(p => [p.slug, p.id]));
 
-    // Seed Stages
+    // Clear existing stages for updated passages and re-seed
     console.log('\n📍 Seeding stages...');
+    for (const passage of passages) {
+      const { eq } = await import('drizzle-orm');
+      await db.delete(schema.stages).where(eq(schema.stages.passageId, passage.id));
+    }
+
     for (const stageData of stagesData) {
       const passageId = passageMap.get(stageData.passageSlug);
       if (!passageId) {
         console.log(`  ⚠ Skipping stage: passage not found for ${stageData.passageSlug}`);
         continue;
       }
-      
+
       const { passageSlug, ...stageWithoutSlug } = stageData;
       await db.insert(schema.stages).values({
         ...stageWithoutSlug,
         passageId,
-      }).onConflictDoNothing();
+      });
       console.log(`  ✓ Stage ${stageData.stageNumber}: ${stageData.routeName}`);
     }
 
