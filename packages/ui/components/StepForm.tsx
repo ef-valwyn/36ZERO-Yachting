@@ -209,7 +209,7 @@ export const StepForm: React.FC<StepFormProps> = ({
       </h3>
 
       {/* Step Content */}
-      <div className="relative min-h-[400px]">
+      <div className="relative min-h-[450px]">
         <AnimatePresence mode="wait" custom={direction}>
           <motion.div
             key={currentStep}
@@ -440,7 +440,7 @@ export const StepForm: React.FC<StepFormProps> = ({
 
             {/* Step 4: Reserve Your Entry */}
             {currentStep === 3 && (
-              <div className="space-y-6">
+              <div className="h-full overflow-y-auto space-y-6 pb-4 pr-2 scrollbar-thin scrollbar-thumb-white/20 scrollbar-track-transparent">
                 {/* Selected Passages Summary */}
                 <div className="space-y-2">
                   <h4 className="text-sm font-medium text-white/60">Selected Passages</h4>
