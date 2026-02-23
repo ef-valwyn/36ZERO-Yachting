@@ -3,12 +3,14 @@
 import Clarity from '@microsoft/clarity';
 import posthog from 'posthog-js';
 import { PostHogProvider as PHProvider } from 'posthog-js/react';
+import Script from 'next/script';
 import { useEffect, useState, useRef } from 'react';
 
 // Environment variables
 const POSTHOG_KEY = process.env.NEXT_PUBLIC_POSTHOG_KEY;
 const POSTHOG_HOST = process.env.NEXT_PUBLIC_POSTHOG_HOST || 'https://us.i.posthog.com';
 const CLARITY_PROJECT_ID = process.env.NEXT_PUBLIC_CLARITY_PROJECT_ID;
+const GA4_MEASUREMENT_ID = process.env.NEXT_PUBLIC_GA4_MEASUREMENT_ID;
 
 /**
  * PostHog Provider - Product analytics and feature flags
@@ -54,11 +56,42 @@ function PostHogProvider({ children }: { children: React.ReactNode }) {
 }
 
 /**
+ * Google Analytics 4 - Page analytics and conversion tracking
+ */
+function GoogleAnalytics() {
+  if (!GA4_MEASUREMENT_ID) return null;
+
+  return (
+    <>
+      <Script
+        src={`https://www.googletagmanager.com/gtag/js?id=${GA4_MEASUREMENT_ID}`}
+        strategy="afterInteractive"
+      />
+      <Script id="google-analytics" strategy="afterInteractive">
+        {`
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', '${GA4_MEASUREMENT_ID}', {
+            page_path: window.location.pathname,
+          });
+        `}
+      </Script>
+    </>
+  );
+}
+
+/**
  * Combined Analytics Provider
- * Includes: Microsoft Clarity (heatmaps) + PostHog (product analytics)
+ * Includes: Microsoft Clarity (heatmaps) + PostHog (product analytics) + Google Analytics 4
  */
 export function AnalyticsProvider({ children }: { children: React.ReactNode }) {
-  return <PostHogProvider>{children}</PostHogProvider>;
+  return (
+    <PostHogProvider>
+      <GoogleAnalytics />
+      {children}
+    </PostHogProvider>
+  );
 }
 
 export default AnalyticsProvider;

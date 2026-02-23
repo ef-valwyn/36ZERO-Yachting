@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { db, inquiries, vessels, eq } from '@36zero/database';
 
 const HUBSPOT_ACCESS_TOKEN = process.env.HUBSPOT_ACCESS_TOKEN;
 const HUBSPOT_API_URL = 'https://api.hubapi.com/crm/v3/objects/contacts';
@@ -8,9 +9,10 @@ interface LeadData {
   firstName?: string;
   lastName?: string;
   phone?: string;
+  countryCode?: string;
   country?: string;
   company?: string;
-  leadSource: 'premiere_updates' | 'premiere_tour_request' | 'vessel_enquiry';
+  leadSource: 'premiere_updates' | 'premiere_tour_request' | 'vessel_enquiry' | 'contact_form';
   interest?: string;
   // Vessel enquiry specific fields
   vesselId?: string;
@@ -33,7 +35,34 @@ export async function POST(request: NextRequest) {
 
     if (!HUBSPOT_ACCESS_TOKEN) {
       console.error('HubSpot access token not configured');
-      // In development, just log and return success
+      // Still save vessel enquiries to DB even without HubSpot
+      if (body.leadSource === 'vessel_enquiry') {
+        try {
+          let vesselUuid: string | null = null;
+          if (body.vesselId) {
+            const vessel = await db.query.vessels.findFirst({
+              where: eq(vessels.slug, body.vesselId),
+            });
+            vesselUuid = vessel?.id || null;
+          }
+          const fullName = [body.firstName || '', body.lastName || ''].filter(Boolean).join(' ');
+          await db.insert(inquiries).values({
+            vesselId: vesselUuid,
+            vesselName: body.vesselName || null,
+            vesselModel: body.vesselModel || null,
+            name: fullName || body.email,
+            email: body.email,
+            phone: body.phone || null,
+            countryCode: body.countryCode || null,
+            company: body.company || null,
+            deliveryRegion: body.deliveryRegion || null,
+            message: body.message || null,
+            source: 'website',
+          });
+        } catch (dbError) {
+          console.error('Failed to save enquiry to DB:', dbError);
+        }
+      }
       if (process.env.NODE_ENV === 'development') {
         console.log('Lead data (dev mode):', body);
         return NextResponse.json({ success: true, message: 'Lead captured (dev mode)' });
@@ -101,6 +130,14 @@ export async function POST(request: NextRequest) {
       if (body.interest) {
         notes.push(`Interest: ${body.interest}`);
       }
+    } else if (body.leadSource === 'contact_form') {
+      notes.push('Source: Contact Form');
+      if (body.interest) {
+        notes.push(`Interest: ${body.interest}`);
+      }
+      if (body.message) {
+        notes.push(`Message: ${body.message}`);
+      }
     }
 
     // Add notes to a standard HubSpot field if we have any
@@ -136,8 +173,36 @@ export async function POST(request: NextRequest) {
       
       // Handle duplicate email error gracefully - contact already exists
       if (errorData.category === 'CONFLICT') {
-        return NextResponse.json({ 
-          success: true, 
+        // Still save vessel enquiries to DB even if HubSpot contact exists
+        if (body.leadSource === 'vessel_enquiry') {
+          try {
+            let vesselUuid: string | null = null;
+            if (body.vesselId) {
+              const vessel = await db.query.vessels.findFirst({
+                where: eq(vessels.slug, body.vesselId),
+              });
+              vesselUuid = vessel?.id || null;
+            }
+            const fullName = [firstName, lastName].filter(Boolean).join(' ');
+            await db.insert(inquiries).values({
+              vesselId: vesselUuid,
+              vesselName: body.vesselName || null,
+              vesselModel: body.vesselModel || null,
+              name: fullName || body.email,
+              email: body.email,
+              phone: body.phone || null,
+              countryCode: body.countryCode || null,
+              company: body.company || null,
+              deliveryRegion: body.deliveryRegion || null,
+              message: body.message || null,
+              source: 'website',
+            });
+          } catch (dbError) {
+            console.error('Failed to save enquiry to DB (non-fatal):', dbError);
+          }
+        }
+        return NextResponse.json({
+          success: true,
           message: 'Contact already exists',
         });
       }
@@ -150,8 +215,40 @@ export async function POST(request: NextRequest) {
 
     const contactData = await createResponse.json();
 
-    return NextResponse.json({ 
-      success: true, 
+    // Save vessel enquiries to the inquiries table
+    if (body.leadSource === 'vessel_enquiry') {
+      try {
+        // Look up vessel UUID by slug if vesselId is provided
+        let vesselUuid: string | null = null;
+        if (body.vesselId) {
+          const vessel = await db.query.vessels.findFirst({
+            where: eq(vessels.slug, body.vesselId),
+          });
+          vesselUuid = vessel?.id || null;
+        }
+
+        const fullName = [firstName, lastName].filter(Boolean).join(' ');
+        await db.insert(inquiries).values({
+          vesselId: vesselUuid,
+          vesselName: body.vesselName || null,
+          vesselModel: body.vesselModel || null,
+          name: fullName || body.email,
+          email: body.email,
+          phone: body.phone || null,
+          countryCode: body.countryCode || null,
+          company: body.company || null,
+          deliveryRegion: body.deliveryRegion || null,
+          message: body.message || null,
+          source: 'website',
+          hubspotContactId: contactData.id,
+        });
+      } catch (dbError) {
+        console.error('Failed to save enquiry to DB (non-fatal):', dbError);
+      }
+    }
+
+    return NextResponse.json({
+      success: true,
       message: 'Contact created',
       contactId: contactData.id,
     });

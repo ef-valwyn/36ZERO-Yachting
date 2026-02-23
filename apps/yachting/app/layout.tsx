@@ -3,6 +3,7 @@ import { ClerkProvider } from '@clerk/nextjs';
 import '@36zero/ui/styles';
 import './globals.css';
 import WorldPremierePopup from '@/components/WorldPremierePopup';
+import MOTYVotePopup from '@/components/MOTYVotePopup';
 import { AnalyticsProvider } from '@/components/Analytics';
 import { OrganizationSchema, WebSiteSchema } from '@/components/OrganizationSchema';
 
@@ -54,6 +55,12 @@ export const metadata: Metadata = {
     index: true,
     follow: true,
   },
+  verification: {
+    google: [
+      'cldLc71YDR4erJT8r9jOie4mjH8wmj2HfKV6iuqEF8I',
+      'f0sIfWFpv4Fy9DWzifPwJTXW4UZ93_SW7SEV7TaFf7I',
+    ],
+  },
 };
 
 export default function RootLayout({
@@ -73,6 +80,7 @@ export default function RootLayout({
           <AnalyticsProvider>
             {children}
             <WorldPremierePopup />
+            <MOTYVotePopup />
           </AnalyticsProvider>
         </body>
       </html>
