@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Loader2, CheckCircle, AlertCircle } from 'lucide-react';
-import { Button } from '@36zero/ui';
+import { Button, countryCodes } from '@36zero/ui';
 
 interface EnquireModalProps {
   isOpen: boolean;
@@ -20,44 +20,6 @@ const deliveryRegions = [
   { value: 'caribbean', label: 'Caribbean' },
   { value: 'australia-nz', label: 'Australia / New Zealand' },
   { value: 'middle-east', label: 'Middle East' },
-];
-
-const countryCodes = [
-  { code: '+1', country: 'US/CA' },
-  { code: '+44', country: 'UK' },
-  { code: '+61', country: 'AU' },
-  { code: '+64', country: 'NZ' },
-  { code: '+33', country: 'FR' },
-  { code: '+49', country: 'DE' },
-  { code: '+34', country: 'ES' },
-  { code: '+39', country: 'IT' },
-  { code: '+31', country: 'NL' },
-  { code: '+41', country: 'CH' },
-  { code: '+43', country: 'AT' },
-  { code: '+32', country: 'BE' },
-  { code: '+45', country: 'DK' },
-  { code: '+46', country: 'SE' },
-  { code: '+47', country: 'NO' },
-  { code: '+358', country: 'FI' },
-  { code: '+353', country: 'IE' },
-  { code: '+351', country: 'PT' },
-  { code: '+30', country: 'GR' },
-  { code: '+971', country: 'UAE' },
-  { code: '+966', country: 'SA' },
-  { code: '+974', country: 'QA' },
-  { code: '+65', country: 'SG' },
-  { code: '+852', country: 'HK' },
-  { code: '+81', country: 'JP' },
-  { code: '+82', country: 'KR' },
-  { code: '+86', country: 'CN' },
-  { code: '+66', country: 'TH' },
-  { code: '+60', country: 'MY' },
-  { code: '+62', country: 'ID' },
-  { code: '+63', country: 'PH' },
-  { code: '+91', country: 'IN' },
-  { code: '+27', country: 'ZA' },
-  { code: '+55', country: 'BR' },
-  { code: '+52', country: 'MX' },
 ];
 
 export function EnquireModal({ isOpen, onClose, vesselId, vesselName, vesselModel }: EnquireModalProps) {
@@ -145,6 +107,7 @@ export function EnquireModal({ isOpen, onClose, vesselId, vesselName, vesselMode
           firstName,
           lastName,
           phone: `${formData.countryCode} ${formData.phone}`,
+          countryCode: formData.countryCode,
           company: formData.company || undefined,
           leadSource: 'vessel_enquiry',
           vesselId,

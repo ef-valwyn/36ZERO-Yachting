@@ -4,44 +4,10 @@ import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Mail, User, Phone, CheckCircle, AlertCircle, Loader2, Send } from 'lucide-react';
 import Image from 'next/image';
-import { Button, GlassCard } from '@36zero/ui';
+import { Button, GlassCard, countryCodes } from '@36zero/ui';
 import Header from '@/components/Header';
 import SiteFooter from '@/components/SiteFooter';
 import { useUser, useSignIn, useSignUp } from '@clerk/nextjs';
-
-// Country codes for phone input
-const countryCodes = [
-  { code: '+1', country: 'US/CA' },
-  { code: '+44', country: 'UK' },
-  { code: '+33', country: 'FR' },
-  { code: '+34', country: 'ES' },
-  { code: '+39', country: 'IT' },
-  { code: '+49', country: 'DE' },
-  { code: '+31', country: 'NL' },
-  { code: '+61', country: 'AU' },
-  { code: '+64', country: 'NZ' },
-  { code: '+971', country: 'UAE' },
-  { code: '+65', country: 'SG' },
-  { code: '+852', country: 'HK' },
-  { code: '+81', country: 'JP' },
-  { code: '+86', country: 'CN' },
-  { code: '+91', country: 'IN' },
-  { code: '+27', country: 'ZA' },
-  { code: '+55', country: 'BR' },
-  { code: '+52', country: 'MX' },
-  { code: '+41', country: 'CH' },
-  { code: '+43', country: 'AT' },
-  { code: '+32', country: 'BE' },
-  { code: '+45', country: 'DK' },
-  { code: '+46', country: 'SE' },
-  { code: '+47', country: 'NO' },
-  { code: '+358', country: 'FI' },
-  { code: '+351', country: 'PT' },
-  { code: '+30', country: 'GR' },
-  { code: '+48', country: 'PL' },
-  { code: '+420', country: 'CZ' },
-  { code: '+36', country: 'HU' },
-];
 
 const interestOptions = [
   { value: 'ay60', label: 'Adventure Yachts AY60' },
