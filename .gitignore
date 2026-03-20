@@ -44,6 +44,7 @@ coverage
 # TypeScript
 *.tsbuildinfo
 next-env.d.ts
+!apps/yachting/next-env.d.ts
 
 # Drizzle
 drizzle/meta
