@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import Script from 'next/script';
 import { ClerkProvider } from '@clerk/nextjs';
 import '@36zero/ui/styles';
 import './globals.css';
@@ -82,6 +83,12 @@ export default function RootLayout({
             <WorldPremierePopup />
             <MOTYVotePopup />
           </AnalyticsProvider>
+          {/* HubSpot Tracking Code — captures UTM params & page views */}
+          <Script
+            id="hs-script-loader"
+            src="//js-na2.hs-scripts.com/245063127.js"
+            strategy="afterInteractive"
+          />
         </body>
       </html>
     </ClerkProvider>
