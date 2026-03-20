@@ -9,6 +9,7 @@ import { useUser, useSignIn, useSignUp } from '@clerk/nextjs';
 
 const COOKIE_POPUP_SEEN = '36zero_premiere_seen';
 const COOKIE_MINIMIZED_CLOSED = '36zero_premiere_minimized_closed';
+const SSO_RETURN_KEY = '36zero_sso_return_view';
 
 const interestOptions = [
   { value: 'individual', label: 'Individual' },
@@ -16,6 +17,17 @@ const interestOptions = [
   { value: 'charter-operator', label: 'Charter Operator' },
   { value: 'other', label: 'Other (Please Specify)' },
 ];
+
+type TourFormState = {
+  fullName: string;
+  email: string;
+  countryCode: string;
+  phone: string;
+  country: string;
+  interest: string;
+  otherInterest: string;
+  company: string;
+};
 
 function setCookie(name: string, value: string, days: number) {
   const expires = new Date();
@@ -52,7 +64,7 @@ export default function WorldPremierePopup() {
   const [error, setError] = useState<string | null>(null);
 
   // Tour request form state
-  const [tourForm, setTourForm] = useState({
+  const [tourForm, setTourForm] = useState<TourFormState>({
     fullName: '',
     email: '',
     countryCode: '+44',
@@ -76,7 +88,7 @@ export default function WorldPremierePopup() {
       }
       
       // Prefill tour form
-      setTourForm(prev => ({
+      setTourForm((prev: TourFormState) => ({
         ...prev,
         fullName: user.fullName || `${user.firstName || ''} ${user.lastName || ''}`.trim(),
         email: user.primaryEmailAddress?.emailAddress || '',
@@ -90,7 +102,10 @@ export default function WorldPremierePopup() {
     
     setIsGoogleLoading(true);
     setError(null);
-    
+
+    // Remember which view the user was on so we can reopen the popup after SSO redirect
+    sessionStorage.setItem(SSO_RETURN_KEY, currentView);
+
     try {
       // Try sign in first
       await signIn?.authenticateWithRedirect({
@@ -115,9 +130,26 @@ export default function WorldPremierePopup() {
   };
 
   useEffect(() => {
+    // Don't process SSO return logic on the callback page itself —
+    // the layout renders this component on /sso-callback too, which would
+    // consume the sessionStorage key before the final redirect lands.
+    if (window.location.pathname === '/sso-callback') {
+      return;
+    }
+
+    // Check if we're returning from Google SSO
+    const ssoReturnView = sessionStorage.getItem(SSO_RETURN_KEY);
+    if (ssoReturnView) {
+      sessionStorage.removeItem(SSO_RETURN_KEY);
+      setCurrentView(ssoReturnView as 'updates' | 'tour');
+      setIsVisible(true);
+      setIsMinimized(false);
+      return;
+    }
+
     const hasSeenPopup = getCookie(COOKIE_POPUP_SEEN);
     const hasClosedMinimized = getCookie(COOKIE_MINIMIZED_CLOSED);
-    
+
     if (!hasSeenPopup) {
       const timer = setTimeout(() => {
         setIsVisible(true);
@@ -451,7 +483,7 @@ export default function WorldPremierePopup() {
                                     id="popup-email"
                                     type="email"
                                     value={email}
-                                    onChange={(e) => setEmail(e.target.value)}
+                                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
                                     placeholder="Enter your email"
                                     className="w-full pl-12 pr-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder:text-white/40
                                              focus:outline-none focus:ring-2 focus:ring-brand-blue/50 focus:border-brand-blue/50 transition-all"
@@ -621,7 +653,7 @@ export default function WorldPremierePopup() {
                                   <input
                                     type="text"
                                     value={tourForm.fullName}
-                                    onChange={(e) => setTourForm({ ...tourForm, fullName: e.target.value })}
+                                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setTourForm({ ...tourForm, fullName: e.target.value })}
                                     placeholder="John Smith"
                                     className={`${inputClasses} pl-10 ${isSignedIn && tourForm.fullName ? 'bg-white/10' : ''} ${isTourFieldInvalid('fullName') ? 'border-red-500' : ''}`}
                                   />
@@ -638,7 +670,7 @@ export default function WorldPremierePopup() {
                                   <input
                                     type="email"
                                     value={tourForm.email}
-                                    onChange={(e) => setTourForm({ ...tourForm, email: e.target.value })}
+                                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setTourForm({ ...tourForm, email: e.target.value })}
                                     placeholder="john@example.com"
                                     className={`${inputClasses} pl-10 ${isSignedIn && tourForm.email ? 'bg-white/10' : ''} ${isTourFieldInvalid('email') ? 'border-red-500' : ''}`}
                                   />
@@ -654,7 +686,7 @@ export default function WorldPremierePopup() {
                                   <div className="relative w-28">
                                     <select
                                       value={tourForm.countryCode}
-                                      onChange={(e) => setTourForm({ ...tourForm, countryCode: e.target.value })}
+                                      onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setTourForm({ ...tourForm, countryCode: e.target.value })}
                                       className={selectClasses}
                                     >
                                       {countryCodes.map((cc) => (
@@ -669,7 +701,7 @@ export default function WorldPremierePopup() {
                                     <input
                                       type="tel"
                                       value={tourForm.phone}
-                                      onChange={(e) => setTourForm({ ...tourForm, phone: e.target.value })}
+                                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => setTourForm({ ...tourForm, phone: e.target.value })}
                                       placeholder="123 456 7890"
                                       className={`${inputClasses} pl-10 ${isTourFieldInvalid('phone') ? 'border-red-500' : ''}`}
                                     />
@@ -686,7 +718,7 @@ export default function WorldPremierePopup() {
                                   <Globe className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/40 pointer-events-none" />
                                   <select
                                     value={tourForm.country}
-                                    onChange={(e) => setTourForm({ ...tourForm, country: e.target.value })}
+                                    onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setTourForm({ ...tourForm, country: e.target.value })}
                                     className={`${selectClasses} pl-10 ${isTourFieldInvalid('country') ? 'border-red-500' : ''}`}
                                   >
                                     <option value="" className="bg-brand-navy">Select country...</option>
@@ -706,7 +738,7 @@ export default function WorldPremierePopup() {
                                 </label>
                                 <select
                                   value={tourForm.interest}
-                                  onChange={(e) => setTourForm({ ...tourForm, interest: e.target.value, otherInterest: '' })}
+                                  onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setTourForm({ ...tourForm, interest: e.target.value, otherInterest: '' })}
                                   className={`${selectClasses} ${isTourFieldInvalid('interest') ? 'border-red-500' : ''}`}
                                 >
                                   <option value="" className="bg-brand-navy">Select your interest...</option>
@@ -731,7 +763,7 @@ export default function WorldPremierePopup() {
                                   <input
                                     type="text"
                                     value={tourForm.otherInterest}
-                                    onChange={(e) => setTourForm({ ...tourForm, otherInterest: e.target.value.slice(0, 32) })}
+                                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setTourForm({ ...tourForm, otherInterest: e.target.value.slice(0, 32) })}
                                     placeholder="Your interest..."
                                     maxLength={32}
                                     className={`${inputClasses} ${isTourFieldInvalid('otherInterest') ? 'border-red-500' : ''}`}
@@ -752,7 +784,7 @@ export default function WorldPremierePopup() {
                                   <input
                                     type="text"
                                     value={tourForm.company}
-                                    onChange={(e) => setTourForm({ ...tourForm, company: e.target.value })}
+                                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setTourForm({ ...tourForm, company: e.target.value })}
                                     placeholder="Company name"
                                     className={`${inputClasses} pl-10`}
                                   />
@@ -837,7 +869,7 @@ export default function WorldPremierePopup() {
             
             {/* Close button */}
             <button
-              onClick={(e) => {
+              onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
                 e.stopPropagation();
                 handleCloseMinimized();
               }}

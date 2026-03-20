@@ -22,8 +22,9 @@ async function syncToHubSpot(data: HubSpotContactData, action: 'create' | 'updat
 
   const properties: Record<string, string> = {
     email: data.email,
-    hs_lead_status: 'OPEN',
-    lifecyclestage: 'customer',
+    hs_lead_status: 'NEW',
+    lifecyclestage: 'lead',
+    lead_source_channel: 'google_sso',
   };
 
   if (data.firstname) properties.firstname = data.firstname;
