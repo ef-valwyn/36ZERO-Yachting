@@ -90,6 +90,7 @@ export async function POST(request: NextRequest) {
       lastname: lastName,
       hs_lead_status: 'NEW',
       lifecyclestage: 'lead',
+      lead_source_channel: body.leadSource,
     };
 
     // Add optional fields if provided
@@ -173,6 +174,61 @@ export async function POST(request: NextRequest) {
       
       // Handle duplicate email error gracefully - contact already exists
       if (errorData.category === 'CONFLICT') {
+        // Search for the existing contact and update it with the new lead source & notes
+        let existingContactId: string | null = null;
+        try {
+          const searchResponse = await fetch(
+            'https://api.hubapi.com/crm/v3/objects/contacts/search',
+            {
+              method: 'POST',
+              headers: {
+                'Authorization': `Bearer ${HUBSPOT_ACCESS_TOKEN}`,
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                filterGroups: [{
+                  filters: [{
+                    propertyName: 'email',
+                    operator: 'EQ',
+                    value: body.email,
+                  }],
+                }],
+              }),
+            }
+          );
+
+          if (searchResponse.ok) {
+            const searchData = await searchResponse.json();
+            if (searchData.total > 0) {
+              existingContactId = searchData.results[0].id;
+
+              // Build update properties — update lead source and append notes
+              const updateProps: Record<string, string> = {
+                lead_source_channel: body.leadSource,
+              };
+              if (body.phone) updateProps.phone = body.phone;
+              if (body.country) updateProps.country = body.country;
+              if (body.company) updateProps.company = body.company;
+              if (firstName) updateProps.firstname = firstName;
+              if (lastName) updateProps.lastname = lastName;
+              if (notes.length > 0) {
+                updateProps.hs_content_membership_notes = notes.join(' | ');
+              }
+
+              await fetch(`${HUBSPOT_API_URL}/${existingContactId}`, {
+                method: 'PATCH',
+                headers: {
+                  'Authorization': `Bearer ${HUBSPOT_ACCESS_TOKEN}`,
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ properties: updateProps }),
+              });
+            }
+          }
+        } catch (searchErr) {
+          console.error('Failed to update existing HubSpot contact (non-fatal):', searchErr);
+        }
+
         // Still save vessel enquiries to DB even if HubSpot contact exists
         if (body.leadSource === 'vessel_enquiry') {
           try {
@@ -196,6 +252,7 @@ export async function POST(request: NextRequest) {
               deliveryRegion: body.deliveryRegion || null,
               message: body.message || null,
               source: 'website',
+              hubspotContactId: existingContactId || undefined,
             });
           } catch (dbError) {
             console.error('Failed to save enquiry to DB (non-fatal):', dbError);
@@ -203,7 +260,8 @@ export async function POST(request: NextRequest) {
         }
         return NextResponse.json({
           success: true,
-          message: 'Contact already exists',
+          message: 'Contact updated',
+          contactId: existingContactId,
         });
       }
       
