@@ -9,13 +9,12 @@ import {
   Download, 
   ChevronLeft, 
   ChevronRight,
-  Calendar,
   Anchor,
   Zap,
   Shield,
   Loader2
 } from 'lucide-react';
-import { Button, GlassCard } from '@36zero/ui';
+import { Button, GlassCard, VesselCard } from '@36zero/ui';
 import Header from '@/components/Header';
 import SiteFooter from '@/components/SiteFooter';
 import AdventureYachtsLogoMark from '@/components/AdventureYachtsLogoMark';
@@ -54,7 +53,8 @@ interface AdventureYacht {
   variant: string;
   availability: string;
   availabilityDate: string | null;
-  status: 'available' | 'coming-soon';
+  availabilityText?: string | null;
+  status: 'available' | 'reserved' | 'under-contract' | 'sold';
   imageUrl: string;
   description: string;
   shortDescription: string | null;
@@ -62,6 +62,7 @@ interface AdventureYacht {
   year: number;
   price: number;
   currency: string;
+  pricePrefix?: string | null;
   length: number;
   beam: number | null;
   draft: number | null;
@@ -945,63 +946,25 @@ export default function AdventureYachtsPage() {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.5, delay: index * 0.1 }}
+                  className="h-full"
                 >
-                  <GlassCard variant="hover" padding="none" className="overflow-hidden group">
-                    {/* Image - Clickable */}
-                    <Link href={`/adventure-yachts/${vessel.slug}`}>
-                      <div className="relative aspect-[16/10] overflow-hidden cursor-pointer">
-                        <Image
-                          src={vessel.imageUrl}
-                          alt={vessel.name}
-                          fill
-                          className="object-cover transition-transform duration-700 group-hover:scale-110"
-                        />
-                        <div className="absolute inset-0 bg-gradient-to-t from-brand-navy via-transparent to-transparent" />
-                        
-                        {/* Availability Badge */}
-                        <div className={`absolute top-4 right-4 px-3 py-1.5 rounded-full text-sm font-medium ${
-                          vessel.status === 'available' 
-                            ? 'bg-accent-teal text-white' 
-                            : 'bg-accent-gold/90 text-brand-navy'
-                        }`}>
-                          <div className="flex items-center gap-1.5">
-                            <Calendar className="w-3.5 h-3.5" />
-                            {vessel.availability}
-                          </div>
-                        </div>
-                      </div>
-                    </Link>
-
-                    {/* Content */}
-                    <div className="p-6">
-                      <div className="mb-4">
-                        <p className="text-brand-blue text-sm font-medium mb-1">{vessel.model}</p>
-                        <h3 className="text-2xl font-bold text-white mb-1">{vessel.name}</h3>
-                        <p className="text-white/60 text-sm">{vessel.variant}</p>
-                      </div>
-                      
-                      <p className="text-white/70 font-light mb-6">
-                        {vessel.shortDescription || vessel.description}
-                      </p>
-
-                      <div className="flex items-center justify-between">
-                        <Button 
-                          variant={vessel.status === 'available' ? 'primary' : 'secondary'}
-                          asChild
-                        >
-                          <Link href={`/adventure-yachts/${vessel.slug}`}>
-                            {vessel.status === 'available' ? 'Enquire Now' : 'Register Interest'}
-                            <ArrowRight className="w-4 h-4 ml-2" />
-                          </Link>
-                        </Button>
-                        <Button variant="ghost" asChild>
-                          <Link href={`/adventure-yachts/${vessel.slug}`}>
-                            View Details
-                          </Link>
-                        </Button>
-                      </div>
-                    </div>
-                  </GlassCard>
+                  <VesselCard
+                    id={vessel.id}
+                    name={vessel.name}
+                    manufacturer={vessel.manufacturer}
+                    model={vessel.model}
+                    year={vessel.year}
+                    price={vessel.price}
+                    currency={vessel.currency}
+                    pricePrefix={vessel.pricePrefix}
+                    length={vessel.length}
+                    capacity={vessel.capacity}
+                    maxSpeed={vessel.maxSpeed}
+                    imageUrl={vessel.imageUrl}
+                    status={vessel.status}
+                    availabilityText={vessel.availabilityText || vessel.availability}
+                    href={`/adventure-yachts/${vessel.slug}`}
+                  />
                 </motion.div>
               ))}
             </div>

@@ -3,6 +3,7 @@ import { resolve } from 'path';
 import { neon } from '@neondatabase/serverless';
 import { drizzle } from 'drizzle-orm/neon-http';
 import * as schema from '../schema';
+import { adventureYachtPricingBySlug } from '../adventureYachtPricing';
 
 // Load .env.local from the root of the monorepo
 config({ path: resolve(__dirname, '../../../.env.local') });
@@ -464,7 +465,7 @@ const vesselsData = [
     guestCapacity: 8,
     cabins: 4,
     crewCapacity: 2,
-    price: '2950000',
+    price: '3245000',
     currency: 'USD',
     status: 'available' as const,
     location: 'Phuket, Thailand',
@@ -484,6 +485,7 @@ const vesselsData = [
     availabilityDate: null,
     sortOrder: 1,
     specs: {
+      pricing: adventureYachtPricingBySlug['adventure-one'],
       engines: 'Triple Mercury V12 600hp Outboards',
       generator: 'Fischer Panda 12kW',
       stabilizers: true,
@@ -514,7 +516,7 @@ const vesselsData = [
     guestCapacity: 8,
     cabins: 4,
     crewCapacity: 2,
-    price: '2950000',
+    price: '3150000',
     currency: 'USD',
     status: 'reserved' as const,
     location: 'Phuket, Thailand',
@@ -533,6 +535,7 @@ const vesselsData = [
     availabilityDate: '2026-04-01',
     sortOrder: 2,
     specs: {
+      pricing: adventureYachtPricingBySlug['adventure-two'],
       engines: 'Twin Volvo D6 440hp + Electric Hybrid',
       generator: 'Fischer Panda 15kW',
       stabilizers: true,
@@ -561,7 +564,7 @@ const vesselsData = [
     guestCapacity: 8,
     cabins: 4,
     crewCapacity: 2,
-    price: '2950000',
+    price: '2850000',
     currency: 'USD',
     status: 'reserved' as const,
     location: 'Phuket, Thailand',
@@ -579,6 +582,7 @@ const vesselsData = [
     availabilityDate: '2026-04-01',
     sortOrder: 3,
     specs: {
+      pricing: adventureYachtPricingBySlug['adventure-three'],
       engines: 'Triple Mercury V12 600hp Outboards',
       generator: 'Fischer Panda 12kW',
       stabilizers: true,
@@ -604,7 +608,7 @@ const vesselsData = [
     guestCapacity: 8,
     cabins: 4,
     crewCapacity: 2,
-    price: '2950000',
+    price: '3245000',
     currency: 'USD',
     status: 'reserved' as const,
     location: 'Phuket, Thailand',
@@ -622,6 +626,7 @@ const vesselsData = [
     availabilityDate: '2026-10-01',
     sortOrder: 4,
     specs: {
+      pricing: adventureYachtPricingBySlug['adventure-four'],
       engines: 'Triple Mercury V12 600hp Outboards',
       generator: 'Fischer Panda 15kW',
       stabilizers: true,
