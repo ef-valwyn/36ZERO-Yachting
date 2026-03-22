@@ -1,7 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { db } from '@36zero/database';
+import {
+  db,
+  getAdventureYachtPricingConfig,
+  resolveAdventureYachtPricing,
+} from '@36zero/database';
 import { vessels } from '@36zero/database/schema';
-import { desc, asc, sql, eq } from 'drizzle-orm';
+import { sql } from 'drizzle-orm';
+import { getAdventureYachtCurrencyFromHeaders } from '@/lib/pricingRegion';
 
 export const dynamic = 'force-dynamic';
 
@@ -22,6 +27,7 @@ export const dynamic = 'force-dynamic';
  */
 export async function GET(request: NextRequest) {
   try {
+    const displayCurrency = getAdventureYachtCurrencyFromHeaders(request.headers);
     const searchParams = request.nextUrl.searchParams;
     const sort = searchParams.get('sort') || 'newest';
     const manufacturer = searchParams.get('manufacturer');
@@ -29,9 +35,6 @@ export async function GET(request: NextRequest) {
     const maxPrice = searchParams.get('maxPrice');
     const minLength = searchParams.get('minLength');
     const maxLength = searchParams.get('maxLength');
-
-    // Build the query with filters
-    let query = db.select().from(vessels);
 
     // Apply filters using SQL conditions
     // Always filter by isVisible = true
@@ -102,36 +105,46 @@ export async function GET(request: NextRequest) {
     sortedVessels = [...adventureYachts, ...regularVessels];
 
     // Transform for API response
-    const response = sortedVessels.map(vessel => ({
-      id: vessel.slug,
-      name: vessel.name,
-      slug: vessel.slug,
-      manufacturer: vessel.manufacturer,
-      model: vessel.model,
-      year: vessel.year,
-      price: parseFloat(vessel.price),
-      currency: vessel.currency,
-      length: parseFloat(vessel.lengthMeters),
-      beam: vessel.beamMeters ? parseFloat(vessel.beamMeters) : null,
-      draft: vessel.draftMeters ? parseFloat(vessel.draftMeters) : null,
-      capacity: vessel.guestCapacity,
-      cabins: vessel.cabins,
-      maxSpeed: vessel.maxSpeed,
-      cruisingSpeed: vessel.cruisingSpeed,
-      range: vessel.range,
-      imageUrl: vessel.featuredImageUrl || '/images/placeholder-yacht.jpg',
-      galleryImages: vessel.galleryImages || [],
-      status: vessel.status === 'under_contract' ? 'under-contract' : vessel.status,
-      location: vessel.location,
-      description: vessel.description,
-      shortDescription: vessel.shortDescription,
-      isFeatured: vessel.isFeatured,
-      isAdventureYacht: vessel.isAdventureYacht,
-      variant: vessel.variant,
-      availabilityText: vessel.availabilityText,
-      availabilityDate: vessel.availabilityDate,
-      specs: vessel.specs,
-    }));
+    const response = sortedVessels.map(vessel => {
+      const regionalPricing = vessel.isAdventureYacht
+        ? getAdventureYachtPricingConfig(vessel.slug, vessel.specs?.pricing)
+        : null;
+      const resolvedPricing = regionalPricing
+        ? resolveAdventureYachtPricing(regionalPricing, displayCurrency).card
+        : null;
+
+      return {
+        id: vessel.slug,
+        name: vessel.name,
+        slug: vessel.slug,
+        manufacturer: vessel.manufacturer,
+        model: vessel.model,
+        year: vessel.year,
+        price: resolvedPricing?.amount ?? parseFloat(vessel.price),
+        currency: resolvedPricing?.currency ?? vessel.currency,
+        pricePrefix: resolvedPricing?.prefix ?? null,
+        length: parseFloat(vessel.lengthMeters),
+        beam: vessel.beamMeters ? parseFloat(vessel.beamMeters) : null,
+        draft: vessel.draftMeters ? parseFloat(vessel.draftMeters) : null,
+        capacity: vessel.guestCapacity,
+        cabins: vessel.cabins,
+        maxSpeed: vessel.maxSpeed,
+        cruisingSpeed: vessel.cruisingSpeed,
+        range: vessel.range,
+        imageUrl: vessel.featuredImageUrl || '/images/placeholder-yacht.jpg',
+        galleryImages: vessel.galleryImages || [],
+        status: vessel.status === 'under_contract' ? 'under-contract' : vessel.status,
+        location: vessel.location,
+        description: vessel.description,
+        shortDescription: vessel.shortDescription,
+        isFeatured: vessel.isFeatured,
+        isAdventureYacht: vessel.isAdventureYacht,
+        variant: vessel.variant,
+        availabilityText: vessel.availabilityText,
+        availabilityDate: vessel.availabilityDate,
+        specs: vessel.specs,
+      };
+    });
 
     return NextResponse.json(response);
   } catch (error) {

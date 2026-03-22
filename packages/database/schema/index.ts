@@ -12,6 +12,7 @@ import {
   pgEnum,
 } from 'drizzle-orm/pg-core';
 import { relations } from 'drizzle-orm';
+import type { AdventureYachtPricingConfig } from '../adventureYachtPricing';
 
 // =========================================
 // ENUMS
@@ -188,6 +189,7 @@ export const vessels = pgTable('vessels', {
     navigation?: string[];
     entertainment?: string[];
     safety?: string[];
+    pricing?: AdventureYachtPricingConfig;
   }>(),
   isFeatured: boolean('is_featured').notNull().default(false),
   

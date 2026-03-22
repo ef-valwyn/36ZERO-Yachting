@@ -253,6 +253,10 @@
     @apply inline-flex items-baseline gap-1;
   }
 
+  .price-prefix {
+    @apply text-sm font-medium text-white/60;
+  }
+
   .price-currency {
     @apply text-sm font-medium text-white/60;
   }
