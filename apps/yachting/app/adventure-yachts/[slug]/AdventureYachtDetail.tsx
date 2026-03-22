@@ -105,7 +105,15 @@ export default function AdventureYachtDetail({ build, allBuilds }: Props) {
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
         {/* Background with gradient overlay */}
         <div className="absolute inset-0">
-          <div className="absolute inset-0 bg-gradient-to-br from-brand-navy via-brand-navy-50 to-brand-navy" />
+          <Image
+            src={build.imageUrl}
+            alt={`${build.name} hero image`}
+            fill
+            priority
+            className="object-cover object-center"
+          />
+          <div className="absolute inset-0 bg-gradient-to-br from-brand-navy/70 via-brand-navy/45 to-brand-navy/85" />
+          <div className="absolute inset-0 bg-gradient-to-t from-brand-navy via-transparent to-brand-navy/35" />
           
           {/* Decorative elements */}
           <div className="absolute top-1/4 -left-32 w-96 h-96 bg-brand-blue/5 rounded-full blur-3xl" />
