@@ -7,7 +7,6 @@ import Image from 'next/image';
 import { 
   ArrowRight, 
   Download, 
-  // Play, // Uncomment when video section is enabled
   ChevronLeft, 
   ChevronRight,
   Calendar,
@@ -20,6 +19,7 @@ import { Button, GlassCard } from '@36zero/ui';
 import Header from '@/components/Header';
 import SiteFooter from '@/components/SiteFooter';
 import AdventureYachtsLogoMark from '@/components/AdventureYachtsLogoMark';
+import YouTubeEmbedCard from '@/components/YouTubeEmbedCard';
 
 // Animation variants
 const containerVariants = {
@@ -101,6 +101,8 @@ const galleryImages = [
   { id: 19, url: `${BLOB_BASE}/head3.jpg`, alt: 'AY60 Bathroom 3' },
   { id: 20, url: `${BLOB_BASE}/head4.jpg`, alt: 'AY60 Bathroom 4' },
 ];
+
+const AY60_VIDEO_URL = 'https://youtu.be/bqJkzIL8JVs';
 
 // AY60 Specifications
 const specifications = [
@@ -190,8 +192,6 @@ export default function AdventureYachtsPage() {
 
   const [activeGalleryIndex, setActiveGalleryIndex] = React.useState(0);
   const [slideDirection, setSlideDirection] = React.useState<'left' | 'right'>('right');
-  // Video state - uncomment when video section is enabled
-  // const [isVideoPlaying, setIsVideoPlaying] = React.useState(false);
   const [galleryHoverZone, setGalleryHoverZone] = React.useState<'left' | 'right' | null>(null);
   const [activeVesselArea, setActiveVesselArea] = React.useState(vesselAreas[0]);
 
@@ -555,48 +555,15 @@ export default function AdventureYachtsPage() {
             </div>
           </motion.div>
 
-          {/* Video Section - Hidden until video is ready
-          <motion.div
-            className="mb-16"
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-          >
-            <GlassCard variant="blue" padding="none" className="overflow-hidden">
-              <div className="relative aspect-video">
-                {!isVideoPlaying ? (
-                  <>
-                    <Image
-                      src="https://yyofqqbn0jyxo9dg.public.blob.vercel-storage.com/yachts/adventure-one/hero-landing.png"
-                      alt="AY60 Video Thumbnail"
-                      fill
-                      className="object-cover"
-                    />
-                    <div className="absolute inset-0 bg-brand-navy/40 flex items-center justify-center">
-                      <motion.button
-                        onClick={() => setIsVideoPlaying(true)}
-                        className="w-24 h-24 rounded-full bg-brand-blue flex items-center justify-center shadow-glow"
-                        whileHover={{ scale: 1.1 }}
-                        whileTap={{ scale: 0.95 }}
-                      >
-                        <Play className="w-10 h-10 text-white ml-1" />
-                      </motion.button>
-                    </div>
-                    <div className="absolute bottom-6 left-6">
-                      <p className="text-white font-semibold text-lg">Watch the AY60 in Action</p>
-                      <p className="text-white/60 text-sm">3:45 min</p>
-                    </div>
-                  </>
-                ) : (
-                  <div className="w-full h-full bg-black flex items-center justify-center">
-                    <p className="text-white/60">Video player placeholder - Connect to video source</p>
-                  </div>
-                )}
-              </div>
-            </GlassCard>
-          </motion.div>
-          */}
+          {AY60_VIDEO_URL ? (
+            <YouTubeEmbedCard
+              className="mb-16"
+              youtubeUrl={AY60_VIDEO_URL}
+              posterSrc={`${BLOB_BASE}/hero-landing.png`}
+              posterAlt="AY60 video cover image"
+              title="Watch the AY60 in Action"
+            />
+          ) : null}
 
           {/* Specifications */}
           <motion.div
