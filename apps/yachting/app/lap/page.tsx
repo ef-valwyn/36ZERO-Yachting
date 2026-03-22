@@ -573,7 +573,7 @@ export default function LAPPage() {
                 Global Connectivity by Design
               </h3>
               <p className="text-white/70 font-light leading-relaxed">
-                All 36ZERO LAP vessels are part of our global connectivity suite powered by Starlink. Whether you are running a business, following the Ocean Education curriculum, or taking a sabbatical, we make sure you're always connected.
+                All 36ZERO LAP vessels are part of our global connectivity suite powered by Starlink. Whether you are running a business, following the Ocean Education curriculum, or taking a sabbatical, we make sure you&apos;re always connected.
               </p>
               <p className="text-white/70 font-light leading-relaxed">
                 From location positioning data, onboard diagnostics are plugged into 36ZERO by default.
@@ -631,7 +631,7 @@ export default function LAPPage() {
                 Crew Augmentation
               </h3>
               <p className="text-white/70 font-light leading-relaxed">
-                Whether it's your first voyage or you're a seasoned skipper, we know finding competent crew is important. We can place any crew from skipper to stew to support your journey from any major rally node.
+                Whether it&apos;s your first voyage or you&apos;re a seasoned skipper, we know finding competent crew is important. We can place any crew from skipper to stew to support your journey from any major rally node.
               </p>
             </motion.div>
           </div>
@@ -823,7 +823,7 @@ export default function LAPPage() {
             <div className="grid md:grid-cols-2 gap-12">
               <div>
                 <h3 className="text-2xl font-bold text-white mb-6">
-                  What's Included
+                  What&apos;s Included
                 </h3>
                 <ul className="space-y-4">
                   {[
