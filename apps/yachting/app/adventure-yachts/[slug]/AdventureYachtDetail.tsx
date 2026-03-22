@@ -6,6 +6,7 @@ import { motion } from 'framer-motion';
 import Link from 'next/link';
 import Image from 'next/image';
 import { ArrowRight, ChevronDown, MapPin } from 'lucide-react';
+import type { ResolvedAdventureYachtPriceEntry } from '@36zero/database';
 import { Button, GlassCard } from '@36zero/ui';
 import Header from '@/components/Header';
 import SiteFooter from '@/components/SiteFooter';
@@ -36,6 +37,10 @@ interface BuildVariant {
 interface Props {
   build: BuildVariant;
   allBuilds: BuildVariant[];
+  pricing: {
+    card: ResolvedAdventureYachtPriceEntry;
+    detail: ResolvedAdventureYachtPriceEntry[];
+  } | null;
 }
 
 // Animation variants
@@ -75,9 +80,13 @@ const specItemVariants = {
   }),
 };
 
-export default function AdventureYachtDetail({ build, allBuilds }: Props) {
+export default function AdventureYachtDetail({ build, allBuilds, pricing }: Props) {
   const [isEnquireModalOpen, setIsEnquireModalOpen] = useState(false);
   const searchParams = useSearchParams();
+  const formatAmount = (amount: number) =>
+    new Intl.NumberFormat('en-US', { maximumFractionDigits: 0 }).format(amount);
+  const formatPricingEntry = (entry: ResolvedAdventureYachtPriceEntry) =>
+    [entry.prefix, entry.currency, formatAmount(entry.amount)].filter(Boolean).join(' ');
 
   // Auto-scroll to specs section when navigating between builds
   useEffect(() => {
@@ -262,6 +271,25 @@ export default function AdventureYachtDetail({ build, allBuilds }: Props) {
                       <ArrowRight className="w-4 h-4 ml-2" />
                     </Button>
                   </div>
+                  {pricing && (
+                    <div className="mb-6 rounded-2xl border border-white/10 bg-white/5 p-5">
+                      <p className="text-xs font-semibold tracking-[0.24em] uppercase text-brand-blue/80 mb-3">
+                        Pricing
+                      </p>
+                      <div className="space-y-3">
+                        {pricing.detail.map((entry) => (
+                          <div key={`${entry.label ?? 'base'}-${entry.currency}-${entry.amount}`}>
+                            {entry.label && (
+                              <p className="text-sm font-medium text-white/60 mb-1">{entry.label}</p>
+                            )}
+                            <p className="text-xl md:text-2xl font-semibold text-white">
+                              {formatPricingEntry(entry)}
+                            </p>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
                   <p className="text-xl md:text-2xl text-white/60 font-light mb-4">
                     {build.tagline}
                   </p>

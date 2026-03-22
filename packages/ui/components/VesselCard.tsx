@@ -15,6 +15,7 @@ export interface VesselCardProps {
   year: number;
   price: number;
   currency?: string;
+  pricePrefix?: string | null;
   length: number; // in meters
   capacity: number;
   maxSpeed?: number | null; // in knots
@@ -48,6 +49,7 @@ export const VesselCard: React.FC<VesselCardProps> = ({
   year,
   price,
   currency = 'USD',
+  pricePrefix,
   length,
   capacity,
   maxSpeed,
@@ -151,6 +153,7 @@ export const VesselCard: React.FC<VesselCardProps> = ({
           {/* Price */}
           <div className="pt-3 mt-auto">
             <div className="price-tag">
+              {pricePrefix && <span className="price-prefix">{pricePrefix}</span>}
               <span className="price-currency">{currency}</span>
               <span className="price-value">
                 {formatPrice(price, currency).replace(/[^0-9,]/g, '')}

@@ -16,11 +16,13 @@ interface Vessel {
   year: number;
   price: number;
   currency: string;
+  pricePrefix?: string | null;
   length: number;
   capacity: number;
   maxSpeed: number | null;
   imageUrl: string;
   status: 'available' | 'under-contract' | 'sold' | 'reserved';
+  availabilityText?: string | null;
   isFeatured: boolean;
   isAdventureYacht: boolean;
 }

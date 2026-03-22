@@ -1,9 +1,17 @@
 import { Metadata } from 'next';
+import { headers } from 'next/headers';
 import { notFound } from 'next/navigation';
+import {
+  getAdventureYachtPricingConfig,
+  resolveAdventureYachtPricing,
+} from '@36zero/database';
 import AdventureYachtDetail from './AdventureYachtDetail';
 import VesselSchema from '@/components/VesselSchema';
 import { BreadcrumbSchema } from '@/components/BreadcrumbSchema';
 import { buildVariants } from './data';
+import { getAdventureYachtCurrencyFromHeaders } from '@/lib/pricingRegion';
+
+export const dynamic = 'force-dynamic';
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -87,6 +95,12 @@ export default async function AdventureYachtPage({ params }: Props) {
     url: `https://www.36zeroyachting.com/adventure-yachts/${build.slug}`,
     availability: 'PreOrder' as const,
   };
+  const requestHeaders = await headers();
+  const displayCurrency = getAdventureYachtCurrencyFromHeaders(requestHeaders);
+  const pricingConfig = getAdventureYachtPricingConfig(build.slug);
+  const pricing = pricingConfig
+    ? resolveAdventureYachtPricing(pricingConfig, displayCurrency)
+    : null;
 
   return (
     <>
@@ -98,7 +112,7 @@ export default async function AdventureYachtPage({ params }: Props) {
           { name: build.name, url: `https://www.36zeroyachting.com/adventure-yachts/${build.slug}` },
         ]}
       />
-      <AdventureYachtDetail build={build} allBuilds={buildVariants} />
+      <AdventureYachtDetail build={build} allBuilds={buildVariants} pricing={pricing} />
     </>
   );
 }
