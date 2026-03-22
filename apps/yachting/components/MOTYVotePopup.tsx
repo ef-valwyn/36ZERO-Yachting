@@ -1,14 +1,54 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useSyncExternalStore } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Vote } from 'lucide-react';
 import { Button, GlassCard } from '@36zero/ui';
 
 const VOTE_URL = 'https://www.multihulls-world.com/164/the-multihulls/votes/votes';
+const SESSION_DISMISSED_KEY = '36zero_moty_vote_dismissed';
+const SESSION_STORAGE_EVENT = '36zero-moty-vote-storage';
+
+function subscribe(onStoreChange: () => void) {
+  const handleStorageChange = (event: Event) => {
+    if (event instanceof StorageEvent && event.key && event.key !== SESSION_DISMISSED_KEY) {
+      return;
+    }
+
+    onStoreChange();
+  };
+
+  window.addEventListener('storage', handleStorageChange);
+  window.addEventListener(SESSION_STORAGE_EVENT, handleStorageChange);
+
+  return () => {
+    window.removeEventListener('storage', handleStorageChange);
+    window.removeEventListener(SESSION_STORAGE_EVENT, handleStorageChange);
+  };
+}
+
+function getDismissedSnapshot() {
+  return sessionStorage.getItem(SESSION_DISMISSED_KEY) === 'true';
+}
+
+function getServerSnapshot() {
+  return true;
+}
 
 export default function MOTYVotePopup() {
+  const isDismissed = useSyncExternalStore(subscribe, getDismissedSnapshot, getServerSnapshot);
   const [isExpanded, setIsExpanded] = useState(false);
+
+  const handleDismiss = (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.stopPropagation();
+    sessionStorage.setItem(SESSION_DISMISSED_KEY, 'true');
+    window.dispatchEvent(new Event(SESSION_STORAGE_EVENT));
+    setIsExpanded(false);
+  };
+
+  if (isDismissed) {
+    return null;
+  }
 
   return (
     <>
@@ -23,10 +63,19 @@ export default function MOTYVotePopup() {
           className="relative bg-brand-navy/95 backdrop-blur-xl rounded-xl border border-white/10 shadow-2xl overflow-hidden max-w-xs cursor-pointer hover:border-white/20 transition-colors"
           onClick={() => setIsExpanded(true)}
         >
+          <button
+            type="button"
+            onClick={handleDismiss}
+            className="absolute right-2 top-2 z-10 rounded-full p-1.5 text-white/60 transition-colors hover:bg-white/10 hover:text-white"
+            aria-label="Dismiss vote banner for this session"
+          >
+            <X className="h-4 w-4" />
+          </button>
+
           {/* Accent bar */}
           <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-brand-blue to-accent-teal" />
 
-          <div className="p-4">
+          <div className="p-4 pr-10">
             <div className="flex items-start gap-3">
               <div className="flex-shrink-0 w-8 h-8 rounded-full bg-accent-gold/20 flex items-center justify-center">
                 <Vote className="w-4 h-4 text-accent-gold" />

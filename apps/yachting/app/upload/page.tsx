@@ -190,6 +190,7 @@ export default function UploadPage() {
                     {blob.url.match(/\.(jpg|jpeg|png|webp|gif)$/i) && (
                       <div>
                         <p className="text-xs text-white/40 mb-2">Preview</p>
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
                         <img
                           src={blob.url}
                           alt="Uploaded file preview"

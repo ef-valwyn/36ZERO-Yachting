@@ -429,8 +429,8 @@ export default function VesselsPage() {
               Looking for Something Specific?
             </h2>
             <p className="text-white/60 font-light mb-8 max-w-xl mx-auto">
-              Our team can help you find the perfect vessel. Whether you're looking 
-              for a specific model or have custom requirements, we're here to assist.
+              Our team can help you find the perfect vessel. Whether you&apos;re looking
+              for a specific model or have custom requirements, we&apos;re here to assist.
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
               <Button variant="primary" asChild>

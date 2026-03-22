@@ -4,7 +4,7 @@ import Clarity from '@microsoft/clarity';
 import posthog from 'posthog-js';
 import { PostHogProvider as PHProvider } from 'posthog-js/react';
 import Script from 'next/script';
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 
 // Environment variables
 const POSTHOG_KEY = process.env.NEXT_PUBLIC_POSTHOG_KEY;
@@ -16,7 +16,6 @@ const GA4_MEASUREMENT_ID = process.env.NEXT_PUBLIC_GA4_MEASUREMENT_ID;
  * PostHog Provider - Product analytics and feature flags
  */
 function PostHogProvider({ children }: { children: React.ReactNode }) {
-  const [isInitialized, setIsInitialized] = useState(false);
   const clarityInitialized = useRef(false);
 
   useEffect(() => {
@@ -45,10 +44,9 @@ function PostHogProvider({ children }: { children: React.ReactNode }) {
         },
       });
     }
-    setIsInitialized(true);
   }, []);
 
-  if (!POSTHOG_KEY || !isInitialized) {
+  if (!POSTHOG_KEY) {
     return <>{children}</>;
   }
 
