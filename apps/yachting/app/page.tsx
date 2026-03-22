@@ -123,7 +123,7 @@ export default function HomePage() {
               variants={itemVariants}
               className="text-lg md:text-xl text-white/70 font-light max-w-2xl mx-auto mb-10"
             >
-              Premium yacht brokerage and the world's most ambitious 
+              Premium yacht brokerage and the world&apos;s most ambitious
               circumnavigation experience. Own the ocean, or sail it with us.
             </motion.p>
             <motion.div

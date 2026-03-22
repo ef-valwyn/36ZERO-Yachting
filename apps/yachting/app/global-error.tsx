@@ -21,7 +21,7 @@ export default function GlobalError({
           <div className="text-center">
             <h1 className="text-4xl font-bold text-white mb-4">Something went wrong</h1>
             <p className="text-white/60 mb-8">
-              We've been notified and are working to fix the issue.
+              We&apos;ve been notified and are working to fix the issue.
             </p>
             <button
               onClick={() => reset()}
