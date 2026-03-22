@@ -394,146 +394,6 @@ export default function AdventureYachtsPage() {
         </motion.div>
       </section>
 
-      {/* About Adventure Yachts - DNA Section */}
-      <section className="py-32 px-6 relative overflow-hidden">
-        {/* DNA Helix Background Pattern */}
-        <div className="absolute inset-0 pointer-events-none overflow-hidden">
-          {/* DNA strand 1 */}
-          <svg className="absolute -left-20 top-0 h-full w-40 opacity-5" viewBox="0 0 100 800">
-            <path
-              d="M50 0 Q80 50 50 100 Q20 150 50 200 Q80 250 50 300 Q20 350 50 400 Q80 450 50 500 Q20 550 50 600 Q80 650 50 700 Q20 750 50 800"
-              fill="none"
-              stroke="#2f97dd"
-              strokeWidth="2"
-            />
-            <path
-              d="M50 0 Q20 50 50 100 Q80 150 50 200 Q20 250 50 300 Q80 350 50 400 Q20 450 50 500 Q80 550 50 600 Q20 650 50 700 Q80 750 50 800"
-              fill="none"
-              stroke="#2f97dd"
-              strokeWidth="2"
-            />
-            {/* Cross connections */}
-            {[0, 100, 200, 300, 400, 500, 600, 700].map((y) => (
-              <line key={y} x1="30" y1={y + 50} x2="70" y2={y + 50} stroke="#2f97dd" strokeWidth="1" />
-            ))}
-          </svg>
-          
-          {/* DNA strand 2 */}
-          <svg className="absolute -right-20 top-20 h-full w-40 opacity-5" viewBox="0 0 100 800">
-            <path
-              d="M50 0 Q80 50 50 100 Q20 150 50 200 Q80 250 50 300 Q20 350 50 400 Q80 450 50 500 Q20 550 50 600 Q80 650 50 700 Q20 750 50 800"
-              fill="none"
-              stroke="#2f97dd"
-              strokeWidth="2"
-            />
-            <path
-              d="M50 0 Q20 50 50 100 Q80 150 50 200 Q20 250 50 300 Q80 350 50 400 Q20 450 50 500 Q80 550 50 600 Q20 650 50 700 Q80 750 50 800"
-              fill="none"
-              stroke="#2f97dd"
-              strokeWidth="2"
-            />
-          </svg>
-
-          {/* Floating DNA nodes */}
-          <motion.div
-            className="absolute top-1/4 left-1/4 w-3 h-3 rounded-full bg-brand-blue/20"
-            animate={{ y: [0, -20, 0], opacity: [0.2, 0.5, 0.2] }}
-            transition={{ duration: 4, repeat: Infinity }}
-          />
-          <motion.div
-            className="absolute top-1/3 right-1/3 w-2 h-2 rounded-full bg-brand-blue/30"
-            animate={{ y: [0, 15, 0], opacity: [0.3, 0.6, 0.3] }}
-            transition={{ duration: 3, repeat: Infinity, delay: 0.5 }}
-          />
-          <motion.div
-            className="absolute bottom-1/4 left-1/3 w-4 h-4 rounded-full bg-brand-blue/10"
-            animate={{ y: [0, -25, 0], opacity: [0.1, 0.4, 0.1] }}
-            transition={{ duration: 5, repeat: Infinity, delay: 1 }}
-          />
-        </div>
-
-        <div className="max-w-6xl mx-auto relative">
-          <motion.div
-            className="text-center mb-16"
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-          >
-            <p className="text-brand-blue font-medium tracking-widest uppercase text-sm mb-4">
-              Brand DNA
-            </p>
-            <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
-              About Adventure Yachts
-            </h2>
-          </motion.div>
-
-          <div className="grid lg:grid-cols-2 gap-16 items-center">
-            {/* Content */}
-            <motion.div
-              initial={{ opacity: 0, x: -30 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
-              className="space-y-6"
-            >
-              <p className="text-lg text-white/80 font-light leading-relaxed">
-                Adventure Yachts designs and builds high-performance catamarans. Whether you&apos;re 
-                looking to explore ownership, or operate private charters to dream destinations, 
-                you&apos;re here because like us, you love freedom, comfort, craftsmanship, and 
-                sustainability. An Adventure Yacht is like a high-end resort that moves with you. 
-                It is off limits to others, but it holds no limits for you. Live life adrift yet 
-                anchored to what matters as your perspective shifts with the passing shores.
-              </p>
-              <p className="text-lg text-white/80 font-light leading-relaxed">
-                Our AY60 catamarans are built for years of performance by a team of Thai artisans 
-                who incorporate multi-generational knowledge with the art and science of boatbuilding. 
-                Engineered from exceptional materials, yachts are custom designed with optimal buoyancy, 
-                adaptability, capacity, and efficiency. On our pursuit for function, we have not 
-                overlooked style or comfort, matching ergonomics and ample storage capabilities with 
-                feet-up, worries-down elegance.
-              </p>
-            </motion.div>
-
-            {/* DNA Feature Cards */}
-            <motion.div
-              initial={{ opacity: 0, x: 30 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-              className="grid grid-cols-2 gap-4"
-            >
-              {[
-                { icon: Anchor, title: 'Heritage', desc: 'Decades of maritime excellence' },
-                { icon: Zap, title: 'Innovation', desc: 'Cutting-edge technology' },
-                { icon: Shield, title: 'Quality', desc: 'Uncompromising standards' },
-                { icon: ArrowRight, title: 'Vision', desc: 'Future of ocean travel' },
-              ].map((item, index) => (
-                <GlassCard 
-                  key={item.title} 
-                  variant="hover" 
-                  padding="md"
-                  className="text-center"
-                >
-                  <motion.div
-                    initial={{ opacity: 0, scale: 0.8 }}
-                    whileInView={{ opacity: 1, scale: 1 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.4, delay: index * 0.1 }}
-                  >
-                    <div className="w-12 h-12 mx-auto mb-4 rounded-full bg-brand-blue/10 flex items-center justify-center">
-                      <item.icon className="w-6 h-6 text-brand-blue" />
-                    </div>
-                    <h4 className="font-semibold text-white mb-1">{item.title}</h4>
-                    <p className="text-sm text-white/60">{item.desc}</p>
-                  </motion.div>
-                </GlassCard>
-              ))}
-            </motion.div>
-          </div>
-        </div>
-      </section>
-
       {/* AY60 Showcase Section */}
       <section id="ay60-showcase" className="py-32 px-6 bg-gradient-to-b from-transparent via-brand-blue/5 to-transparent">
         <div className="max-w-7xl mx-auto">
@@ -890,6 +750,147 @@ export default function AdventureYachtsPage() {
               ))}
             </div>
           </motion.div>
+        </div>
+      </section>
+
+
+      {/* About Adventure Yachts - DNA Section */}
+      <section className="py-32 px-6 relative overflow-hidden">
+        {/* DNA Helix Background Pattern */}
+        <div className="absolute inset-0 pointer-events-none overflow-hidden">
+          {/* DNA strand 1 */}
+          <svg className="absolute -left-20 top-0 h-full w-40 opacity-5" viewBox="0 0 100 800">
+            <path
+              d="M50 0 Q80 50 50 100 Q20 150 50 200 Q80 250 50 300 Q20 350 50 400 Q80 450 50 500 Q20 550 50 600 Q80 650 50 700 Q20 750 50 800"
+              fill="none"
+              stroke="#2f97dd"
+              strokeWidth="2"
+            />
+            <path
+              d="M50 0 Q20 50 50 100 Q80 150 50 200 Q20 250 50 300 Q80 350 50 400 Q20 450 50 500 Q80 550 50 600 Q20 650 50 700 Q80 750 50 800"
+              fill="none"
+              stroke="#2f97dd"
+              strokeWidth="2"
+            />
+            {/* Cross connections */}
+            {[0, 100, 200, 300, 400, 500, 600, 700].map((y) => (
+              <line key={y} x1="30" y1={y + 50} x2="70" y2={y + 50} stroke="#2f97dd" strokeWidth="1" />
+            ))}
+          </svg>
+          
+          {/* DNA strand 2 */}
+          <svg className="absolute -right-20 top-20 h-full w-40 opacity-5" viewBox="0 0 100 800">
+            <path
+              d="M50 0 Q80 50 50 100 Q20 150 50 200 Q80 250 50 300 Q20 350 50 400 Q80 450 50 500 Q20 550 50 600 Q80 650 50 700 Q20 750 50 800"
+              fill="none"
+              stroke="#2f97dd"
+              strokeWidth="2"
+            />
+            <path
+              d="M50 0 Q20 50 50 100 Q80 150 50 200 Q20 250 50 300 Q80 350 50 400 Q20 450 50 500 Q80 550 50 600 Q20 650 50 700 Q80 750 50 800"
+              fill="none"
+              stroke="#2f97dd"
+              strokeWidth="2"
+            />
+          </svg>
+
+          {/* Floating DNA nodes */}
+          <motion.div
+            className="absolute top-1/4 left-1/4 w-3 h-3 rounded-full bg-brand-blue/20"
+            animate={{ y: [0, -20, 0], opacity: [0.2, 0.5, 0.2] }}
+            transition={{ duration: 4, repeat: Infinity }}
+          />
+          <motion.div
+            className="absolute top-1/3 right-1/3 w-2 h-2 rounded-full bg-brand-blue/30"
+            animate={{ y: [0, 15, 0], opacity: [0.3, 0.6, 0.3] }}
+            transition={{ duration: 3, repeat: Infinity, delay: 0.5 }}
+          />
+          <motion.div
+            className="absolute bottom-1/4 left-1/3 w-4 h-4 rounded-full bg-brand-blue/10"
+            animate={{ y: [0, -25, 0], opacity: [0.1, 0.4, 0.1] }}
+            transition={{ duration: 5, repeat: Infinity, delay: 1 }}
+          />
+        </div>
+
+        <div className="max-w-6xl mx-auto relative">
+          <motion.div
+            className="text-center mb-16"
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+          >
+            <p className="text-brand-blue font-medium tracking-widest uppercase text-sm mb-4">
+              Brand DNA
+            </p>
+            <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
+              About Adventure Yachts
+            </h2>
+          </motion.div>
+
+          <div className="grid lg:grid-cols-2 gap-16 items-center">
+            {/* Content */}
+            <motion.div
+              initial={{ opacity: 0, x: -30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+              className="space-y-6"
+            >
+              <p className="text-lg text-white/80 font-light leading-relaxed">
+                Adventure Yachts designs and builds high-performance catamarans. Whether you&apos;re 
+                looking to explore ownership, or operate private charters to dream destinations, 
+                you&apos;re here because like us, you love freedom, comfort, craftsmanship, and 
+                sustainability. An Adventure Yacht is like a high-end resort that moves with you. 
+                It is off limits to others, but it holds no limits for you. Live life adrift yet 
+                anchored to what matters as your perspective shifts with the passing shores.
+              </p>
+              <p className="text-lg text-white/80 font-light leading-relaxed">
+                Our AY60 catamarans are built for years of performance by a team of Thai artisans 
+                who incorporate multi-generational knowledge with the art and science of boatbuilding. 
+                Engineered from exceptional materials, yachts are custom designed with optimal buoyancy, 
+                adaptability, capacity, and efficiency. On our pursuit for function, we have not 
+                overlooked style or comfort, matching ergonomics and ample storage capabilities with 
+                feet-up, worries-down elegance.
+              </p>
+            </motion.div>
+
+            {/* DNA Feature Cards */}
+            <motion.div
+              initial={{ opacity: 0, x: 30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              className="grid grid-cols-2 gap-4"
+            >
+              {[
+                { icon: Anchor, title: 'Heritage', desc: 'Decades of maritime excellence' },
+                { icon: Zap, title: 'Innovation', desc: 'Cutting-edge technology' },
+                { icon: Shield, title: 'Quality', desc: 'Uncompromising standards' },
+                { icon: ArrowRight, title: 'Vision', desc: 'Future of ocean travel' },
+              ].map((item, index) => (
+                <GlassCard 
+                  key={item.title} 
+                  variant="hover" 
+                  padding="md"
+                  className="text-center"
+                >
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    whileInView={{ opacity: 1, scale: 1 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.4, delay: index * 0.1 }}
+                  >
+                    <div className="w-12 h-12 mx-auto mb-4 rounded-full bg-brand-blue/10 flex items-center justify-center">
+                      <item.icon className="w-6 h-6 text-brand-blue" />
+                    </div>
+                    <h4 className="font-semibold text-white mb-1">{item.title}</h4>
+                    <p className="text-sm text-white/60">{item.desc}</p>
+                  </motion.div>
+                </GlassCard>
+              ))}
+            </motion.div>
+          </div>
         </div>
       </section>
 
