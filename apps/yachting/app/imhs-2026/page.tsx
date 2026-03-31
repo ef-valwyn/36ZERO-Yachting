@@ -321,7 +321,7 @@ export default function IMHSPage() {
       </section>
 
       {/* Countdown Timer */}
-      <section className="py-16 px-6">
+      <section className="pt-16 pb-8 px-6">
         <div className="max-w-4xl mx-auto text-center">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -329,6 +329,24 @@ export default function IMHSPage() {
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
           >
+            {/* Show organiser logos */}
+            <div className="flex items-center justify-center gap-8 sm:gap-12 mb-8">
+              <Image
+                src="https://yyofqqbn0jyxo9dg.public.blob.vercel-storage.com/multicoque-logo-white.svg"
+                alt="Salon International du Multicoque"
+                width={180}
+                height={60}
+                className="h-10 sm:h-14 w-auto"
+              />
+              <Image
+                src="https://yyofqqbn0jyxo9dg.public.blob.vercel-storage.com/imhs/grande-motte-logo-bleu-1.svg"
+                alt="La Grande Motte"
+                width={180}
+                height={60}
+                className="h-10 sm:h-14 w-auto"
+              />
+            </div>
+
             {countdown.isLive ? (
               <div>
                 <h2 className="text-3xl md:text-4xl font-extrabold uppercase tracking-tighter text-white mb-4">
@@ -370,7 +388,7 @@ export default function IMHSPage() {
       </section>
 
       {/* Event Info Cards */}
-      <section className="py-16 px-6">
+      <section className="pt-8 pb-16 px-6">
         <div className="max-w-5xl mx-auto">
           <motion.div
             className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4"
