@@ -274,7 +274,7 @@ export default function IMHSPage() {
         <div className="absolute inset-0">
           <Image
             src={`${BLOB_BASE}/hero-landing.png`}
-            alt="AY60 Power Catamaran"
+            alt="Adventure Yachts AY60 power catamaran — World Premiere at IMHS 2026 La Grande Motte"
             fill
             className="object-cover"
             priority
@@ -305,8 +305,9 @@ export default function IMHSPage() {
             variants={itemVariants}
             className="text-lg md:text-xl text-white/70 font-light max-w-3xl mx-auto mb-8"
           >
-            Visit Adventure Yachts &amp; 36ZERO Yachting at the world&apos;s premier multihull event.
-            See the AY60 power catamaran and meet our team.
+            Visit Adventure Yachts &amp; 36ZERO Yachting at the Salon International du Multicoque,
+            the world&apos;s premier multihull event. Experience the AY60 power catamaran world premiere
+            and register for a private viewing.
           </motion.p>
           <motion.div variants={itemVariants} className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button variant="primary" size="lg" onClick={() => document.getElementById('register')?.scrollIntoView({ behavior: 'smooth' })}>
@@ -428,7 +429,7 @@ export default function IMHSPage() {
             <div className="relative aspect-[4/3] rounded-2xl overflow-hidden">
               <Image
                 src={`${BLOB_BASE}/real-DJI_20260226162622_0007_D.jpg`}
-                alt="AY60 Aerial - Starboard Cruising"
+                alt="AY60 power catamaran aerial view — 60 ft composite catamaran cruising at sea"
                 fill
                 className="object-cover"
               />
@@ -442,13 +443,15 @@ export default function IMHSPage() {
                 <span className="text-gradient">Catamaran</span>
               </h2>
               <p className="text-white/70 font-light mb-4">
-                The AY60 is a revolutionary 60-foot power catamaran designed for long-range ocean cruising.
-                With lightweight carbon/eGlass composite construction at just 18,500 kg displacement,
-                it delivers exceptional performance with a range of over 2,000 nautical miles.
+                The Adventure Yachts AY60 is a revolutionary 60-foot (18.3 m) power catamaran engineered
+                for long-range ocean cruising. Built with lightweight carbon and eGlass composite construction
+                at just 18,500 kg displacement, the AY60 delivers a range of over 2,000 nautical miles
+                at cruising speed with a top speed of 18 knots.
               </p>
               <p className="text-white/70 font-light mb-6">
-                Accommodating 8-10 guests across 4+2 cabins, the AY60 combines
-                blue-water capability with the comfort and space of a much larger vessel.
+                Accommodating 8-10 guests across 4+2 cabins with 2 crew, the AY60 power catamaran combines
+                true blue-water expedition capability with the comfort of a much larger yacht.
+                See her for the first time at the International Multihull Show in La Grande Motte.
               </p>
               <Link href="/adventure-yachts">
                 <Button variant="secondary" size="md">
@@ -479,7 +482,8 @@ export default function IMHSPage() {
                 <span className="text-gradient">Private Viewing</span>
               </h2>
               <p className="text-white/70 font-light">
-                Secure your spot for an exclusive tour of the AY60 at the International Multihull Show.
+                Secure your spot for an exclusive private tour of the AY60 power catamaran
+                at the International Multihull Show 2026 in La Grande Motte, France.
               </p>
             </div>
 
@@ -788,13 +792,15 @@ export default function IMHSPage() {
                 <span className="text-gradient">Adventure One</span>
               </h2>
               <p className="text-white/70 font-light mb-4">
-                Adventure One is the first AY60 Sport, and she will be on display at the International
-                Multihull Show. Come aboard and experience the spacious living areas, innovative design,
-                and exceptional build quality for yourself.
+                Adventure One is hull #1 of the AY60 Sport — the outboard-powered variant of the
+                AY60 power catamaran. She will be on display at the International Multihull Show
+                2026 in La Grande Motte. Come aboard and experience the spacious saloon, flybridge,
+                cockpit, and four guest cabins for yourself.
               </p>
               <p className="text-white/70 font-light mb-6">
-                Our team from Adventure Yachts and 36ZERO Yachting will be on hand to answer your questions
-                and discuss how the AY60 can be configured to suit your cruising plans.
+                The Adventure Yachts and 36ZERO Yachting teams will be on hand to walk you through
+                the AY60&apos;s carbon composite construction, energy autonomy systems, and long-range
+                cruising capabilities. Discuss how the AY60 can be configured to suit your expedition plans.
               </p>
               <div className="flex flex-col sm:flex-row gap-3">
                 <Button variant="primary" size="md" onClick={() => document.getElementById('register')?.scrollIntoView({ behavior: 'smooth' })}>
@@ -811,7 +817,7 @@ export default function IMHSPage() {
             <div className="relative aspect-[4/3] rounded-2xl overflow-hidden order-1 md:order-2">
               <Image
                 src={`${BLOB_BASE}/real-DJI_20260226185233_0004_D.jpg`}
-                alt="AY60 Adventure One at twilight"
+                alt="Adventure One — AY60 Sport hull #1 with underwater LED lighting at twilight"
                 fill
                 className="object-cover"
               />
@@ -851,7 +857,8 @@ export default function IMHSPage() {
                     Stay Updated
                   </h3>
                   <p className="text-white/60 text-sm mb-6">
-                    Sign up for email updates about the show, the AY60, and exclusive content.
+                    Sign up for email updates on the AY60 world premiere, show schedules,
+                    and exclusive content from Adventure Yachts and 36ZERO Yachting.
                   </p>
 
                   {!isSignedIn && (
