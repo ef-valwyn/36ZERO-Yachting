@@ -198,9 +198,9 @@ export const Navigation: React.FC<NavigationProps> = ({
               </Link>
             </motion.div>
 
-            {/* Navigation Links Container - slides up when collapsed */}
-            <motion.div 
-              className="flex items-center flex-1 mx-4 lg:mx-8 min-w-0 relative"
+            {/* Navigation Links Container - hidden on mobile, slides up when collapsed on desktop */}
+            <motion.div
+              className="hidden lg:flex items-center flex-1 mx-4 lg:mx-8 min-w-0 relative"
               initial={false}
               animate={{
                 y: showCollapsed ? -60 : 0,
@@ -320,41 +320,61 @@ export const Navigation: React.FC<NavigationProps> = ({
 
             {/* Menu Content */}
             <motion.div
-              className="relative flex flex-col items-center justify-center h-full gap-8"
+              className="relative flex flex-col items-center justify-center h-full gap-6 px-6"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: 20 }}
               transition={{ delay: 0.1, duration: 0.3 }}
             >
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: 20 }}
-                transition={{ delay: 0.1 }}
-                className="text-center"
-              >
-                <p className="text-white/50 text-sm uppercase tracking-wider mb-6">Account</p>
-              </motion.div>
+              {/* Navigation Links */}
+              <nav className="flex flex-col items-center gap-1">
+                {items.map((item, i) => (
+                  <motion.div
+                    key={item.href}
+                    initial={{ opacity: 0, y: 15 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: 15 }}
+                    transition={{ delay: 0.1 + i * 0.05 }}
+                  >
+                    <Link
+                      href={item.href}
+                      onClick={() => setIsMobileMenuOpen(false)}
+                      className={cn(
+                        'block text-lg font-medium py-2 px-4 rounded-xl transition-colors',
+                        item.isActive
+                          ? 'text-white bg-white/10'
+                          : 'text-white/70 hover:text-white hover:bg-white/5'
+                      )}
+                    >
+                      {item.label}
+                    </Link>
+                  </motion.div>
+                ))}
+              </nav>
 
+              {/* Divider */}
+              <div className="w-16 h-px bg-white/10" />
+
+              {/* Account / Actions */}
               {actions && (
                 <motion.div
-                  initial={{ opacity: 0, y: 20 }}
+                  initial={{ opacity: 0, y: 15 }}
                   animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: 20 }}
-                  transition={{ delay: 0.15 }}
-                  className="flex flex-col items-center gap-4"
+                  exit={{ opacity: 0, y: 15 }}
+                  transition={{ delay: 0.1 + items.length * 0.05 }}
+                  className="flex items-center gap-4"
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
                   {actions}
                 </motion.div>
               )}
 
+              {/* CTA Button */}
               <motion.div
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 0, y: 15 }}
                 animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: 20 }}
-                transition={{ delay: 0.2 }}
-                className="mt-8"
+                exit={{ opacity: 0, y: 15 }}
+                transition={{ delay: 0.15 + items.length * 0.05 }}
               >
                 <Button
                   variant="primary"
