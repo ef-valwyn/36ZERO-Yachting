@@ -12,7 +12,7 @@ interface LeadData {
   countryCode?: string;
   country?: string;
   company?: string;
-  leadSource: 'premiere_updates' | 'premiere_tour_request' | 'vessel_enquiry' | 'contact_form';
+  leadSource: 'premiere_updates' | 'premiere_tour_request' | 'vessel_enquiry' | 'contact_form' | 'imhs_updates' | 'imhs_tour_request';
   interest?: string;
   // Vessel enquiry specific fields
   vesselId?: string;
@@ -35,8 +35,8 @@ export async function POST(request: NextRequest) {
 
     if (!HUBSPOT_ACCESS_TOKEN) {
       console.error('HubSpot access token not configured');
-      // Still save vessel enquiries to DB even without HubSpot
-      if (body.leadSource === 'vessel_enquiry') {
+      // Still save vessel enquiries and IMHS tour requests to DB even without HubSpot
+      if (body.leadSource === 'vessel_enquiry' || body.leadSource === 'imhs_tour_request') {
         try {
           let vesselUuid: string | null = null;
           if (body.vesselId) {
@@ -48,16 +48,16 @@ export async function POST(request: NextRequest) {
           const fullName = [body.firstName || '', body.lastName || ''].filter(Boolean).join(' ');
           await db.insert(inquiries).values({
             vesselId: vesselUuid,
-            vesselName: body.vesselName || null,
-            vesselModel: body.vesselModel || null,
+            vesselName: body.leadSource === 'imhs_tour_request' ? 'AY60' : (body.vesselName || null),
+            vesselModel: body.leadSource === 'imhs_tour_request' ? 'AY60 Power Catamaran' : (body.vesselModel || null),
             name: fullName || body.email,
             email: body.email,
             phone: body.phone || null,
             countryCode: body.countryCode || null,
             company: body.company || null,
             deliveryRegion: body.deliveryRegion || null,
-            message: body.message || null,
-            source: 'website',
+            message: body.leadSource === 'imhs_tour_request' ? (body.interest || null) : (body.message || null),
+            source: body.leadSource === 'imhs_tour_request' ? 'imhs_2026' : 'website',
           });
         } catch (dbError) {
           console.error('Failed to save enquiry to DB:', dbError);
@@ -138,6 +138,13 @@ export async function POST(request: NextRequest) {
       }
       if (body.message) {
         notes.push(`Message: ${body.message}`);
+      }
+    } else if (body.leadSource === 'imhs_updates') {
+      notes.push('Source: IMHS 2026 - Email Updates');
+    } else if (body.leadSource === 'imhs_tour_request') {
+      notes.push('Source: IMHS 2026 - AY60 Viewing Request');
+      if (body.interest) {
+        notes.push(`Interest: ${body.interest}`);
       }
     }
 
@@ -229,8 +236,8 @@ export async function POST(request: NextRequest) {
           console.error('Failed to update existing HubSpot contact (non-fatal):', searchErr);
         }
 
-        // Still save vessel enquiries to DB even if HubSpot contact exists
-        if (body.leadSource === 'vessel_enquiry') {
+        // Still save vessel enquiries and IMHS tour requests to DB even if HubSpot contact exists
+        if (body.leadSource === 'vessel_enquiry' || body.leadSource === 'imhs_tour_request') {
           try {
             let vesselUuid: string | null = null;
             if (body.vesselId) {
@@ -242,16 +249,16 @@ export async function POST(request: NextRequest) {
             const fullName = [firstName, lastName].filter(Boolean).join(' ');
             await db.insert(inquiries).values({
               vesselId: vesselUuid,
-              vesselName: body.vesselName || null,
-              vesselModel: body.vesselModel || null,
+              vesselName: body.leadSource === 'imhs_tour_request' ? 'AY60' : (body.vesselName || null),
+              vesselModel: body.leadSource === 'imhs_tour_request' ? 'AY60 Power Catamaran' : (body.vesselModel || null),
               name: fullName || body.email,
               email: body.email,
               phone: body.phone || null,
               countryCode: body.countryCode || null,
               company: body.company || null,
               deliveryRegion: body.deliveryRegion || null,
-              message: body.message || null,
-              source: 'website',
+              message: body.leadSource === 'imhs_tour_request' ? (body.interest || null) : (body.message || null),
+              source: body.leadSource === 'imhs_tour_request' ? 'imhs_2026' : 'website',
               hubspotContactId: existingContactId || undefined,
             });
           } catch (dbError) {
@@ -273,8 +280,8 @@ export async function POST(request: NextRequest) {
 
     const contactData = await createResponse.json();
 
-    // Save vessel enquiries to the inquiries table
-    if (body.leadSource === 'vessel_enquiry') {
+    // Save vessel enquiries and IMHS tour requests to the inquiries table
+    if (body.leadSource === 'vessel_enquiry' || body.leadSource === 'imhs_tour_request') {
       try {
         // Look up vessel UUID by slug if vesselId is provided
         let vesselUuid: string | null = null;
@@ -288,16 +295,16 @@ export async function POST(request: NextRequest) {
         const fullName = [firstName, lastName].filter(Boolean).join(' ');
         await db.insert(inquiries).values({
           vesselId: vesselUuid,
-          vesselName: body.vesselName || null,
-          vesselModel: body.vesselModel || null,
+          vesselName: body.leadSource === 'imhs_tour_request' ? 'AY60' : (body.vesselName || null),
+          vesselModel: body.leadSource === 'imhs_tour_request' ? 'AY60 Power Catamaran' : (body.vesselModel || null),
           name: fullName || body.email,
           email: body.email,
           phone: body.phone || null,
           countryCode: body.countryCode || null,
           company: body.company || null,
           deliveryRegion: body.deliveryRegion || null,
-          message: body.message || null,
-          source: 'website',
+          message: body.leadSource === 'imhs_tour_request' ? (body.interest || null) : (body.message || null),
+          source: body.leadSource === 'imhs_tour_request' ? 'imhs_2026' : 'website',
           hubspotContactId: contactData.id,
         });
       } catch (dbError) {

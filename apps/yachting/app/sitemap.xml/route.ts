@@ -21,6 +21,8 @@ export async function GET() {
     { url: `${baseUrl}/adventure-yachts`, priority: '0.9', changefreq: 'weekly' },
     { url: `${baseUrl}/news`, priority: '0.8', changefreq: 'daily' },
     { url: `${baseUrl}/lap`, priority: '0.8', changefreq: 'monthly' },
+    { url: `${baseUrl}/imhs-2026`, priority: '0.9', changefreq: 'weekly' },
+    { url: `${baseUrl}/contact`, priority: '0.6', changefreq: 'monthly' },
   ];
 
   // Adventure Yacht pages
