@@ -226,6 +226,7 @@ export default function AdventureYachtsPage() {
   const [activeGalleryIndex, setActiveGalleryIndex] = React.useState(0);
   const [slideDirection, setSlideDirection] = React.useState<'left' | 'right'>('right');
   const [galleryHoverZone, setGalleryHoverZone] = React.useState<'left' | 'right' | null>(null);
+  const [galleryInteractionKey, setGalleryInteractionKey] = React.useState(0);
   const [activeVesselArea, setActiveVesselArea] = React.useState(vesselAreas[0]);
 
   // Fetch adventure yachts from API
@@ -252,14 +253,14 @@ export default function AdventureYachtsPage() {
     fetchAdventureYachts();
   }, []);
 
-  // Auto-scroll gallery every 5 seconds
+  // Auto-scroll gallery every 5 seconds — resets on user interaction
   React.useEffect(() => {
     const interval = setInterval(() => {
       setSlideDirection('right');
       setActiveGalleryIndex((prev) => (prev + 1) % galleryImages.length);
     }, 5000);
     return () => clearInterval(interval);
-  }, []);
+  }, [galleryInteractionKey]);
 
   const handleDownloadSpecSheet = () => {
     const specSheetUrl = 'https://yyofqqbn0jyxo9dg.public.blob.vercel-storage.com/pdf/AY60%20Specs.pdf';
@@ -274,16 +275,19 @@ export default function AdventureYachtsPage() {
   const nextGalleryImage = () => {
     setSlideDirection('right');
     setActiveGalleryIndex((prev) => (prev + 1) % galleryImages.length);
+    setGalleryInteractionKey((k) => k + 1);
   };
 
   const prevGalleryImage = () => {
     setSlideDirection('left');
     setActiveGalleryIndex((prev) => (prev - 1 + galleryImages.length) % galleryImages.length);
+    setGalleryInteractionKey((k) => k + 1);
   };
 
   const goToGalleryImage = (index: number) => {
     setSlideDirection(index > activeGalleryIndex ? 'right' : 'left');
     setActiveGalleryIndex(index);
+    setGalleryInteractionKey((k) => k + 1);
   };
 
   const handleGalleryMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {

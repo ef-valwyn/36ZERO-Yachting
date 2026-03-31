@@ -2,10 +2,10 @@
 
 import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
 import Image from 'next/image';
-import { ArrowRight, ChevronDown, MapPin } from 'lucide-react';
+import { ArrowRight, ChevronDown, ChevronLeft, ChevronRight, MapPin } from 'lucide-react';
 import type { ResolvedAdventureYachtPriceEntry } from '@36zero/database';
 import { Button, GlassCard } from '@36zero/ui';
 import Header from '@/components/Header';
@@ -42,6 +42,57 @@ interface Props {
     detail: ResolvedAdventureYachtPriceEntry[];
   } | null;
 }
+
+// Gallery images for AY60 showcase
+const BLOB_BASE = 'https://yyofqqbn0jyxo9dg.public.blob.vercel-storage.com/yachts/adventure-one';
+const galleryImages = [
+  { id: 1, url: `${BLOB_BASE}/hero-landing.png`, alt: 'AY60 Hero - Exterior View' },
+  { id: 2, url: `${BLOB_BASE}/real-DJI_20260226162622_0007_D.jpg`, alt: 'AY60 Aerial - Starboard Cruising with Island Backdrop' },
+  { id: 3, url: `${BLOB_BASE}/real-DJI_20260226162648_0010_D.jpg`, alt: 'AY60 Aerial - Port Three-Quarter Cruising' },
+  { id: 4, url: `${BLOB_BASE}/real-DJI_20260226162945_0024_D.jpg`, alt: 'AY60 Aerial - Starboard Cruising at Sunset' },
+  { id: 5, url: `${BLOB_BASE}/real-DJI_20260226163041_0029_D.jpg`, alt: 'AY60 Aerial - Port Side Underway' },
+  { id: 6, url: `${BLOB_BASE}/real-DJI_20260226163300_0041_D.jpg`, alt: 'AY60 Aerial - Bow Head-On View' },
+  { id: 7, url: `${BLOB_BASE}/real-DJI_20260226163405_0045_D.jpg`, alt: 'AY60 Aerial - Top-Down Overhead View' },
+  { id: 8, url: `${BLOB_BASE}/real-DJI_20260226170642_0001_D.jpg`, alt: 'AY60 Aerial - Anchored Near Island' },
+  { id: 9, url: `${BLOB_BASE}/real-DJI_20260226171500_0033_D.jpg`, alt: 'AY60 Aerial - Broadside Profile at Anchor' },
+  { id: 10, url: `${BLOB_BASE}/real-DJI_20260226172815_0055_D.jpg`, alt: 'AY60 Aft Swim Platform and Boarding Steps' },
+  { id: 11, url: `${BLOB_BASE}/real-DJI_20260226172926_0060_D.jpg`, alt: 'AY60 Aerial - Three-Quarter View with Solar Hardtop' },
+  { id: 12, url: `${BLOB_BASE}/real-DJI_20260226180239_0092_D.jpg`, alt: 'AY60 Aerial - Aft Quarter View at Dusk' },
+  { id: 13, url: `${BLOB_BASE}/real-DJI_20260226185233_0004_D.jpg`, alt: 'AY60 Twilight - Underwater LED Lights Illuminated' },
+  { id: 14, url: `${BLOB_BASE}/real-DJI_20260226185347_0011_D.jpg`, alt: 'AY60 Twilight - Side Profile with Cabin Glow' },
+  { id: 15, url: `${BLOB_BASE}/real-DJI_20260226185436_0014_D.jpg`, alt: 'AY60 Twilight - Stern View with Blue Underwater Lights' },
+  { id: 16, url: `${BLOB_BASE}/real-DJI_20260226185604_0021_D.jpg`, alt: 'AY60 Twilight - Port Quarter with Dramatic Sky' },
+  { id: 17, url: `${BLOB_BASE}/real-DSC05832.jpg`, alt: 'AY60 Flybridge Dining Area with Teak Table' },
+  { id: 18, url: `${BLOB_BASE}/real-DSC05833.jpg`, alt: 'AY60 Flybridge Dining and Helm Station' },
+  { id: 19, url: `${BLOB_BASE}/real-DSC05835.jpg`, alt: 'AY60 Aft Cockpit Lounge and Dining' },
+  { id: 20, url: `${BLOB_BASE}/real-DSC05837.jpg`, alt: 'AY60 Salon Dining and Galley with Panoramic Windows' },
+  { id: 21, url: `${BLOB_BASE}/real-DSC05841.jpg`, alt: 'AY60 Helm Station with Dual Displays' },
+  { id: 22, url: `${BLOB_BASE}/real-DSC05843.jpg`, alt: 'AY60 Helm Navigation Screens Close-Up' },
+  { id: 23, url: `${BLOB_BASE}/real-DSC05844.jpg`, alt: 'AY60 Interior Companionway and Stairwell' },
+  { id: 24, url: `${BLOB_BASE}/real-DSC05845.jpg`, alt: 'AY60 Hull Interior - Galley and Seating Nook' },
+  { id: 25, url: `${BLOB_BASE}/real-DSC05847.jpg`, alt: 'AY60 Cabin with Double Bed and Portholes' },
+  { id: 26, url: `${BLOB_BASE}/real-DSC05849.jpg`, alt: 'AY60 Hull Galley and Shower Entrance' },
+  { id: 27, url: `${BLOB_BASE}/real-DSC05856.jpg`, alt: 'AY60 Hull Cabin with Galley and Storage' },
+  { id: 28, url: `${BLOB_BASE}/ay60-gallery-1.png`, alt: 'AY60 Gallery - At Sea' },
+  { id: 29, url: `${BLOB_BASE}/front.jpeg`, alt: 'AY60 Front View' },
+  { id: 30, url: `${BLOB_BASE}/side.jpeg`, alt: 'AY60 Side Profile' },
+  { id: 31, url: `${BLOB_BASE}/sideaft.jpeg`, alt: 'AY60 Side Aft View' },
+  { id: 32, url: `${BLOB_BASE}/portthreequarter.jpeg`, alt: 'AY60 Port Three-Quarter' },
+  { id: 33, url: `${BLOB_BASE}/afterthreequarter.jpeg`, alt: 'AY60 Aft Three-Quarter' },
+  { id: 34, url: `${BLOB_BASE}/cockpitmain.jpg`, alt: 'AY60 Main Cockpit' },
+  { id: 35, url: `${BLOB_BASE}/cockpit1.jpg`, alt: 'AY60 Cockpit View 1' },
+  { id: 36, url: `${BLOB_BASE}/cockpit2.jpg`, alt: 'AY60 Cockpit View 2' },
+  { id: 37, url: `${BLOB_BASE}/cockpit3.jpg`, alt: 'AY60 Cockpit View 3' },
+  { id: 38, url: `${BLOB_BASE}/kitchen.jpg`, alt: 'AY60 Kitchen' },
+  { id: 39, url: `${BLOB_BASE}/kitchen2.jpg`, alt: 'AY60 Kitchen Detail' },
+  { id: 40, url: `${BLOB_BASE}/grill.jpg`, alt: 'AY60 Outdoor Grill' },
+  { id: 41, url: `${BLOB_BASE}/bedroomforward.jpg`, alt: 'AY60 Forward Cabin' },
+  { id: 42, url: `${BLOB_BASE}/bedroomaft.jpg`, alt: 'AY60 Aft Cabin' },
+  { id: 43, url: `${BLOB_BASE}/head1.jpg`, alt: 'AY60 Bathroom 1' },
+  { id: 44, url: `${BLOB_BASE}/head2.jpg`, alt: 'AY60 Bathroom 2' },
+  { id: 45, url: `${BLOB_BASE}/head3.jpg`, alt: 'AY60 Bathroom 3' },
+  { id: 46, url: `${BLOB_BASE}/head4.jpg`, alt: 'AY60 Bathroom 4' },
+];
 
 // Animation variants
 const containerVariants = {
@@ -87,6 +138,52 @@ export default function AdventureYachtDetail({ build, allBuilds, pricing }: Prop
     new Intl.NumberFormat('en-US', { maximumFractionDigits: 0 }).format(amount);
   const formatPricingEntry = (entry: ResolvedAdventureYachtPriceEntry) =>
     [entry.prefix, entry.currency, formatAmount(entry.amount)].filter(Boolean).join(' ');
+
+  // Gallery state
+  const [activeGalleryIndex, setActiveGalleryIndex] = useState(0);
+  const [slideDirection, setSlideDirection] = useState<'left' | 'right'>('right');
+  const [galleryHoverZone, setGalleryHoverZone] = useState<'left' | 'right' | null>(null);
+  const [galleryInteractionKey, setGalleryInteractionKey] = useState(0);
+
+  // Auto-scroll gallery every 5 seconds — resets on user interaction
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setSlideDirection('right');
+      setActiveGalleryIndex((prev) => (prev + 1) % galleryImages.length);
+    }, 5000);
+    return () => clearInterval(interval);
+  }, [galleryInteractionKey]);
+
+  const nextGalleryImage = () => {
+    setSlideDirection('right');
+    setActiveGalleryIndex((prev) => (prev + 1) % galleryImages.length);
+    setGalleryInteractionKey((k) => k + 1);
+  };
+
+  const prevGalleryImage = () => {
+    setSlideDirection('left');
+    setActiveGalleryIndex((prev) => (prev - 1 + galleryImages.length) % galleryImages.length);
+    setGalleryInteractionKey((k) => k + 1);
+  };
+
+  const goToGalleryImage = (index: number) => {
+    setSlideDirection(index > activeGalleryIndex ? 'right' : 'left');
+    setActiveGalleryIndex(index);
+    setGalleryInteractionKey((k) => k + 1);
+  };
+
+  const handleGalleryMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const width = rect.width;
+    if (x < width / 3) {
+      setGalleryHoverZone('left');
+    } else if (x > (width * 2) / 3) {
+      setGalleryHoverZone('right');
+    } else {
+      setGalleryHoverZone(null);
+    }
+  };
 
   // Auto-scroll to specs section when navigating between builds
   useEffect(() => {
@@ -445,42 +542,120 @@ export default function AdventureYachtDetail({ build, allBuilds, pricing }: Prop
         </div>
       </section>
 
-      {/* Vessel Image Section */}
-      <section className="py-16 md:py-24 px-6">
+      {/* Photo Gallery */}
+      <section className="py-8 md:py-12 px-6">
         <div className="max-w-7xl mx-auto">
           <motion.div
-            initial={{ opacity: 0, scale: 0.98 }}
-            whileInView={{ opacity: 1, scale: 1 }}
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
           >
-            <GlassCard variant="blue" padding="none" className="overflow-hidden">
-              <div className="relative aspect-[21/9]">
-                <Image
-                  src={build.imageUrl}
-                  alt={`${build.name} - ${build.model}`}
-                  fill
-                  className="object-cover"
-                  priority
-                />
-                <div className="absolute inset-0 bg-gradient-to-b from-brand-navy/40 via-transparent to-brand-navy/20" />
-                
-                {/* Vessel Label */}
-                <div className="absolute top-6 left-6 md:top-8 md:left-8">
-                  <motion.div
-                    initial={{ opacity: 0, y: -10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.4, delay: 0.3 }}
-                    className="bg-brand-navy/80 backdrop-blur-md rounded-xl px-5 py-3 border border-white/10"
-                  >
-                    <p className="text-brand-blue text-xs font-medium uppercase tracking-wider mb-1">
-                      {build.variant}
-                    </p>
-                    <p className="text-white text-xl font-semibold">{build.name}</p>
-                  </motion.div>
-                </div>
+            {/* Main Gallery Image with Overlay Navigation */}
+            <div
+              className="relative aspect-[16/9] rounded-2xl overflow-hidden mb-4 cursor-pointer"
+              onMouseMove={handleGalleryMouseMove}
+              onMouseLeave={() => setGalleryHoverZone(null)}
+            >
+              <AnimatePresence initial={false} mode="popLayout">
+                <motion.div
+                  key={activeGalleryIndex}
+                  initial={{ x: slideDirection === 'right' ? '100%' : '-100%' }}
+                  animate={{ x: 0 }}
+                  exit={{ x: slideDirection === 'right' ? '-100%' : '100%' }}
+                  transition={{ duration: 0.5, ease: [0.4, 0, 0.2, 1] }}
+                  className="absolute inset-0"
+                >
+                  <Image
+                    src={galleryImages[activeGalleryIndex].url}
+                    alt={galleryImages[activeGalleryIndex].alt}
+                    fill
+                    className="object-cover"
+                  />
+                </motion.div>
+              </AnimatePresence>
+
+              {/* Left Navigation Zone */}
+              <motion.div
+                className="absolute left-0 top-0 h-full flex items-center justify-start cursor-pointer z-10"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: galleryHoverZone === 'left' ? 1 : 0 }}
+                transition={{ duration: 0.3 }}
+                onClick={prevGalleryImage}
+                style={{ width: '12.5%' }}
+              >
+                <motion.div
+                  className="h-full flex items-center pl-4"
+                  initial={{ x: -50, opacity: 0 }}
+                  animate={{
+                    x: galleryHoverZone === 'left' ? 0 : -50,
+                    opacity: galleryHoverZone === 'left' ? 1 : 0,
+                  }}
+                  transition={{ duration: 0.3, ease: 'easeOut' }}
+                  style={{
+                    background: 'linear-gradient(to right, rgba(7, 25, 35, 0.8), transparent)',
+                    width: '200%',
+                  }}
+                >
+                  <ChevronLeft className="w-8 h-8 text-white" />
+                </motion.div>
+              </motion.div>
+
+              {/* Right Navigation Zone */}
+              <motion.div
+                className="absolute right-0 top-0 h-full flex items-center justify-end cursor-pointer z-10"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: galleryHoverZone === 'right' ? 1 : 0 }}
+                transition={{ duration: 0.3 }}
+                onClick={nextGalleryImage}
+                style={{ width: '12.5%' }}
+              >
+                <motion.div
+                  className="h-full flex items-center justify-end pr-4"
+                  initial={{ x: 50, opacity: 0 }}
+                  animate={{
+                    x: galleryHoverZone === 'right' ? 0 : 50,
+                    opacity: galleryHoverZone === 'right' ? 1 : 0,
+                  }}
+                  transition={{ duration: 0.3, ease: 'easeOut' }}
+                  style={{
+                    background: 'linear-gradient(to left, rgba(7, 25, 35, 0.8), transparent)',
+                    width: '200%',
+                  }}
+                >
+                  <ChevronRight className="w-8 h-8 text-white" />
+                </motion.div>
+              </motion.div>
+
+              {/* Image Counter */}
+              <div className="absolute bottom-4 right-4 px-3 py-1.5 rounded-full bg-brand-navy/80 backdrop-blur-sm z-10">
+                <span className="text-sm text-white">
+                  {activeGalleryIndex + 1} / {galleryImages.length}
+                </span>
               </div>
-            </GlassCard>
+            </div>
+
+            {/* Thumbnail Strip */}
+            <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
+              {galleryImages.map((image, index) => (
+                <button
+                  key={image.id}
+                  onClick={() => goToGalleryImage(index)}
+                  className={`relative flex-shrink-0 w-24 h-16 rounded-lg overflow-hidden transition-all ${
+                    index === activeGalleryIndex
+                      ? 'ring-2 ring-brand-blue'
+                      : 'opacity-60 hover:opacity-100'
+                  }`}
+                >
+                  <Image
+                    src={image.url}
+                    alt={image.alt}
+                    fill
+                    className="object-cover"
+                  />
+                </button>
+              ))}
+            </div>
           </motion.div>
         </div>
       </section>
