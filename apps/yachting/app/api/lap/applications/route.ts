@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db, lapApplications, eq } from '@36zero/database';
+import { sendLeadNotification } from '@/lib/email';
 
 const HUBSPOT_ACCESS_TOKEN = process.env.HUBSPOT_ACCESS_TOKEN;
 const HUBSPOT_API_URL = 'https://api.hubapi.com/crm/v3/objects/contacts';
@@ -52,6 +53,7 @@ async function syncToHubSpot(data: LapApplicationData): Promise<string | null> {
     country: data.countryOfResidence,
     hs_lead_status: 'NEW',
     lifecyclestage: 'lead',
+    lead_source_channel: 'lap_application',
     hs_content_membership_notes: notes,
   };
 
@@ -112,6 +114,24 @@ export async function POST(request: NextRequest) {
     } catch (hsError) {
       console.error('HubSpot sync failed (non-fatal):', hsError);
     }
+
+    const yachtTypeLabels: Record<string, string> = { sail: 'Sail', power: 'Power', own_yacht: 'Own Yacht' };
+
+    // Send email notification (fire and forget)
+    sendLeadNotification({
+      leadSource: 'lap_application',
+      email: body.email,
+      name: body.fullName,
+      phone: `${body.countryCode} ${body.phone}`,
+      country: body.countryOfResidence,
+      details: {
+        'Passages': body.selectedPassages.join(', '),
+        'Guests': String(body.guestCount),
+        'Yacht Type': yachtTypeLabels[body.yachtType] || body.yachtType,
+        'Own Yacht Details': body.yachtType === 'own_yacht' ? body.ownYachtDetails : undefined,
+        'Crew Augmentation': body.crewAugmentationRequired ? 'Yes' : 'No',
+      },
+    });
 
     return NextResponse.json({
       success: true,

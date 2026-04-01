@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db, inquiries, vessels, eq } from '@36zero/database';
+import { sendLeadNotification } from '@/lib/email';
 
 const HUBSPOT_ACCESS_TOKEN = process.env.HUBSPOT_ACCESS_TOKEN;
 const HUBSPOT_API_URL = 'https://api.hubapi.com/crm/v3/objects/contacts';
@@ -20,6 +21,29 @@ interface LeadData {
   vesselModel?: string;
   deliveryRegion?: string;
   message?: string;
+}
+
+function buildNotificationDetails(body: LeadData): Record<string, string | undefined> {
+  const regionLabels: Record<string, string> = {
+    'asia': 'Asia', 'europe': 'Europe', 'us': 'United States',
+    'caribbean': 'Caribbean', 'australia-nz': 'Australia / New Zealand', 'middle-east': 'Middle East',
+  };
+  const details: Record<string, string | undefined> = {};
+
+  if (body.leadSource === 'vessel_enquiry') {
+    details['Vessel'] = body.vesselName ? `${body.vesselName} (${body.vesselModel || 'N/A'})` : undefined;
+    details['Delivery Region'] = body.deliveryRegion ? (regionLabels[body.deliveryRegion] || body.deliveryRegion) : undefined;
+  }
+  if (body.leadSource === 'imhs_tour_request' || body.leadSource === 'premiere_tour_request') {
+    details['Interest'] = body.interest;
+  }
+  if (body.leadSource === 'contact_form') {
+    details['Interest'] = body.interest;
+  }
+  if (body.message) {
+    details['Message'] = body.message;
+  }
+  return details;
 }
 
 export async function POST(request: NextRequest) {
@@ -265,6 +289,17 @@ export async function POST(request: NextRequest) {
             console.error('Failed to save enquiry to DB (non-fatal):', dbError);
           }
         }
+        // Send email notification (fire and forget)
+        sendLeadNotification({
+          leadSource: body.leadSource,
+          email: body.email,
+          name: [firstName, lastName].filter(Boolean).join(' ') || undefined,
+          phone: body.phone,
+          company: body.company,
+          country: body.country,
+          details: buildNotificationDetails(body),
+        });
+
         return NextResponse.json({
           success: true,
           message: 'Contact updated',
@@ -311,6 +346,17 @@ export async function POST(request: NextRequest) {
         console.error('Failed to save enquiry to DB (non-fatal):', dbError);
       }
     }
+
+    // Send email notification (fire and forget)
+    sendLeadNotification({
+      leadSource: body.leadSource,
+      email: body.email,
+      name: [firstName, lastName].filter(Boolean).join(' ') || undefined,
+      phone: body.phone,
+      company: body.company,
+      country: body.country,
+      details: buildNotificationDetails(body),
+    });
 
     return NextResponse.json({
       success: true,
