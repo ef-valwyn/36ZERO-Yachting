@@ -1,5 +1,6 @@
 import {
   pgTable,
+  uniqueIndex,
   uuid,
   varchar,
   text,
@@ -11,7 +12,7 @@ import {
   jsonb,
   pgEnum,
 } from 'drizzle-orm/pg-core';
-import { relations } from 'drizzle-orm';
+import { relations, sql } from 'drizzle-orm';
 import type { AdventureYachtPricingConfig } from '../adventureYachtPricing';
 
 // =========================================
@@ -259,24 +260,40 @@ export const documents = pgTable('documents', {
 // INQUIRIES TABLE (AY60 Vessel Enquiries)
 // =========================================
 
-export const inquiries = pgTable('inquiries', {
-  id: uuid('id').primaryKey().defaultRandom(),
-  vesselId: uuid('vessel_id').references(() => vessels.id),
-  vesselName: varchar('vessel_name', { length: 255 }),
-  vesselModel: varchar('vessel_model', { length: 255 }),
-  name: varchar('name', { length: 255 }).notNull(),
-  email: varchar('email', { length: 255 }).notNull(),
-  phone: varchar('phone', { length: 50 }),
-  countryCode: varchar('country_code', { length: 10 }),
-  company: varchar('company', { length: 255 }),
-  deliveryRegion: varchar('delivery_region', { length: 50 }),
-  message: text('message'),
-  source: varchar('source', { length: 100 }), // website, referral, etc.
-  hubspotContactId: varchar('hubspot_contact_id', { length: 100 }),
-  isContacted: boolean('is_contacted').notNull().default(false),
-  contactedAt: timestamp('contacted_at'),
-  createdAt: timestamp('created_at').defaultNow().notNull(),
-});
+export const inquiries = pgTable(
+  'inquiries',
+  {
+    id: uuid('id').primaryKey().defaultRandom(),
+    vesselId: uuid('vessel_id').references(() => vessels.id),
+    vesselName: varchar('vessel_name', { length: 255 }),
+    vesselModel: varchar('vessel_model', { length: 255 }),
+    name: varchar('name', { length: 255 }).notNull(),
+    email: varchar('email', { length: 255 }).notNull(),
+    phone: varchar('phone', { length: 50 }),
+    countryCode: varchar('country_code', { length: 10 }),
+    country: varchar('country', { length: 100 }),
+    company: varchar('company', { length: 255 }),
+    deliveryRegion: varchar('delivery_region', { length: 50 }),
+    message: text('message'),
+    source: varchar('source', { length: 100 }), // website, imhs_2026, imhs_onboard_registration, etc.
+    // IMHS 2026 onboard registration interest flags. Defaulted false so
+    // legacy rows backfill cleanly; written only for the onboard form.
+    interestAdventureYachts: boolean('interest_adventure_yachts').notNull().default(false),
+    interestShift: boolean('interest_shift').notNull().default(false),
+    hubspotContactId: varchar('hubspot_contact_id', { length: 100 }),
+    isContacted: boolean('is_contacted').notNull().default(false),
+    contactedAt: timestamp('contacted_at'),
+    createdAt: timestamp('created_at').defaultNow().notNull(),
+  },
+  (table) => ({
+    // Partial unique index: one row per email for the IMHS onboard registration
+    // source, while leaving other sources (vessel_enquiry, etc.) unconstrained.
+    // Email is normalized to lowercase at the API boundary before write.
+    emailOnboardIdx: uniqueIndex('inquiries_email_onboard_idx')
+      .on(table.email)
+      .where(sql`source = 'imhs_onboard_registration'`),
+  })
+);
 
 // =========================================
 // LAP APPLICATIONS TABLE
