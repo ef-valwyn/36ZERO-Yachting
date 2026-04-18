@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useSyncExternalStore } from 'react';
+import { usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Vote } from 'lucide-react';
 import { Button, GlassCard } from '@36zero/ui';
@@ -36,6 +37,7 @@ function getServerSnapshot() {
 }
 
 export default function MOTYVotePopup() {
+  const pathname = usePathname();
   const isDismissed = useSyncExternalStore(subscribe, getDismissedSnapshot, getServerSnapshot);
   const [isExpanded, setIsExpanded] = useState(false);
 
@@ -45,6 +47,12 @@ export default function MOTYVotePopup() {
     window.dispatchEvent(new Event(SESSION_STORAGE_EVENT));
     setIsExpanded(false);
   };
+
+  // Never render on the IMHS 2026 pages — the onboard registration form is
+  // a QR-only landing page that must stay free of overlays.
+  if (pathname?.startsWith('/imhs-2026')) {
+    return null;
+  }
 
   if (isDismissed) {
     return null;
