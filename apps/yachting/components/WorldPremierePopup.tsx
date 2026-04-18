@@ -472,7 +472,7 @@ export default function WorldPremierePopup() {
                               </div>
                             )}
 
-                            <form onSubmit={handleSubmit} className="space-y-4">
+                            <form id="form-premiere-updates" name="Premiere Email Updates" data-hs-cf-bound="true" onSubmit={handleSubmit} className="space-y-4">
                               <div>
                                 <label htmlFor="popup-email" className="block text-sm font-medium text-white/80 mb-2">
                                   {isSignedIn ? 'Confirm your email for updates' : 'Sign up for updates'}
@@ -642,7 +642,7 @@ export default function WorldPremierePopup() {
                               </div>
                             )}
 
-                            <form onSubmit={handleTourSubmit} noValidate className="space-y-3">
+                            <form id="form-premiere-tour" name="Premiere Tour Request" data-hs-cf-bound="true" onSubmit={handleTourSubmit} noValidate className="space-y-3">
                               {/* Full Name */}
                               <div>
                                 <label className="block text-xs font-medium text-white/60 mb-1">

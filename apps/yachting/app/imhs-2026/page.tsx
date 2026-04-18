@@ -569,7 +569,7 @@ export default function IMHSPage() {
                     </div>
                   )}
 
-                  <form onSubmit={handleTourSubmit} noValidate className="space-y-5">
+                  <form id="form-imhs-tour" name="IMHS 2026 Tour Request" data-hs-cf-bound="true" onSubmit={handleTourSubmit} noValidate className="space-y-5">
                     {/* Honeypot */}
                     <input
                       type="text"
@@ -892,7 +892,7 @@ export default function IMHSPage() {
                     </>
                   )}
 
-                  <form onSubmit={handleSignupSubmit} className="flex gap-3">
+                  <form id="form-imhs-updates" name="IMHS 2026 Email Updates" data-hs-cf-bound="true" onSubmit={handleSignupSubmit} className="flex gap-3">
                     <div className="relative flex-1">
                       <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-white/40" />
                       <input

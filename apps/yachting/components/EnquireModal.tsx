@@ -200,7 +200,7 @@ export function EnquireModal({ isOpen, onClose, vesselId, vesselName, vesselMode
                     </Button>
                   </motion.div>
                 ) : (
-                  <form onSubmit={handleSubmit} className="space-y-6">
+                  <form id="form-vessel-enquiry" name="Vessel Enquiry" data-hs-cf-bound="true" onSubmit={handleSubmit} className="space-y-6">
                     {/* Honeypot field - hidden from humans, visible to bots */}
                     <input
                       type="text"

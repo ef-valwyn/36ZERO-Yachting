@@ -294,7 +294,7 @@ export default function ContactPage() {
                     </div>
                   )}
 
-                  <form onSubmit={handleSubmit} noValidate className="space-y-6">
+                  <form id="form-contact" name="Contact Form" data-hs-cf-bound="true" onSubmit={handleSubmit} noValidate className="space-y-6">
                     {/* Honeypot */}
                     <input
                       type="text"
