@@ -14,6 +14,7 @@ type LeadSource =
   | 'contact_form'
   | 'imhs_updates'
   | 'imhs_tour_request'
+  | 'imhs_onboard_registration'
   | 'lap_application';
 
 const SOURCE_LABELS: Record<LeadSource, string> = {
@@ -23,6 +24,7 @@ const SOURCE_LABELS: Record<LeadSource, string> = {
   contact_form: 'Contact Form',
   imhs_updates: 'IMHS 2026 Email Signup',
   imhs_tour_request: 'IMHS 2026 Tour Request',
+  imhs_onboard_registration: 'IMHS 2026 Onboard Registration',
   lap_application: 'LAP Application',
 };
 

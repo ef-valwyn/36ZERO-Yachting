@@ -11,3 +11,12 @@ export { Footer, type FooterProps, type FooterSection, type FooterLink } from '.
 // Utilities
 export { cn, formatPrice, formatDate, slugify, truncate } from './lib/utils';
 export { countryCodes, countries } from './lib/countryCodes';
+export {
+  countryEntriesOnboard,
+  countriesOnboardEn,
+  countriesOnboardFr,
+  enToFr,
+  frToEn,
+  isCanonicalEnCountry,
+  type CountryEntryOnboard,
+} from './lib/countriesOnboard';

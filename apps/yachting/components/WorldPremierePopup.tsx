@@ -133,7 +133,10 @@ export default function WorldPremierePopup() {
     // Don't process SSO return logic on the callback page itself —
     // the layout renders this component on /sso-callback too, which would
     // consume the sessionStorage key before the final redirect lands.
-    if (window.location.pathname === '/sso-callback' || window.location.pathname === '/imhs-2026') {
+    if (
+      window.location.pathname === '/sso-callback' ||
+      window.location.pathname.startsWith('/imhs-2026')
+    ) {
       return;
     }
 
