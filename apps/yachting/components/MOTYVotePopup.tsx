@@ -48,9 +48,9 @@ export default function MOTYVotePopup() {
     setIsExpanded(false);
   };
 
-  // Never render on the IMHS 2026 pages — the onboard registration form is
-  // a QR-only landing page that must stay free of overlays.
-  if (pathname?.startsWith('/imhs-2026')) {
+  // Never render on the IMHS 2026 pages or the admin GUI — both need a clean
+  // canvas (the onboard form is QR-only; /admin is an internal staff tool).
+  if (pathname?.startsWith('/imhs-2026') || pathname?.startsWith('/admin')) {
     return null;
   }
 

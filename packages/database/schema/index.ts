@@ -1,6 +1,7 @@
 import {
   pgTable,
   uniqueIndex,
+  index,
   uuid,
   varchar,
   text,
@@ -51,6 +52,8 @@ export const passageStatusEnum = pgEnum('passage_status', [
 ]);
 
 export const yachtTypeEnum = pgEnum('yacht_type', ['sail', 'power', 'own_yacht']);
+
+export const userRoleEnum = pgEnum('user_role', ['admin', 'staff', 'customer']);
 
 // =========================================
 // PASSAGES TABLE (LAP Circumnavigation)
@@ -126,6 +129,9 @@ export const users = pgTable('users', {
   firstName: varchar('first_name', { length: 100 }),
   lastName: varchar('last_name', { length: 100 }),
   phone: varchar('phone', { length: 50 }),
+  // Admin/staff role for gating the /admin GUI. Promoted on user.created
+  // if the email is in ADMIN_EMAIL_ALLOWLIST env var (see Clerk webhook).
+  role: userRoleEnum('role').notNull().default('customer'),
   sailingExperience: sailingExperienceEnum('sailing_experience'),
   certifications: jsonb('certifications').$type<string[]>(),
   passportStatus: varchar('passport_status', { length: 50 }),
@@ -280,6 +286,20 @@ export const inquiries = pgTable(
     // legacy rows backfill cleanly; written only for the onboard form.
     interestAdventureYachts: boolean('interest_adventure_yachts').notNull().default(false),
     interestShift: boolean('interest_shift').notNull().default(false),
+    // IMHS 2026 admin triage fields (set via /admin GUI by staff).
+    // 1..5 scale; CHECK constraint applied post-push via
+    // packages/database/scripts/fix-admin-schema.mjs (drizzle-kit builder doesn't
+    // reliably emit CHECKs at 0.20.18).
+    rating: integer('rating'),
+    ratingUpdatedByUserId: uuid('rating_updated_by_user_id').references(() => users.id),
+    ratingUpdatedAt: timestamp('rating_updated_at'),
+    // Cal.com appointment cache — webhook at /api/webhooks/calcom is source of truth.
+    appointmentBookingId: varchar('appointment_booking_id', { length: 100 }),
+    appointmentStartAt: timestamp('appointment_start_at'),
+    appointmentEndAt: timestamp('appointment_end_at'),
+    appointmentStatus: varchar('appointment_status', { length: 30 }), // confirmed | cancelled | rescheduled | completed | no_show
+    appointmentAssignedStaffEmail: varchar('appointment_assigned_staff_email', { length: 255 }),
+    appointmentUpdatedAt: timestamp('appointment_updated_at'),
     hubspotContactId: varchar('hubspot_contact_id', { length: 100 }),
     isContacted: boolean('is_contacted').notNull().default(false),
     contactedAt: timestamp('contacted_at'),
@@ -366,11 +386,89 @@ export const vesselsRelations = relations(vessels, ({ many }) => ({
   inquiries: many(inquiries),
 }));
 
-export const inquiriesRelations = relations(inquiries, ({ one }) => ({
+export const inquiriesRelations = relations(inquiries, ({ one, many }) => ({
   vessel: one(vessels, {
     fields: [inquiries.vesselId],
     references: [vessels.id],
   }),
+  ratingAuthor: one(users, {
+    fields: [inquiries.ratingUpdatedByUserId],
+    references: [users.id],
+  }),
+  notes: many(leadNotes),
 }));
 
 export const lapApplicationsRelations = relations(lapApplications, ({}) => ({}));
+
+// =========================================
+// LEAD NOTES (admin/staff notes on inquiries — append-only)
+// =========================================
+
+export const leadNotes = pgTable(
+  'lead_notes',
+  {
+    id: uuid('id').primaryKey().defaultRandom(),
+    inquiryId: uuid('inquiry_id')
+      .notNull()
+      .references(() => inquiries.id, { onDelete: 'cascade' }),
+    authorUserId: uuid('author_user_id')
+      .notNull()
+      .references(() => users.id),
+    body: text('body').notNull(),
+    // HubSpot native Note engagement id (POST /crm/v3/objects/notes). Populated
+    // after admin-sync.createHubSpotNote succeeds. Null means sync pending.
+    hubspotNoteId: varchar('hubspot_note_id', { length: 100 }),
+    hubspotSynced: boolean('hubspot_synced').notNull().default(false),
+    hubspotSyncedAt: timestamp('hubspot_synced_at'),
+    createdAt: timestamp('created_at').defaultNow().notNull(),
+  },
+  (t) => ({
+    inquiryCreatedIdx: index('lead_notes_inquiry_created_idx').on(
+      t.inquiryId,
+      t.createdAt
+    ),
+  })
+);
+
+export const leadNotesRelations = relations(leadNotes, ({ one }) => ({
+  inquiry: one(inquiries, {
+    fields: [leadNotes.inquiryId],
+    references: [inquiries.id],
+  }),
+  author: one(users, {
+    fields: [leadNotes.authorUserId],
+    references: [users.id],
+  }),
+}));
+
+// =========================================
+// AUDIT LOG (who did what, when)
+// =========================================
+
+export const auditLog = pgTable(
+  'audit_log',
+  {
+    id: uuid('id').primaryKey().defaultRandom(),
+    actorUserId: uuid('actor_user_id').references(() => users.id),
+    actorEmail: varchar('actor_email', { length: 255 }).notNull(), // denormalised for resilience
+    action: varchar('action', { length: 50 }).notNull(), // note_created | rating_set | appointment_booked | appointment_cancelled | appointment_rescheduled
+    entityType: varchar('entity_type', { length: 50 }).notNull(), // inquiry | lead_note
+    entityId: uuid('entity_id').notNull(),
+    metadata: jsonb('metadata').$type<Record<string, unknown>>(),
+    createdAt: timestamp('created_at').defaultNow().notNull(),
+  },
+  (t) => ({
+    entityIdx: index('audit_log_entity_idx').on(
+      t.entityType,
+      t.entityId,
+      t.createdAt
+    ),
+  })
+);
+
+export const auditLogRelations = relations(auditLog, ({ one }) => ({
+  actor: one(users, {
+    fields: [auditLog.actorUserId],
+    references: [users.id],
+  }),
+}));

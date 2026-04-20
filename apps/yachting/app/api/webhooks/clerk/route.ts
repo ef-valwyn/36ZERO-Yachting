@@ -149,10 +149,18 @@ export async function POST(req: Request) {
   switch (eventType) {
     case 'user.created': {
       const { id, email_addresses, first_name, last_name, phone_numbers } = evt.data;
-      
+
       const primaryEmail = email_addresses.find((e) => e.id === evt.data.primary_email_address_id);
       const primaryPhone = phone_numbers?.find((p) => p.id === evt.data.primary_phone_number_id);
       const email = primaryEmail?.email_address || email_addresses[0]?.email_address || '';
+
+      // Auto-promote to 'staff' if email is in the admin allowlist.
+      // (Admin GUI gating — see apps/yachting/lib/auth/require-staff.ts.)
+      const allowlist = (process.env.ADMIN_EMAIL_ALLOWLIST ?? '')
+        .split(',')
+        .map((s) => s.trim().toLowerCase())
+        .filter(Boolean);
+      const role = allowlist.includes(email.toLowerCase()) ? 'staff' : 'customer';
 
       // Sync to database
       await db.insert(schema.users).values({
@@ -161,6 +169,7 @@ export async function POST(req: Request) {
         firstName: first_name || null,
         lastName: last_name || null,
         phone: primaryPhone?.phone_number || null,
+        role,
       });
 
       // Sync to HubSpot
@@ -183,6 +192,20 @@ export async function POST(req: Request) {
       const primaryPhone = phone_numbers?.find((p) => p.id === evt.data.primary_phone_number_id);
       const email = primaryEmail?.email_address || email_addresses[0]?.email_address || '';
 
+      // Re-evaluate allowlist on update (staff may be added after initial signup).
+      // Never demote — preserves manually-elevated admins.
+      const allowlist = (process.env.ADMIN_EMAIL_ALLOWLIST ?? '')
+        .split(',')
+        .map((s) => s.trim().toLowerCase())
+        .filter(Boolean);
+      const existing = await db.query.users.findFirst({
+        where: eq(schema.users.clerkUserId, id),
+        columns: { role: true },
+      });
+      const shouldPromote =
+        allowlist.includes(email.toLowerCase()) &&
+        existing?.role === 'customer';
+
       // Sync to database
       await db
         .update(schema.users)
@@ -191,6 +214,7 @@ export async function POST(req: Request) {
           firstName: first_name || null,
           lastName: last_name || null,
           phone: primaryPhone?.phone_number || null,
+          ...(shouldPromote ? { role: 'staff' as const } : {}),
           updatedAt: new Date(),
         })
         .where(eq(schema.users.clerkUserId, id));
