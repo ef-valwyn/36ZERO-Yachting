@@ -11,6 +11,7 @@
   "dependencies": {
     "@36zero/database": "*",
     "@36zero/ui": "*",
+    "@calcom/embed-react": "^1.5.3",
     "@clerk/nextjs": "^4.29.1",
     "@microsoft/clarity": "^1.0.2",
     "@sentry/nextjs": "^10.38.0",
@@ -25,7 +26,8 @@
     "react-markdown": "^10.1.0",
     "remark-gfm": "^4.0.1",
     "resend": "^6.10.0",
-    "svix": "^1.84.1"
+    "svix": "^1.84.1",
+    "swr": "^2.2.0"
   },
   "devDependencies": {
     "@hubspot/cli": "^7.11.2",

@@ -135,7 +135,8 @@ export default function WorldPremierePopup() {
     // consume the sessionStorage key before the final redirect lands.
     if (
       window.location.pathname === '/sso-callback' ||
-      window.location.pathname.startsWith('/imhs-2026')
+      window.location.pathname.startsWith('/imhs-2026') ||
+      window.location.pathname.startsWith('/admin')
     ) {
       return;
     }

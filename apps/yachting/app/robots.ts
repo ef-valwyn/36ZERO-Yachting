@@ -11,6 +11,8 @@ export default function robots(): MetadataRoute.Robots {
         '/sign-up/',
         '/sso-callback/',
         '/upload/',
+        '/admin',
+        '/admin/',
       ],
     },
     sitemap: 'https://www.36zeroyachting.com/sitemap.xml',
