@@ -44,7 +44,7 @@ export async function GET(
     prefill: {
       name: inquiry.name,
       email: inquiry.email,
-      metadata: { inquiryId: inquiry.id },
+      inquiryId: inquiry.id,
     },
   });
 }

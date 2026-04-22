@@ -51,8 +51,16 @@ export async function POST(request: NextRequest) {
 
   const triggerEvent: string = payload.triggerEvent ?? payload.type ?? '';
   const booking = payload.payload ?? payload;
+
+  // Cal.com may deliver the inquiryId in several shapes depending on how it's
+  // captured (booking metadata vs hidden booking question vs legacy custom
+  // input). A hidden question with identifier `inquiryId` on the event type
+  // lands it in `responses.inquiryId`, sometimes as a plain string and
+  // sometimes as a `{ value, label }` wrapper.
+  const resp = booking?.responses?.inquiryId;
   const inquiryId: string | undefined =
     booking?.metadata?.inquiryId ||
+    (typeof resp === 'string' ? resp : resp?.value) ||
     booking?.responses?.metadata?.inquiryId ||
     booking?.customInputs?.inquiryId;
 
@@ -60,6 +68,8 @@ export async function POST(request: NextRequest) {
     console.warn('[calcom-webhook] no inquiryId in payload', {
       triggerEvent,
       uid: booking?.uid,
+      metadataKeys: booking?.metadata ? Object.keys(booking.metadata) : null,
+      responseKeys: booking?.responses ? Object.keys(booking.responses) : null,
     });
     return NextResponse.json({ ignored: 'no inquiryId in metadata' });
   }
