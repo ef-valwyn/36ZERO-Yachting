@@ -15,7 +15,7 @@ interface AppointmentLinkResp {
   prefill: {
     name: string;
     email: string;
-    metadata: { inquiryId: string };
+    inquiryId: string;
   };
 }
 
@@ -198,7 +198,10 @@ function CalEmbed({
       config={{
         name: prefill.name,
         email: prefill.email,
-        metadata: prefill.metadata,
+        // Cal.com forwards top-level config keys matching a booking question
+        // identifier into `payload.responses` on the webhook. The event type
+        // has a hidden question with identifier `inquiryId` for exactly this.
+        inquiryId: prefill.inquiryId,
         theme: 'dark',
       }}
     />
