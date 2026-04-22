@@ -303,6 +303,10 @@ export const inquiries = pgTable(
     hubspotContactId: varchar('hubspot_contact_id', { length: 100 }),
     isContacted: boolean('is_contacted').notNull().default(false),
     contactedAt: timestamp('contacted_at'),
+    // Manual entry via /admin (paper-collected leads). Distinct from QR/form
+    // submissions so paper vs scan conversion can be reported.
+    manualEntry: boolean('manual_entry').notNull().default(false),
+    manualEntryByUserId: uuid('manual_entry_by_user_id').references(() => users.id),
     createdAt: timestamp('created_at').defaultNow().notNull(),
   },
   (table) => ({

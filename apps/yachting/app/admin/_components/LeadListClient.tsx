@@ -19,6 +19,7 @@ interface Lead {
   appointmentStatus: string | null;
   appointmentAssignedStaffEmail: string | null;
   hubspotContactId: string | null;
+  manualEntry: boolean | null;
   createdAt: string;
   notesCount: number;
 }
@@ -200,6 +201,11 @@ export default function LeadListClient() {
                     {interestBadges(lead) && (
                       <span className="shrink-0 rounded-full bg-white/5 px-2 py-0.5 text-[10px] uppercase tracking-wider text-white/50">
                         {interestBadges(lead)}
+                      </span>
+                    )}
+                    {lead.manualEntry && (
+                      <span className="shrink-0 rounded-full border border-amber-400/40 bg-amber-400/10 px-2 py-0.5 text-[10px] uppercase tracking-wider text-amber-300">
+                        Manual
                       </span>
                     )}
                   </div>

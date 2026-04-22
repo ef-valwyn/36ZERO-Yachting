@@ -6,7 +6,8 @@ export type AuditAction =
   | 'appointment_booked'
   | 'appointment_rescheduled'
   | 'appointment_cancelled'
-  | 'appointment_completed';
+  | 'appointment_completed'
+  | 'lead_manual_create';
 
 export type AuditEntity = 'inquiry' | 'lead_note';
 
