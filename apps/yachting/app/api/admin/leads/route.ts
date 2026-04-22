@@ -107,6 +107,7 @@ export async function GET(request: NextRequest) {
       appointmentStatus: inquiries.appointmentStatus,
       appointmentAssignedStaffEmail: inquiries.appointmentAssignedStaffEmail,
       hubspotContactId: inquiries.hubspotContactId,
+      manualEntry: inquiries.manualEntry,
       createdAt: inquiries.createdAt,
       notesCount: sql<number>`(
         SELECT COUNT(*)::int FROM ${leadNotes}
