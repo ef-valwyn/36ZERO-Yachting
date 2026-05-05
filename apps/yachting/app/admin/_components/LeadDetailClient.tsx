@@ -10,6 +10,7 @@ import NotesEditor from './NotesEditor';
 import NotesThread from './NotesThread';
 import RatingStars from './RatingStars';
 import ScheduleAppointment from './ScheduleAppointment';
+import HubSpotDealPanel from './HubSpotDealPanel';
 
 interface InquiryDetail {
   inquiry: {
@@ -108,7 +109,13 @@ function toLocalInputValue(iso: string | null): string {
   return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
 }
 
-export default function LeadDetailClient({ inquiryId }: { inquiryId: string }) {
+export default function LeadDetailClient({
+  inquiryId,
+  isAdmin = false,
+}: {
+  inquiryId: string;
+  isAdmin?: boolean;
+}) {
   const { data, error, isLoading, mutate } = useSWR<InquiryDetail>(
     `/api/admin/leads/${inquiryId}`,
     fetcher,
@@ -380,6 +387,8 @@ export default function LeadDetailClient({ inquiryId }: { inquiryId: string }) {
           />
         </div>
       </div>
+
+      <HubSpotDealPanel inquiryId={inquiryId} isAdmin={isAdmin} />
 
       <div className="rounded-2xl border border-white/10 bg-white/5 p-5">
         <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-white/50">

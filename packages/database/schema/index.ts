@@ -325,6 +325,15 @@ export const inquiries = pgTable(
     // "Due for follow-up" filter when nextActionAt <= now.
     nextActionAt: timestamp('next_action_at'),
     nextActionNote: varchar('next_action_note', { length: 500 }),
+    // Phase 3: HubSpot deal linkage. `hasDeal` is a fact (we created a deal
+    // for this inquiry); the deal's *current stage* is fetched live from
+    // HubSpot, never mirrored locally. Codex correctly flagged that storing
+    // a derived stage label (e.g. lifecycleStage='converted_to_deal') would
+    // lie when HubSpot moves the deal to Closed Lost. Not unique — yacht
+    // deals can span multiple stakeholders (spouse / broker / family
+    // office), so two inquiries pointing at one deal is real and allowed.
+    hasDeal: boolean('has_deal').notNull().default(false),
+    hubspotDealId: varchar('hubspot_deal_id', { length: 100 }),
     createdAt: timestamp('created_at').defaultNow().notNull(),
     updatedAt: timestamp('updated_at').defaultNow().notNull(),
   },
