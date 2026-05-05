@@ -2,18 +2,10 @@ import { NextRequest, NextResponse } from 'next/server';
 import { db, inquiries, vessels, eq } from '@36zero/database';
 import { sendLeadNotification } from '@/lib/email';
 import { createOnboardLead } from '@/lib/leads/create-onboard-lead';
+import type { LeadSource } from '@/lib/leads/sources';
 
 const HUBSPOT_ACCESS_TOKEN = process.env.HUBSPOT_ACCESS_TOKEN;
 const HUBSPOT_API_URL = 'https://api.hubapi.com/crm/v3/objects/contacts';
-
-type LeadSource =
-  | 'premiere_updates'
-  | 'premiere_tour_request'
-  | 'vessel_enquiry'
-  | 'contact_form'
-  | 'imhs_updates'
-  | 'imhs_tour_request'
-  | 'imhs_onboard_registration';
 
 interface LeadData {
   email: string;

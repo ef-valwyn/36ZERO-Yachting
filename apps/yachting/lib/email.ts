@@ -1,4 +1,5 @@
 import { Resend } from 'resend';
+import { leadSourceLabel, type LeadSource } from '@/lib/leads/sources';
 
 let _resend: Resend | null = null;
 function getResend(): Resend | null {
@@ -6,27 +7,6 @@ function getResend(): Resend | null {
   if (!_resend) _resend = new Resend(process.env.RESEND_API_KEY);
   return _resend;
 }
-
-type LeadSource =
-  | 'premiere_updates'
-  | 'premiere_tour_request'
-  | 'vessel_enquiry'
-  | 'contact_form'
-  | 'imhs_updates'
-  | 'imhs_tour_request'
-  | 'imhs_onboard_registration'
-  | 'lap_application';
-
-const SOURCE_LABELS: Record<LeadSource, string> = {
-  premiere_updates: 'Premiere Email Signup',
-  premiere_tour_request: 'Premiere Tour Request',
-  vessel_enquiry: 'Vessel Enquiry',
-  contact_form: 'Contact Form',
-  imhs_updates: 'IMHS 2026 Email Signup',
-  imhs_tour_request: 'IMHS 2026 Tour Request',
-  imhs_onboard_registration: 'IMHS 2026 Onboard Registration',
-  lap_application: 'LAP Application',
-};
 
 interface NotificationData {
   leadSource: LeadSource;
@@ -60,7 +40,7 @@ export async function sendLeadNotification(data: NotificationData): Promise<void
     return;
   }
 
-  const label = SOURCE_LABELS[data.leadSource] || data.leadSource;
+  const label = leadSourceLabel(data.leadSource);
   const subject = `New Lead: ${label} — ${data.name || data.email}`;
 
   const detailRows = buildDetailRows({
