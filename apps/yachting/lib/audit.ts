@@ -10,9 +10,12 @@ export type AuditAction =
   | 'lead_manual_create'
   | 'lifecycle_stage_set'
   | 'owner_set'
-  | 'next_action_set';
+  | 'next_action_set'
+  | 'inbound_draft_approved'
+  | 'inbound_draft_rejected'
+  | 'inbound_draft_merged';
 
-export type AuditEntity = 'inquiry' | 'lead_note';
+export type AuditEntity = 'inquiry' | 'lead_note' | 'inbound_draft';
 
 interface LogParams {
   actorUserId?: string | null; // null for system actors (webhooks)
