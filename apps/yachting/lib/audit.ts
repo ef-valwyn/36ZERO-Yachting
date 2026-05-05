@@ -13,7 +13,9 @@ export type AuditAction =
   | 'next_action_set'
   | 'inbound_draft_approved'
   | 'inbound_draft_rejected'
-  | 'inbound_draft_merged';
+  | 'inbound_draft_merged'
+  | 'deal_converted'
+  | 'deal_cleared';
 
 export type AuditEntity = 'inquiry' | 'lead_note' | 'inbound_draft';
 
