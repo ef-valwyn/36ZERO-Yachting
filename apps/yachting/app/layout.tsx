@@ -3,8 +3,6 @@ import Script from 'next/script';
 import { ClerkProvider } from '@clerk/nextjs';
 import '@36zero/ui/styles';
 import './globals.css';
-import WorldPremierePopup from '@/components/WorldPremierePopup';
-import MOTYVotePopup from '@/components/MOTYVotePopup';
 import { AnalyticsProvider } from '@/components/Analytics';
 import { OrganizationSchema, WebSiteSchema } from '@/components/OrganizationSchema';
 
@@ -80,8 +78,6 @@ export default function RootLayout({
         <body className="bg-brand-navy text-white antialiased">
           <AnalyticsProvider>
             {children}
-            <WorldPremierePopup />
-            <MOTYVotePopup />
           </AnalyticsProvider>
           {/* HubSpot Tracking Code — captures UTM params & page views */}
           <Script
