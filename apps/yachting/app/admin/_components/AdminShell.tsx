@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { SignOutButton } from '@clerk/nextjs';
 import { cn } from '@36zero/ui';
-import { LayoutList, CalendarDays, LogOut, UserPlus } from 'lucide-react';
+import { LayoutList, CalendarDays, LogOut, UserPlus, FilePlus2 } from 'lucide-react';
 import type { StaffUser } from '@/lib/auth/require-staff';
 
 interface AdminShellProps {
@@ -14,7 +14,8 @@ interface AdminShellProps {
 
 const NAV = [
   { href: '/admin', label: 'Leads', icon: LayoutList, exact: true },
-  { href: '/admin/leads/new', label: 'New lead', icon: UserPlus, exact: false },
+  { href: '/admin/leads/add', label: 'Add lead', icon: UserPlus, exact: false },
+  { href: '/admin/leads/new', label: 'IMHS bulk', icon: FilePlus2, exact: false },
   { href: '/admin/calendar', label: 'Calendar', icon: CalendarDays, exact: false },
 ];
 
@@ -31,7 +32,7 @@ export default function AdminShell({ staff, children }: AdminShellProps) {
             <span className="text-xs font-semibold uppercase tracking-[0.2em] text-brand-blue">
               36ZERO · Admin
             </span>
-            <span className="hidden text-xs text-white/40 sm:inline">IMHS 2026</span>
+            <span className="hidden text-xs text-white/40 sm:inline">CRM</span>
           </div>
           <div className="flex items-center gap-3 text-sm">
             <span className="hidden text-white/70 sm:inline">{displayName}</span>
