@@ -190,8 +190,7 @@ export default function HomePage() {
                     Adventure Yachts
                   </h3>
                   <p className="text-white/60 font-light">
-                    Exclusive partnership with Adventure Yachts – purpose-built 
-                    vessels for serious ocean passages.
+                    Adventure Yachts - Purpose-built vessels for serious ocean passages.
                   </p>
                 </GlassCard>
               </Link>

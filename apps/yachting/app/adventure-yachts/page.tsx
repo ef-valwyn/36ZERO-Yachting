@@ -335,7 +335,7 @@ export default function AdventureYachtsPage() {
               className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-brand-blue/10 border border-brand-blue/20 mb-6"
             >
               <AdventureYachtsLogoMark size={16} className="text-brand-blue" />
-              <span className="text-sm font-medium text-brand-blue">Adventure Yachts Partnership</span>
+              <span className="text-sm font-medium text-brand-blue">Adventure Yachts</span>
             </motion.div>
 
             <motion.p

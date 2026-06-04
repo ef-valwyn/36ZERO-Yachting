@@ -528,7 +528,7 @@ const vesselsData = [
       'https://yyofqqbn0jyxo9dg.public.blob.vercel-storage.com/yachts/adventure-two/Adventure%20Two%20AY60F%202.png',
     ],
     isFeatured: false,
-    isVisible: true,
+    isVisible: false,
     isAdventureYacht: true,
     variant: 'Hybrid Inboard Version',
     availabilityText: 'Q2 2026',
@@ -547,7 +547,9 @@ const vesselsData = [
     },
   },
   {
-    name: 'Adventure Three',
+    // Displayed as "Adventure Two". Slug kept as adventure-three to preserve the
+    // existing URL and update the existing DB row in place (no delete / no new row).
+    name: 'Adventure Two',
     slug: 'adventure-three',
     manufacturer: 'Adventure Yachts',
     model: 'AY60 Sport',
@@ -580,7 +582,7 @@ const vesselsData = [
     variant: 'Outboard Version',
     availabilityText: 'Q2 2026',
     availabilityDate: '2026-04-01',
-    sortOrder: 3,
+    sortOrder: 2,
     specs: {
       pricing: adventureYachtPricingBySlug['adventure-three'],
       engines: 'Triple Mercury V12 600hp Outboards',
@@ -619,7 +621,7 @@ const vesselsData = [
       'https://yyofqqbn0jyxo9dg.public.blob.vercel-storage.com/yachts/adventure-one/portthreequarter.jpeg',
     ],
     isFeatured: false,
-    isVisible: true,
+    isVisible: false,
     isAdventureYacht: true,
     variant: 'Long-Range Outboard Version',
     availabilityText: 'Q4 2026',
