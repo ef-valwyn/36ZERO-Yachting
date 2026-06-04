@@ -45,6 +45,19 @@ const nextConfig: NextConfig = {
         destination: '/adventure-yachts',
         permanent: true,
       },
+      // IMHS 2026 (La Grande Motte, 22-26 April 2026) has passed — page deactivated.
+      // Temporary redirects so the route can be re-enabled for a future event;
+      // the page components under app/imhs-2026 are kept in place for reuse.
+      {
+        source: '/imhs-2026',
+        destination: '/',
+        permanent: false,
+      },
+      {
+        source: '/imhs-2026/onboard',
+        destination: '/',
+        permanent: false,
+      },
     ];
   },
   async rewrites() {

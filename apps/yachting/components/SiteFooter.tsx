@@ -22,7 +22,6 @@ const footerSections: FooterSection[] = [
     title: 'Company',
     links: [
       { label: 'Adventure Yachts', href: '/adventure-yachts' },
-      { label: 'IMHS 2026', href: '/imhs-2026' },
       { label: 'News & Updates', href: '/news' },
       { label: 'Contact Us', href: '/contact' },
     ],
