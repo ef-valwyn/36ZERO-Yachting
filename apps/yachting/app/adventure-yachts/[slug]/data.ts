@@ -21,28 +21,11 @@ export const buildVariants = [
     imageUrl: 'https://yyofqqbn0jyxo9dg.public.blob.vercel-storage.com/yachts/adventure-one/hero-landing.png',
   },
   {
-    id: 'adventure-two',
-    slug: 'adventure-two',
-    name: 'Adventure Two',
-    model: 'AY60 Flybridge',
-    variant: 'Hybrid Inboard',
-    tagline: 'Extended horizons with sustainable power',
-    location: 'Thailand (Global Delivery Available)',
-    description: 'The AY60 Flybridge combines elegant design with innovative hybrid propulsion technology. The expansive flybridge deck provides exceptional entertaining space, while the hybrid inboard system delivers remarkable range and reduced environmental impact for the conscientious voyager.',
-    specs: {
-      lengthOverall: { value: '18.3 m', imperial: "(60' 0\")" },
-      beamOverall: { value: '8.47m', imperial: "(30' 0\")" },
-      range: { value: '2,500', unit: 'nm' },
-      cruisingSpeed: { value: '12', unit: 'kn' },
-      berths: { value: '4+2', unit: '' },
-      construction: { value: 'Composite', detail: '(Carbon - eGlass)' },
-    },
-    imageUrl: 'https://yyofqqbn0jyxo9dg.public.blob.vercel-storage.com/yachts/adventure-two/Adventure%20Two%20AY60F.png',
-  },
-  {
+    // Displayed as "Adventure Two". Retains the adventure-three slug/URL so the
+    // existing detail-page link and database row (renamed, not deleted) stay in sync.
     id: 'adventure-three',
     slug: 'adventure-three',
-    name: 'Adventure Three',
+    name: 'Adventure Two',
     model: 'AY60 Sport',
     variant: 'Outboard',
     tagline: 'Bespoke excellence awaits your vision',
@@ -57,25 +40,6 @@ export const buildVariants = [
       construction: { value: 'Composite', detail: '(Carbon - eGlass)' },
     },
     imageUrl: 'https://yyofqqbn0jyxo9dg.public.blob.vercel-storage.com/yachts/adventure-one/portthreequarter.jpeg',
-  },
-  {
-    id: 'adventure-four',
-    slug: 'adventure-four',
-    name: 'Adventure Four',
-    model: 'AY60 SportX',
-    variant: 'Outboard Explorer',
-    tagline: 'Engineered for ocean passages',
-    location: 'Thailand (Global Delivery Available)',
-    description: 'The AY60 SportX is purpose-built for serious bluewater cruising. With enhanced fuel capacity and extended range capabilities, this explorer variant is designed for those who seek distant horizons. Robust construction and comprehensive systems ensure you can venture far from shore with complete confidence.',
-    specs: {
-      lengthOverall: { value: '18.3 m', imperial: "(60' 0\")" },
-      beamOverall: { value: '8.47m', imperial: "(30' 0\")" },
-      range: { value: '2,000', unit: 'nm' },
-      cruisingSpeed: { value: '14', unit: 'kn' },
-      berths: { value: '4+2', unit: '' },
-      construction: { value: 'Composite', detail: '(Carbon - eGlass)' },
-    },
-    imageUrl: 'https://yyofqqbn0jyxo9dg.public.blob.vercel-storage.com/yachts/adventure-one/afterthreequarter.jpeg',
   },
 ];
 
