@@ -4,11 +4,11 @@ import { getAllArticles } from '@/lib/news';
 const baseUrl = 'https://www.36zeroyachting.com';
 
 // Adventure Yacht slugs for individual detail pages
+// adventure-three is the live slug for the listing displayed as "Adventure Two".
+// adventure-two (Flybridge) and adventure-four are hidden (isVisible=false).
 const adventureYachtSlugs = [
   'adventure-one',
-  'adventure-two',
   'adventure-three',
-  'adventure-four',
 ];
 
 export async function GET() {
@@ -21,7 +21,6 @@ export async function GET() {
     { url: `${baseUrl}/adventure-yachts`, priority: '0.9', changefreq: 'weekly' },
     { url: `${baseUrl}/news`, priority: '0.8', changefreq: 'daily' },
     { url: `${baseUrl}/lap`, priority: '0.8', changefreq: 'monthly' },
-    { url: `${baseUrl}/imhs-2026`, priority: '0.9', changefreq: 'weekly' },
     { url: `${baseUrl}/contact`, priority: '0.6', changefreq: 'monthly' },
   ];
 
