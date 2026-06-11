@@ -16,8 +16,8 @@
     --accent-coral: #e07a5f;
     
     /* Glassmorphism */
-    --glass-bg: rgba(7, 25, 35, 0.8);
-    --glass-border: rgba(255, 255, 255, 0.1);
+    --glass-bg: rgba(7, 25, 35, 0.65);
+    --glass-border: rgba(255, 255, 255, 0.08);
     --glass-border-blue: rgba(47, 151, 221, 0.2);
     
     /* Shadows */
@@ -36,23 +36,27 @@
     min-height: 100vh;
   }
 
-  /* Typography Scale */
+  /* Typography Scale — "Refined Expedition Luxury": light-weight caps with
+     generous tracking for display, medium sentence-case for subheads. */
   h1, .h1 {
-    @apply font-extrabold uppercase tracking-tighter;
-    font-size: clamp(2.5rem, 8vw, 5rem);
-    line-height: 0.95;
+    @apply font-light uppercase;
+    font-size: clamp(2.75rem, 7vw, 5.25rem);
+    letter-spacing: 0.02em;
+    line-height: 1.05;
   }
 
   h2, .h2 {
-    @apply font-bold uppercase tracking-tight;
-    font-size: clamp(1.75rem, 5vw, 3rem);
-    line-height: 1.1;
+    @apply font-light uppercase;
+    font-size: clamp(1.9rem, 4.5vw, 3.25rem);
+    letter-spacing: 0.015em;
+    line-height: 1.12;
   }
 
   h3, .h3 {
-    @apply font-semibold tracking-tight;
-    font-size: clamp(1.25rem, 3vw, 1.75rem);
-    line-height: 1.2;
+    @apply font-medium;
+    font-size: clamp(1.2rem, 2.5vw, 1.6rem);
+    letter-spacing: -0.01em;
+    line-height: 1.25;
   }
 
   p, .body {
@@ -73,8 +77,8 @@
   .glass-card {
     @apply relative overflow-hidden rounded-2xl;
     background: var(--glass-bg);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
     border: 1px solid var(--glass-border);
     box-shadow: var(--shadow-glass);
   }
@@ -94,36 +98,22 @@
      BUTTONS
      ========================================= */
   .btn-primary {
-    @apply relative inline-flex items-center justify-center px-8 py-4 
-           font-medium tracking-wide uppercase text-sm
+    @apply relative inline-flex items-center justify-center px-8 py-4
+           font-medium tracking-wider uppercase text-sm
            bg-brand-blue text-white rounded-full
            transition-all duration-300 ease-out
-           hover:bg-brand-blue-600 hover:shadow-glow
-           focus:outline-none focus:ring-2 focus:ring-brand-blue focus:ring-offset-2 focus:ring-offset-brand-navy
-           overflow-hidden;
-  }
-
-  .btn-primary::before {
-    content: '';
-    @apply absolute inset-0;
-    background: linear-gradient(
-      90deg,
-      transparent 0%,
-      rgba(255, 255, 255, 0.2) 50%,
-      transparent 100%
-    );
-    transform: translateX(-100%);
-    animation: shimmer 5s ease-in-out infinite;
+           hover:bg-brand-blue-400 hover:shadow-glow
+           focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-blue focus-visible:ring-offset-2 focus-visible:ring-offset-brand-navy;
   }
 
   .btn-secondary {
-    @apply inline-flex items-center justify-center px-8 py-4 
-           font-medium tracking-wide uppercase text-sm
+    @apply inline-flex items-center justify-center px-8 py-4
+           font-medium tracking-wider uppercase text-sm
            bg-transparent text-white rounded-full
-           border border-white/30
+           border border-white/25
            transition-all duration-300 ease-out
-           hover:bg-white/10 hover:border-white/50
-           focus:outline-none focus:ring-2 focus:ring-white/50 focus:ring-offset-2 focus:ring-offset-brand-navy;
+           hover:bg-white/5 hover:border-white/60
+           focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50 focus-visible:ring-offset-2 focus-visible:ring-offset-brand-navy;
   }
 
   .btn-ghost {
@@ -181,7 +171,7 @@
   .vessel-card-image img {
     @apply w-full h-full object-cover
            transition-transform duration-700 ease-out
-           group-hover:scale-110;
+           group-hover:scale-[1.04];
   }
 
   .vessel-card-overlay {
@@ -191,8 +181,8 @@
   }
 
   .vessel-card-badge {
-    @apply absolute top-4 right-4 px-3 py-1
-           text-xs font-semibold uppercase tracking-wider
+    @apply absolute top-4 right-4 px-2.5 py-1
+           text-[11px] font-medium uppercase tracking-widest
            bg-brand-blue text-white rounded-full;
   }
 
@@ -216,12 +206,25 @@
   }
 
   .price-value {
-    @apply text-2xl font-bold text-white;
+    @apply text-2xl font-semibold text-accent-gold;
   }
 
 }
 
 @layer utilities {
+  /* Eyebrow kicker labels (section headers, card meta) */
+  .eyebrow {
+    @apply text-xs font-semibold uppercase tracking-luxe text-brand-blue;
+  }
+
+  .eyebrow-gold {
+    @apply text-xs font-semibold uppercase tracking-luxe text-accent-gold;
+  }
+
+  .eyebrow-muted {
+    @apply text-xs font-semibold uppercase tracking-luxe text-white/50;
+  }
+
   /* Text gradient utility */
   .text-gradient {
     @apply bg-clip-text text-transparent;

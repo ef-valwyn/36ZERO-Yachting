@@ -219,8 +219,8 @@ export const Navigation: React.FC<NavigationProps> = ({
                     key={item.href}
                     href={item.href}
                     className={cn(
-                      'whitespace-nowrap text-sm',
-                      'font-medium text-white/70 hover:text-white transition-colors',
+                      'whitespace-nowrap text-xs uppercase tracking-widest',
+                      'font-medium text-white/60 hover:text-white transition-colors',
                       'py-1 px-2',
                       item.isActive && 'text-white'
                     )}
