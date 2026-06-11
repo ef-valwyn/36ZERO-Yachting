@@ -43,9 +43,10 @@ export default function ArticleClient({
         />
         <div className="absolute inset-0 bg-gradient-to-t from-brand-navy via-brand-navy/60 to-brand-navy/20" />
 
-        {/* Return to News - Top */}
+        {/* Return to News — below the fixed 80px nav (top-6 sat under the
+            z-50 nav bar, which intercepted clicks) */}
         <motion.div
-          className="absolute top-6 left-6 z-10"
+          className="absolute top-24 left-6 z-10"
           initial={{ opacity: 0, x: -10 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.4 }}
@@ -77,8 +78,9 @@ export default function ArticleClient({
               ))}
             </div>
 
-            {/* Title */}
-            <h1 className="text-white mb-4">
+            {/* Title — sized explicitly: long titles must fit the fixed-height
+                hero (absolute bottom-0), the global display scale overflows it */}
+            <h1 className="text-2xl md:text-3xl lg:text-4xl leading-tight text-white mb-4">
               {frontmatter.title}
             </h1>
 
