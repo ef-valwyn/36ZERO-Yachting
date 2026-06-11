@@ -287,16 +287,16 @@ export default function IMHSPage() {
         >
           <motion.p
             variants={itemVariants}
-            className="text-brand-blue font-medium tracking-widest uppercase text-sm mb-4"
+            className="eyebrow mb-4"
           >
             April 22-26, 2026 &middot; La Grande Motte, France
           </motion.p>
           <motion.h1
             variants={itemVariants}
-            className="text-4xl md:text-6xl font-extrabold uppercase tracking-tighter text-white mb-6"
+            className="text-white mb-6"
           >
             International Multihull{' '}
-            <span className="text-gradient">Show 2026</span>
+            <span className="text-gradient font-medium">Show 2026</span>
           </motion.h1>
           <motion.p
             variants={itemVariants}
@@ -347,7 +347,7 @@ export default function IMHSPage() {
 
             {countdown.isLive ? (
               <div>
-                <h2 className="text-3xl md:text-4xl font-extrabold uppercase tracking-tighter text-white mb-4">
+                <h2 className="text-3xl md:text-4xl text-white mb-4">
                   The Show Is <span className="text-gradient">Live!</span>
                 </h2>
                 <p className="text-lg text-white/70 font-light">
@@ -356,7 +356,7 @@ export default function IMHSPage() {
               </div>
             ) : (
               <>
-                <p className="text-brand-blue font-medium tracking-widest uppercase text-sm mb-8">
+                <p className="eyebrow mb-8">
                   Countdown to Opening
                 </p>
                 <div className="grid grid-cols-4 gap-3 sm:gap-6 max-w-xl mx-auto">
@@ -432,10 +432,10 @@ export default function IMHSPage() {
               />
             </div>
             <div>
-              <p className="text-brand-blue font-medium tracking-widest uppercase text-sm mb-3">
+              <p className="eyebrow mb-3">
                 World Premiere
               </p>
-              <h2 className="text-3xl md:text-4xl font-extrabold uppercase tracking-tighter text-white mb-4">
+              <h2 className="text-3xl md:text-4xl text-white mb-4">
                 The AY60 Power{' '}
                 <span className="text-gradient">Catamaran</span>
               </h2>
@@ -471,10 +471,10 @@ export default function IMHSPage() {
             transition={{ duration: 0.6 }}
           >
             <div className="text-center mb-8">
-              <p className="text-brand-blue font-medium tracking-widest uppercase text-sm mb-3">
+              <p className="eyebrow mb-3">
                 Book Your Appointment
               </p>
-              <h2 className="text-3xl md:text-4xl font-extrabold uppercase tracking-tighter text-white mb-4">
+              <h2 className="text-3xl md:text-4xl text-white mb-4">
                 Register for a{' '}
                 <span className="text-gradient">Private Viewing</span>
               </h2>
@@ -494,7 +494,7 @@ export default function IMHSPage() {
                   <div className="w-16 h-16 mx-auto mb-6 rounded-full bg-accent-teal/20 flex items-center justify-center">
                     <CheckCircle className="w-8 h-8 text-accent-teal" />
                   </div>
-                  <h3 className="text-2xl font-semibold text-white mb-3">
+                  <h3 className="text-2xl font-medium text-white mb-3">
                     Viewing Request Received
                   </h3>
                   <p className="text-white/70 max-w-md mx-auto">
@@ -781,10 +781,10 @@ export default function IMHSPage() {
             transition={{ duration: 0.6 }}
           >
             <div className="order-2 md:order-1">
-              <p className="text-brand-blue font-medium tracking-widest uppercase text-sm mb-3">
+              <p className="eyebrow mb-3">
                 At the Show
               </p>
-              <h2 className="text-3xl md:text-4xl font-extrabold uppercase tracking-tighter text-white mb-4">
+              <h2 className="text-3xl md:text-4xl text-white mb-4">
                 Visit{' '}
                 <span className="text-gradient">Adventure One</span>
               </h2>
@@ -842,7 +842,7 @@ export default function IMHSPage() {
                   <div className="w-12 h-12 mx-auto mb-4 rounded-full bg-accent-teal/20 flex items-center justify-center">
                     <CheckCircle className="w-6 h-6 text-accent-teal" />
                   </div>
-                  <h3 className="text-xl font-semibold text-white mb-2">You&apos;re Signed Up!</h3>
+                  <h3 className="text-xl font-medium text-white mb-2">You&apos;re Signed Up!</h3>
                   <p className="text-white/60 text-sm">
                     We&apos;ll keep you updated on everything IMHS 2026.
                   </p>

@@ -78,7 +78,7 @@ export default function ArticleClient({
             </div>
 
             {/* Title */}
-            <h1 className="text-3xl md:text-4xl lg:text-5xl font-extrabold text-white uppercase tracking-tighter leading-tight mb-4">
+            <h1 className="text-white mb-4">
               {frontmatter.title}
             </h1>
 

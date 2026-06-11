@@ -20,14 +20,14 @@ Repo verification baseline (no test suite exists — recorded as a known gap):
 
 | Plan | Title | Priority | Effort | Depends on | Status |
 |------|-------|----------|--------|------------|--------|
-| 001  | Delete dead popup components and unused design-system CSS | P1 | S | — | TODO |
-| 002  | Load Inter Tight via next/font instead of render-blocking @import | P1 | S | — | TODO |
-| 003  | Accessible Modal primitive; migrate EnquireModal + ScheduleAppointment | P1 | M | 001 (soft) | TODO |
-| 004  | Centralize duplicated form-input styles; add form a11y attributes | P2 | M | 001 | TODO |
-| 005  | Honor prefers-reduced-motion across CSS and Framer Motion | P2 | S | — | TODO |
-| 006  | Add `sizes` hints to Adventure Yachts gallery/thumbnail images | P3 | S | — | TODO |
-| 007  | Design-system overhaul — "Refined Expedition Luxury" | P1 | L | 001,002,005 | TODO |
-| 008  | Apply the overhaul across pages | P1 | L | 007 | TODO |
+| 001  | Delete dead popup components and unused design-system CSS | P1 | S | — | DONE |
+| 002  | Load Inter Tight via next/font instead of render-blocking @import | P1 | S | — | DONE |
+| 003  | Accessible Modal primitive; migrate EnquireModal + ScheduleAppointment | P1 | M | 001 (soft) | DONE |
+| 004  | Centralize duplicated form-input styles; add form a11y attributes | P2 | M | 001 | DONE |
+| 005  | Honor prefers-reduced-motion across CSS and Framer Motion | P2 | S | — | DONE |
+| 006  | Add `sizes` hints to Adventure Yachts gallery/thumbnail images | P3 | S | — | DONE |
+| 007  | Design-system overhaul — "Refined Expedition Luxury" | P1 | L | 001,002,005 | DONE |
+| 008  | Apply the overhaul across pages | P1 | L | 007 | DONE (admin chrome polish deferred — compact density kept, shared classes flow through) |
 
 Status values: TODO | IN PROGRESS | DONE | BLOCKED (with one-line reason) | REJECTED (with one-line rationale)
 

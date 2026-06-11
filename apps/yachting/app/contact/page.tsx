@@ -186,11 +186,11 @@ export default function ContactPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
           >
-            <p className="text-brand-blue font-medium tracking-widest uppercase text-sm mb-4">
+            <p className="eyebrow mb-4">
               Get In Touch
             </p>
-            <h1 className="text-4xl md:text-5xl font-extrabold uppercase tracking-tighter text-white mb-6">
-              Contact <span className="text-gradient">Our Team</span>
+            <h1 className="text-white mb-6">
+              Contact <span className="text-gradient font-medium">Our Team</span>
             </h1>
             <p className="text-lg text-white/70 font-light max-w-2xl mx-auto">
               Whether you&apos;re interested in the Adventure Yachts AY60 or joining the 36ZERO LAP circumnavigation,
@@ -218,7 +218,7 @@ export default function ContactPage() {
                   <div className="w-16 h-16 mx-auto mb-6 rounded-full bg-accent-teal/20 flex items-center justify-center">
                     <CheckCircle className="w-8 h-8 text-accent-teal" />
                   </div>
-                  <h3 className="text-2xl font-semibold text-white mb-3">
+                  <h3 className="text-2xl font-medium text-white mb-3">
                     Thank You for Reaching Out
                   </h3>
                   <p className="text-white/70 mb-8 max-w-md mx-auto">

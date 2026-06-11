@@ -253,7 +253,7 @@ export default function AdventureYachtDetail({ build, allBuilds, pricing }: Prop
 
             <motion.h1
               variants={itemVariants}
-              className="text-5xl md:text-7xl lg:text-8xl font-extrabold uppercase tracking-tighter text-white leading-[0.9] mb-6"
+              className="text-white mb-6"
             >
               {build.name}
             </motion.h1>
@@ -336,7 +336,7 @@ export default function AdventureYachtDetail({ build, allBuilds, pricing }: Prop
       </section>
 
       {/* Specifications Section */}
-      <section id="specs-section" className="py-24 md:py-32 px-6 scroll-mt-24">
+      <section id="specs-section" className="py-20 md:py-28 px-6 scroll-mt-24">
         <div className="max-w-7xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -356,7 +356,7 @@ export default function AdventureYachtDetail({ build, allBuilds, pricing }: Prop
                 >
                   {/* Title row with CTA */}
                   <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4">
-                    <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white tracking-tight">
+                    <h2 className="text-white">
                       {build.model}
                     </h2>
                     <Button 
@@ -370,7 +370,7 @@ export default function AdventureYachtDetail({ build, allBuilds, pricing }: Prop
                   </div>
                   {pricing && (
                     <div className="mb-6 rounded-2xl border border-white/10 bg-white/5 p-5">
-                      <p className="text-xs font-semibold tracking-[0.24em] uppercase text-brand-blue/80 mb-3">
+                      <p className="eyebrow mb-3">
                         Pricing
                       </p>
                       <div className="space-y-3">
@@ -379,7 +379,7 @@ export default function AdventureYachtDetail({ build, allBuilds, pricing }: Prop
                             {entry.label && (
                               <p className="text-sm font-medium text-white/60 mb-1">{entry.label}</p>
                             )}
-                            <p className="text-xl md:text-2xl font-semibold text-white">
+                            <p className="text-xl md:text-2xl font-semibold text-accent-gold">
                               {formatPricingEntry(entry)}
                             </p>
                           </div>
@@ -429,7 +429,7 @@ export default function AdventureYachtDetail({ build, allBuilds, pricing }: Prop
                 viewport={{ once: true }}
                 className="spec-item"
               >
-                <p className="text-xs font-semibold tracking-[0.2em] uppercase text-white/50 mb-4">
+                <p className="eyebrow-muted mb-4">
                   Length Overall
                 </p>
                 <div className="h-0.5 bg-brand-blue mb-6 w-full" />
@@ -448,7 +448,7 @@ export default function AdventureYachtDetail({ build, allBuilds, pricing }: Prop
                 viewport={{ once: true }}
                 className="spec-item"
               >
-                <p className="text-xs font-semibold tracking-[0.2em] uppercase text-white/50 mb-4">
+                <p className="eyebrow-muted mb-4">
                   Beam Overall
                 </p>
                 <div className="h-0.5 bg-brand-blue mb-6 w-full" />
@@ -467,7 +467,7 @@ export default function AdventureYachtDetail({ build, allBuilds, pricing }: Prop
                 viewport={{ once: true }}
                 className="spec-item"
               >
-                <p className="text-xs font-semibold tracking-[0.2em] uppercase text-white/50 mb-4">
+                <p className="eyebrow-muted mb-4">
                   Range
                 </p>
                 <div className="h-0.5 bg-brand-blue mb-6 w-full" />
@@ -486,7 +486,7 @@ export default function AdventureYachtDetail({ build, allBuilds, pricing }: Prop
                 viewport={{ once: true }}
                 className="spec-item"
               >
-                <p className="text-xs font-semibold tracking-[0.2em] uppercase text-white/50 mb-4">
+                <p className="eyebrow-muted mb-4">
                   Cruising Speed
                 </p>
                 <div className="h-0.5 bg-brand-blue mb-6 w-full" />
@@ -505,7 +505,7 @@ export default function AdventureYachtDetail({ build, allBuilds, pricing }: Prop
                 viewport={{ once: true }}
                 className="spec-item"
               >
-                <p className="text-xs font-semibold tracking-[0.2em] uppercase text-white/50 mb-4">
+                <p className="eyebrow-muted mb-4">
                   Berths
                 </p>
                 <div className="h-0.5 bg-brand-blue mb-6 w-full" />
@@ -523,7 +523,7 @@ export default function AdventureYachtDetail({ build, allBuilds, pricing }: Prop
                 viewport={{ once: true }}
                 className="spec-item"
               >
-                <p className="text-xs font-semibold tracking-[0.2em] uppercase text-white/50 mb-4">
+                <p className="eyebrow-muted mb-4">
                   Construction
                 </p>
                 <div className="h-0.5 bg-brand-blue mb-6 w-full" />
@@ -663,7 +663,7 @@ export default function AdventureYachtDetail({ build, allBuilds, pricing }: Prop
       </section>
 
       {/* CTA Section */}
-      <section className="py-24 md:py-32 px-6">
+      <section className="py-20 md:py-28 px-6">
         <div className="max-w-4xl mx-auto text-center">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -671,10 +671,10 @@ export default function AdventureYachtDetail({ build, allBuilds, pricing }: Prop
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
           >
-            <p className="text-brand-blue font-medium tracking-widest uppercase text-sm mb-4">
+            <p className="eyebrow mb-4">
               Ready to Begin?
             </p>
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-6">
+            <h2 className="text-3xl md:text-4xl lg:text-5xl text-white mb-6">
               Reserve Your {build.model}
             </h2>
             <p className="text-lg text-white/60 font-light max-w-2xl mx-auto mb-10">

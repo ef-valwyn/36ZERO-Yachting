@@ -63,10 +63,10 @@ export default function NewsListingClient({ articles }: NewsListingClientProps) 
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
         >
-          <p className="text-brand-blue text-sm font-semibold uppercase tracking-widest mb-4">
+          <p className="eyebrow mb-4">
             36ZERO Yachting
           </p>
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-white uppercase tracking-tighter mb-4">
+          <h1 className="text-white mb-4">
             News & Updates
           </h1>
           <p className="text-white/60 font-light text-lg max-w-2xl mx-auto">
