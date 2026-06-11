@@ -554,6 +554,7 @@ export default function AdventureYachtsPage() {
                       src={activeVesselArea.imageUrl}
                       alt={activeVesselArea.name}
                       fill
+                      sizes="(max-width: 1280px) 100vw, 1152px"
                       className="object-cover"
                     />
                     {/* Gradient overlay for better hotspot visibility */}
@@ -668,6 +669,7 @@ export default function AdventureYachtsPage() {
                     src={galleryImages[activeGalleryIndex].url}
                     alt={galleryImages[activeGalleryIndex].alt}
                     fill
+                    sizes="(max-width: 1280px) 100vw, 1152px"
                     className="object-cover"
                   />
                 </motion.div>
@@ -749,6 +751,7 @@ export default function AdventureYachtsPage() {
                     src={image.url}
                     alt={image.alt}
                     fill
+                    sizes="96px"
                     className="object-cover"
                   />
                 </button>

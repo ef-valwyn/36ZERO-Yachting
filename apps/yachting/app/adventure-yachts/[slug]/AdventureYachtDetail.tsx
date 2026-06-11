@@ -570,6 +570,7 @@ export default function AdventureYachtDetail({ build, allBuilds, pricing }: Prop
                     src={galleryImages[activeGalleryIndex].url}
                     alt={galleryImages[activeGalleryIndex].alt}
                     fill
+                    sizes="(max-width: 1280px) 100vw, 1152px"
                     className="object-cover"
                   />
                 </motion.div>
@@ -651,6 +652,7 @@ export default function AdventureYachtDetail({ build, allBuilds, pricing }: Prop
                     src={image.url}
                     alt={image.alt}
                     fill
+                    sizes="96px"
                     className="object-cover"
                   />
                 </button>
