@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronLeft, ChevronRight, Check, AlertTriangle, Mail, User, Phone } from 'lucide-react';
 import { cn } from '../lib/utils';
+import { inputCx, selectCx } from '../lib/formStyles';
 import { Button } from './Button';
 import { GlassCard } from './GlassCard';
 import { countryCodes, countries } from '../lib/countryCodes';
@@ -60,9 +61,6 @@ const slideVariants = {
     opacity: 0,
   }),
 };
-
-const inputClasses = 'w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-white/40 focus:outline-none focus:border-brand-blue focus:ring-1 focus:ring-brand-blue transition-colors';
-const selectClasses = 'px-3 py-3 bg-white/5 border border-white/10 rounded-xl text-white focus:outline-none focus:border-brand-blue focus:ring-1 focus:ring-brand-blue transition-colors appearance-none';
 
 export const StepForm: React.FC<StepFormProps> = ({
   passages,
@@ -303,7 +301,7 @@ export const StepForm: React.FC<StepFormProps> = ({
                       placeholder="your@email.com"
                       value={userInfo.email}
                       onChange={(e) => updateUserInfo('email', e.target.value)}
-                      className={cn(inputClasses, 'pl-10', formTouched && !userInfo.email.includes('@') && 'border-red-400/50')}
+                      className={cn(inputCx, 'pl-10', formTouched && !userInfo.email.includes('@') && 'border-red-400/50')}
                     />
                   </div>
                 </div>
@@ -318,7 +316,7 @@ export const StepForm: React.FC<StepFormProps> = ({
                       placeholder="John Smith"
                       value={userInfo.fullName}
                       onChange={(e) => updateUserInfo('fullName', e.target.value)}
-                      className={cn(inputClasses, 'pl-10', formTouched && !userInfo.fullName.trim() && 'border-red-400/50')}
+                      className={cn(inputCx, 'pl-10', formTouched && !userInfo.fullName.trim() && 'border-red-400/50')}
                     />
                   </div>
                 </div>
@@ -330,7 +328,8 @@ export const StepForm: React.FC<StepFormProps> = ({
                     <select
                       value={userInfo.countryCode}
                       onChange={(e) => updateUserInfo('countryCode', e.target.value)}
-                      className={cn(selectClasses, 'w-28 flex-shrink-0')}
+                      className={cn(selectCx, 'w-28 flex-shrink-0')}
+                      aria-label="Country code"
                     >
                       {countryCodes.map((cc) => (
                         <option key={cc.code} value={cc.code} className="bg-brand-navy">
@@ -345,7 +344,7 @@ export const StepForm: React.FC<StepFormProps> = ({
                         placeholder="Phone number"
                         value={userInfo.phone}
                         onChange={(e) => updateUserInfo('phone', e.target.value)}
-                        className={cn(inputClasses, 'pl-10', formTouched && !userInfo.phone.trim() && 'border-red-400/50')}
+                        className={cn(inputCx, 'pl-10', formTouched && !userInfo.phone.trim() && 'border-red-400/50')}
                       />
                     </div>
                   </div>
@@ -357,7 +356,7 @@ export const StepForm: React.FC<StepFormProps> = ({
                   <select
                     value={userInfo.countryOfResidence}
                     onChange={(e) => updateUserInfo('countryOfResidence', e.target.value)}
-                    className={cn(selectClasses, 'w-full', formTouched && !userInfo.countryOfResidence && 'border-red-400/50')}
+                    className={cn(selectCx, 'w-full', formTouched && !userInfo.countryOfResidence && 'border-red-400/50')}
                   >
                     <option value="" className="bg-brand-navy">Select country</option>
                     {countries.map((c) => (
@@ -397,7 +396,7 @@ export const StepForm: React.FC<StepFormProps> = ({
                       placeholder="e.g. Oyster 565, 2021"
                       value={userInfo.ownYachtDetails}
                       onChange={(e) => updateUserInfo('ownYachtDetails', e.target.value)}
-                      className={cn(inputClasses, formTouched && !userInfo.ownYachtDetails.trim() && 'border-red-400/50')}
+                      className={cn(inputCx, formTouched && !userInfo.ownYachtDetails.trim() && 'border-red-400/50')}
                     />
                   </div>
                 )}

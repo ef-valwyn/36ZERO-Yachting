@@ -9,6 +9,8 @@ import {
   cn,
   countryEntriesOnboard,
   enToFr,
+  honeypotCx,
+  inputCx,
 } from '@36zero/ui';
 import Logo from '@/components/Logo';
 
@@ -27,9 +29,6 @@ const NAME_REGEX = /^[\p{L}\p{M} .'\-]{2,100}$/u;
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const BOT_GUARD_MS = 3000;
 const REDIRECT_MS = 2500;
-
-const baseInputCx =
-  'w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-white/40 focus:outline-none focus:border-brand-blue focus:ring-1 focus:ring-brand-blue transition-colors';
 
 const COPY = {
   en: {
@@ -173,7 +172,7 @@ function CountryCombobox({
         aria-autocomplete="list"
         aria-expanded={open}
         aria-controls={`${id}-listbox`}
-        className={cn(baseInputCx, invalid && 'border-red-500')}
+        className={cn(inputCx, invalid && 'border-red-500')}
       />
       {open && filtered.length > 0 && (
         <ul
@@ -501,7 +500,7 @@ function OnboardPageInner() {
               tabIndex={-1}
               autoComplete="off"
               aria-hidden="true"
-              className="absolute left-[-9999px] top-0 h-0 w-0 overflow-hidden"
+              className={honeypotCx}
             />
 
             {/* Interests */}
@@ -546,7 +545,7 @@ function OnboardPageInner() {
                 required
                 value={fullName}
                 onChange={(e) => setFullName(e.target.value)}
-                className={cn(baseInputCx, nameError && 'border-red-500')}
+                className={cn(inputCx, nameError && 'border-red-500')}
                 aria-invalid={!!nameError}
               />
               {nameError && (
@@ -571,7 +570,7 @@ function OnboardPageInner() {
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className={cn(baseInputCx, emailError && 'border-red-500')}
+                className={cn(inputCx, emailError && 'border-red-500')}
                 aria-invalid={!!emailError}
               />
               {emailError && (

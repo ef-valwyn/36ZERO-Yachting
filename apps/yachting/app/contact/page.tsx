@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Mail, User, Phone, CheckCircle, AlertCircle, Loader2, Send } from 'lucide-react';
 import Image from 'next/image';
-import { Button, GlassCard, countryCodes } from '@36zero/ui';
+import { Button, GlassCard, countryCodes, inputCx, honeypotCx } from '@36zero/ui';
 import Header from '@/components/Header';
 import SiteFooter from '@/components/SiteFooter';
 import { useUser, useSignIn, useSignUp } from '@clerk/nextjs';
@@ -173,8 +173,6 @@ export default function ContactPage() {
     }
   };
 
-  const inputClasses = 'w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-white/40 focus:outline-none focus:border-brand-blue focus:ring-1 focus:ring-brand-blue transition-colors';
-
   return (
     <main className="min-h-screen bg-brand-navy">
       <Header variant="solid" />
@@ -301,7 +299,7 @@ export default function ContactPage() {
                       name="website"
                       value={honeypot}
                       onChange={(e) => setHoneypot(e.target.value)}
-                      style={{ position: 'absolute', left: '-9999px' }}
+                      className={honeypotCx}
                       tabIndex={-1}
                       autoComplete="off"
                       aria-hidden="true"
@@ -320,7 +318,7 @@ export default function ContactPage() {
                           value={formData.fullName}
                           onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
                           placeholder="John Smith"
-                          className={`${inputClasses} pl-12 ${isSignedIn && formData.fullName ? 'bg-white/10' : ''} ${isFieldInvalid('fullName') ? 'border-red-500' : ''}`}
+                          className={`${inputCx} pl-12 ${isSignedIn && formData.fullName ? 'bg-white/10' : ''} ${isFieldInvalid('fullName') ? 'border-red-500' : ''}`}
                         />
                       </div>
                     </div>
@@ -338,7 +336,7 @@ export default function ContactPage() {
                           value={formData.email}
                           onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                           placeholder="john@example.com"
-                          className={`${inputClasses} pl-12 ${isSignedIn && formData.email ? 'bg-white/10' : ''} ${isFieldInvalid('email') ? 'border-red-500' : ''}`}
+                          className={`${inputCx} pl-12 ${isSignedIn && formData.email ? 'bg-white/10' : ''} ${isFieldInvalid('email') ? 'border-red-500' : ''}`}
                         />
                       </div>
                     </div>
@@ -353,6 +351,7 @@ export default function ContactPage() {
                           value={formData.countryCode}
                           onChange={(e) => setFormData({ ...formData, countryCode: e.target.value })}
                           className="w-28 px-3 py-3 bg-white/5 border border-white/10 rounded-xl text-white focus:outline-none focus:border-brand-blue focus:ring-1 focus:ring-brand-blue transition-colors"
+                          aria-label="Country code"
                         >
                           {countryCodes.map((cc) => (
                             <option key={cc.code} value={cc.code} className="bg-brand-navy">
@@ -368,7 +367,7 @@ export default function ContactPage() {
                             value={formData.phone}
                             onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                             placeholder="123 456 7890"
-                            className={`${inputClasses} pl-12`}
+                            className={`${inputCx} pl-12`}
                           />
                         </div>
                       </div>
@@ -439,7 +438,7 @@ export default function ContactPage() {
                         rows={4}
                         value={formData.message}
                         onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                        className={`${inputClasses} resize-none`}
+                        className={`${inputCx} resize-none`}
                         placeholder="Tell us how we can help..."
                       />
                     </div>
@@ -450,6 +449,7 @@ export default function ContactPage() {
                         initial={{ opacity: 0, y: -10 }}
                         animate={{ opacity: 1, y: 0 }}
                         className="flex items-center gap-3 p-4 bg-accent-coral/10 border border-accent-coral/20 rounded-xl"
+                        role="alert"
                       >
                         <AlertCircle className="w-5 h-5 text-accent-coral shrink-0" />
                         <p className="text-sm text-accent-coral">{errorMessage}</p>

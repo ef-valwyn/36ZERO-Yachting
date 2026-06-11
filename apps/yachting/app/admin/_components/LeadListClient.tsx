@@ -11,7 +11,7 @@ import {
   AlarmClock,
   User as UserIcon,
 } from 'lucide-react';
-import { cn } from '@36zero/ui';
+import { cn, inputCx } from '@36zero/ui';
 import { LEAD_SOURCES, leadSourceLabel } from '@/lib/leads/sources';
 
 interface Lead {
@@ -79,9 +79,6 @@ const STAGE_BADGE: Record<string, string> = {
   nurture: 'border-amber-400/40 bg-amber-400/10 text-amber-300',
   lost: 'border-red-500/30 bg-red-500/10 text-red-300',
 };
-
-const baseInput =
-  'w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-white/40 focus:outline-none focus:border-brand-blue focus:ring-1 focus:ring-brand-blue transition-colors';
 
 function RatingDisplay({ value }: { value: number | null }) {
   if (value == null) return <span className="text-xs text-white/40">Unrated</span>;
@@ -236,7 +233,7 @@ export default function LeadListClient() {
             value={q}
             onChange={(e) => setQ(e.target.value)}
             placeholder="Search name, email, country…"
-            className={cn(baseInput, 'pl-11')}
+            className={cn(inputCx, 'pl-11')}
           />
         </div>
 
@@ -291,7 +288,7 @@ export default function LeadListClient() {
           <select
             value={source}
             onChange={(e) => setSource(e.target.value)}
-            className={cn(baseInput, 'py-2')}
+            className={cn(inputCx, 'py-2')}
           >
             <option value="">Any source</option>
             {LEAD_SOURCES.map((s) => (

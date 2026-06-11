@@ -1,6 +1,8 @@
 // Components
 export { Button, type ButtonProps } from './components/Button';
 export { GlassCard, type GlassCardProps } from './components/GlassCard';
+export { Modal, type ModalProps } from './components/Modal';
+export { SectionHeading, type SectionHeadingProps } from './components/SectionHeading';
 export { HeroVideo, type HeroVideoProps } from './components/HeroVideo';
 export { Navigation, type NavigationProps, type NavItem } from './components/Navigation';
 export { VesselCard, type VesselCardProps } from './components/VesselCard';
@@ -10,6 +12,7 @@ export { Footer, type FooterProps, type FooterSection, type FooterLink } from '.
 
 // Utilities
 export { cn, formatPrice, formatDate, slugify, truncate } from './lib/utils';
+export { inputCx, selectCx, inputCompactCx, honeypotCx } from './lib/formStyles';
 export { countryCodes, countries } from './lib/countryCodes';
 export {
   countryEntriesOnboard,

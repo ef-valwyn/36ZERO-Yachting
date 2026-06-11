@@ -17,7 +17,7 @@ import {
   Ship,
   Anchor,
 } from 'lucide-react';
-import { Button, GlassCard, countryCodes, countries } from '@36zero/ui';
+import { Button, GlassCard, countryCodes, countries, inputCx, honeypotCx } from '@36zero/ui';
 import Image from 'next/image';
 import Link from 'next/link';
 import Header from '@/components/Header';
@@ -261,9 +261,6 @@ export default function IMHSPage() {
       setSignupSubmitting(false);
     }
   };
-
-  const inputClasses =
-    'w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-white/40 focus:outline-none focus:border-brand-blue focus:ring-1 focus:ring-brand-blue transition-colors';
 
   return (
     <main className="min-h-screen bg-brand-navy">
@@ -576,7 +573,7 @@ export default function IMHSPage() {
                       name="website"
                       value={honeypot}
                       onChange={(e) => setHoneypot(e.target.value)}
-                      style={{ position: 'absolute', left: '-9999px' }}
+                      className={honeypotCx}
                       tabIndex={-1}
                       autoComplete="off"
                       aria-hidden="true"
@@ -595,7 +592,7 @@ export default function IMHSPage() {
                           value={tourForm.fullName}
                           onChange={(e) => setTourForm({ ...tourForm, fullName: e.target.value })}
                           placeholder="John Smith"
-                          className={`${inputClasses} pl-12 ${isSignedIn && tourForm.fullName ? 'bg-white/10' : ''} ${isTourFieldInvalid('fullName') ? 'border-red-500' : ''}`}
+                          className={`${inputCx} pl-12 ${isSignedIn && tourForm.fullName ? 'bg-white/10' : ''} ${isTourFieldInvalid('fullName') ? 'border-red-500' : ''}`}
                         />
                       </div>
                     </div>
@@ -613,7 +610,7 @@ export default function IMHSPage() {
                           value={tourForm.email}
                           onChange={(e) => setTourForm({ ...tourForm, email: e.target.value })}
                           placeholder="john@example.com"
-                          className={`${inputClasses} pl-12 ${isSignedIn && tourForm.email ? 'bg-white/10' : ''} ${isTourFieldInvalid('email') ? 'border-red-500' : ''}`}
+                          className={`${inputCx} pl-12 ${isSignedIn && tourForm.email ? 'bg-white/10' : ''} ${isTourFieldInvalid('email') ? 'border-red-500' : ''}`}
                         />
                       </div>
                     </div>
@@ -643,7 +640,7 @@ export default function IMHSPage() {
                             value={tourForm.phone}
                             onChange={(e) => setTourForm({ ...tourForm, phone: e.target.value })}
                             placeholder="123 456 7890"
-                            className={`${inputClasses} pl-12 ${isTourFieldInvalid('phone') ? 'border-red-500' : ''}`}
+                            className={`${inputCx} pl-12 ${isTourFieldInvalid('phone') ? 'border-red-500' : ''}`}
                           />
                         </div>
                       </div>
@@ -660,7 +657,7 @@ export default function IMHSPage() {
                           id="tour-country"
                           value={tourForm.country}
                           onChange={(e) => setTourForm({ ...tourForm, country: e.target.value })}
-                          className={`${inputClasses} pl-12 appearance-none ${isTourFieldInvalid('country') ? 'border-red-500' : ''}`}
+                          className={`${inputCx} pl-12 appearance-none ${isTourFieldInvalid('country') ? 'border-red-500' : ''}`}
                         >
                           <option value="" className="bg-brand-navy">Select your country</option>
                           {countries.map((c) => (
@@ -705,7 +702,7 @@ export default function IMHSPage() {
                           value={tourForm.otherInterest}
                           onChange={(e) => setTourForm({ ...tourForm, otherInterest: e.target.value })}
                           placeholder="Please specify..."
-                          className={`${inputClasses} mt-3`}
+                          className={`${inputCx} mt-3`}
                         />
                       )}
                     </div>
@@ -723,7 +720,7 @@ export default function IMHSPage() {
                           value={tourForm.company}
                           onChange={(e) => setTourForm({ ...tourForm, company: e.target.value })}
                           placeholder="Your company name"
-                          className={`${inputClasses} pl-12`}
+                          className={`${inputCx} pl-12`}
                         />
                       </div>
                     </div>
@@ -900,7 +897,7 @@ export default function IMHSPage() {
                         value={signupEmail}
                         onChange={(e) => setSignupEmail(e.target.value)}
                         placeholder="your@email.com"
-                        className={`${inputClasses} pl-12`}
+                        className={`${inputCx} pl-12`}
                         required
                       />
                     </div>
