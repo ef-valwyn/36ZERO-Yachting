@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { Mic, MicOff, Loader2 } from 'lucide-react';
-import { Button, cn } from '@36zero/ui';
+import { Button, cn, inputCx } from '@36zero/ui';
 
 interface NotesEditorProps {
   onSubmit: (body: string) => Promise<void>;
@@ -35,9 +35,6 @@ function getSR(): SpeechRecognitionCtor | null {
   };
   return anyWin.SpeechRecognition ?? anyWin.webkitSpeechRecognition ?? null;
 }
-
-const baseInput =
-  'w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-white/40 focus:outline-none focus:border-brand-blue focus:ring-1 focus:ring-brand-blue transition-colors resize-none';
 
 export default function NotesEditor({ onSubmit, placeholder }: NotesEditorProps) {
   const [body, setBody] = useState('');
@@ -144,7 +141,7 @@ export default function NotesEditor({ onSubmit, placeholder }: NotesEditorProps)
           onKeyDown={onKeyDown}
           rows={4}
           placeholder={placeholder ?? 'Add a note… ⌘+Enter to save'}
-          className={cn(baseInput, 'pr-12')}
+          className={cn(inputCx, 'resize-none pr-12')}
           disabled={submitting}
         />
         {srSupported && (

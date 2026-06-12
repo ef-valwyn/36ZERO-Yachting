@@ -2,12 +2,9 @@
 
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import { cn } from '@36zero/ui';
+import { cn, inputCompactCx } from '@36zero/ui';
 import { Loader2 } from 'lucide-react';
 import { LEAD_SOURCES, leadSourceLabel } from '@/lib/leads/sources';
-
-const baseInput =
-  'w-full px-3 py-2.5 bg-white/5 border border-white/10 rounded-lg text-white placeholder-white/40 text-sm focus:outline-none focus:border-brand-blue focus:ring-1 focus:ring-brand-blue transition-colors';
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -85,7 +82,7 @@ export default function AddLeadForm() {
   return (
     <form onSubmit={onSubmit} className="space-y-4">
       {error && (
-        <div className="rounded-xl border border-red-500/40 bg-red-500/10 px-4 py-3 text-sm text-red-300">
+        <div role="alert" className="rounded-xl border border-red-500/40 bg-red-500/10 px-4 py-3 text-sm text-red-300">
           {error}
         </div>
       )}
@@ -97,7 +94,7 @@ export default function AddLeadForm() {
         <select
           value={source}
           onChange={(e) => setSource(e.target.value)}
-          className={cn(baseInput, 'py-2.5')}
+          className={cn(inputCompactCx, 'py-2.5')}
         >
           {SOURCES_FOR_GENERIC.map((s) => (
             <option key={s} value={s}>
@@ -117,7 +114,7 @@ export default function AddLeadForm() {
             value={name}
             onChange={(e) => setName(e.target.value)}
             placeholder="Jane Smith"
-            className={baseInput}
+            className={inputCompactCx}
           />
         </div>
         <div>
@@ -130,7 +127,7 @@ export default function AddLeadForm() {
             onChange={(e) => setEmail(e.target.value)}
             placeholder="jane@example.com"
             autoComplete="off"
-            className={baseInput}
+            className={inputCompactCx}
           />
         </div>
         <div>
@@ -142,7 +139,7 @@ export default function AddLeadForm() {
             value={phone}
             onChange={(e) => setPhone(e.target.value)}
             placeholder="+44 7700 900000"
-            className={baseInput}
+            className={inputCompactCx}
           />
         </div>
         <div>
@@ -154,7 +151,7 @@ export default function AddLeadForm() {
             value={country}
             onChange={(e) => setCountry(e.target.value)}
             placeholder="United Kingdom"
-            className={baseInput}
+            className={inputCompactCx}
           />
         </div>
         <div className="md:col-span-2">
@@ -166,7 +163,7 @@ export default function AddLeadForm() {
             value={company}
             onChange={(e) => setCompany(e.target.value)}
             placeholder="Optional"
-            className={baseInput}
+            className={inputCompactCx}
           />
         </div>
         <div className="md:col-span-2">
@@ -178,7 +175,7 @@ export default function AddLeadForm() {
             onChange={(e) => setMessage(e.target.value)}
             rows={3}
             placeholder="What did they ask about? Which vessel? Any next steps?"
-            className={cn(baseInput, 'resize-y')}
+            className={cn(inputCompactCx, 'resize-y')}
           />
         </div>
       </div>

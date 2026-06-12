@@ -43,9 +43,9 @@ const config: Config = {
         'accent-coral': '#e07a5f',
       },
       fontFamily: {
-        // Inter Tight for headings and body
-        sans: ['Inter Tight', 'system-ui', 'sans-serif'],
-        display: ['Inter Tight', 'system-ui', 'sans-serif'],
+        // Inter Tight (self-hosted via next/font in the app root layout)
+        sans: ['var(--font-inter-tight)', 'Inter Tight', 'system-ui', 'sans-serif'],
+        display: ['var(--font-inter-tight)', 'Inter Tight', 'system-ui', 'sans-serif'],
       },
       fontWeight: {
         light: '300',
@@ -62,6 +62,7 @@ const config: Config = {
         wide: '0.025em',
         wider: '0.05em',
         widest: '0.1em',
+        luxe: '0.25em',
       },
       backgroundImage: {
         // Gradient overlays for glassmorphism

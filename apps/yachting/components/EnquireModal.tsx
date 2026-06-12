@@ -1,9 +1,9 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { X, Loader2, CheckCircle, AlertCircle } from 'lucide-react';
-import { Button, countryCodes } from '@36zero/ui';
+import { Button, Modal, countryCodes, cn, inputCx, honeypotCx } from '@36zero/ui';
 
 interface EnquireModalProps {
   isOpen: boolean;
@@ -58,18 +58,6 @@ export function EnquireModal({ isOpen, onClose, vesselId, vesselName, vesselMode
       setHoneypot('');
       setLoadTime(Date.now());
     }
-  }, [isOpen]);
-
-  // Prevent body scroll when modal is open
-  useEffect(() => {
-    if (isOpen) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = 'unset';
-    }
-    return () => {
-      document.body.style.overflow = 'unset';
-    };
   }, [isOpen]);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -140,32 +128,17 @@ export function EnquireModal({ isOpen, onClose, vesselId, vesselName, vesselMode
   };
 
   return (
-    <AnimatePresence>
-      {isOpen && (
-        <>
-          {/* Backdrop */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.3 }}
-            className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50"
-            onClick={onClose}
-          />
-
-          {/* Modal */}
-          <motion.div
-            initial={{ y: '100%' }}
-            animate={{ y: 0 }}
-            exit={{ y: '100%' }}
-            transition={{ type: 'spring', damping: 30, stiffness: 300 }}
-            className="fixed bottom-0 left-0 right-0 z-50 max-h-[90vh] overflow-y-auto"
-          >
+    <Modal
+      isOpen={isOpen}
+      onClose={onClose}
+      labelledBy="enquire-modal-title"
+      panelClassName="fixed bottom-0 left-0 right-0 z-50 max-h-[90vh] overflow-y-auto"
+    >
             <div className="bg-brand-navy border-t border-white/10 rounded-t-3xl">
               {/* Header */}
               <div className="sticky top-0 bg-brand-navy/95 backdrop-blur-md border-b border-white/10 px-6 py-5 flex items-center justify-between rounded-t-3xl">
                 <div>
-                  <h2 className="text-2xl font-bold text-white">Enquire About {vesselName}</h2>
+                  <h2 id="enquire-modal-title" className="text-2xl font-bold text-white">Enquire About {vesselName}</h2>
                   <p className="text-white/60 text-sm mt-1">{vesselModel}</p>
                 </div>
                 <button
@@ -207,7 +180,7 @@ export function EnquireModal({ isOpen, onClose, vesselId, vesselName, vesselMode
                       name="website"
                       value={honeypot}
                       onChange={(e) => setHoneypot(e.target.value)}
-                      style={{ position: 'absolute', left: '-9999px' }}
+                      className={honeypotCx}
                       tabIndex={-1}
                       autoComplete="off"
                       aria-hidden="true"
@@ -225,7 +198,7 @@ export function EnquireModal({ isOpen, onClose, vesselId, vesselName, vesselMode
                         required
                         value={formData.fullName}
                         onChange={handleInputChange}
-                        className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-white/40 focus:outline-none focus:border-brand-blue focus:ring-1 focus:ring-brand-blue transition-colors"
+                        className={inputCx}
                         placeholder="John Smith"
                       />
                     </div>
@@ -242,7 +215,7 @@ export function EnquireModal({ isOpen, onClose, vesselId, vesselName, vesselMode
                         required
                         value={formData.email}
                         onChange={handleInputChange}
-                        className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-white/40 focus:outline-none focus:border-brand-blue focus:ring-1 focus:ring-brand-blue transition-colors"
+                        className={inputCx}
                         placeholder="john@example.com"
                       />
                     </div>
@@ -257,7 +230,8 @@ export function EnquireModal({ isOpen, onClose, vesselId, vesselName, vesselMode
                           name="countryCode"
                           value={formData.countryCode}
                           onChange={handleInputChange}
-                          className="w-28 px-3 py-3 bg-white/5 border border-white/10 rounded-xl text-white focus:outline-none focus:border-brand-blue focus:ring-1 focus:ring-brand-blue transition-colors"
+                          className={cn(inputCx, 'w-28 px-3')}
+                          aria-label="Country code"
                         >
                           {countryCodes.map((cc) => (
                             <option key={cc.code} value={cc.code} className="bg-brand-navy">
@@ -272,7 +246,7 @@ export function EnquireModal({ isOpen, onClose, vesselId, vesselName, vesselMode
                           required
                           value={formData.phone}
                           onChange={handleInputChange}
-                          className="flex-1 px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-white/40 focus:outline-none focus:border-brand-blue focus:ring-1 focus:ring-brand-blue transition-colors"
+                          className={cn(inputCx, 'w-auto flex-1')}
                           placeholder="123 456 7890"
                         />
                       </div>
@@ -289,7 +263,7 @@ export function EnquireModal({ isOpen, onClose, vesselId, vesselName, vesselMode
                         name="company"
                         value={formData.company}
                         onChange={handleInputChange}
-                        className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-white/40 focus:outline-none focus:border-brand-blue focus:ring-1 focus:ring-brand-blue transition-colors"
+                        className={inputCx}
                         placeholder="Your company name"
                       />
                     </div>
@@ -305,7 +279,7 @@ export function EnquireModal({ isOpen, onClose, vesselId, vesselName, vesselMode
                         required
                         value={formData.deliveryRegion}
                         onChange={handleInputChange}
-                        className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white focus:outline-none focus:border-brand-blue focus:ring-1 focus:ring-brand-blue transition-colors"
+                        className={inputCx}
                       >
                         <option value="" disabled className="bg-brand-navy">
                           Select a region
@@ -329,7 +303,7 @@ export function EnquireModal({ isOpen, onClose, vesselId, vesselName, vesselMode
                         rows={4}
                         value={formData.message}
                         onChange={handleInputChange}
-                        className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-white/40 focus:outline-none focus:border-brand-blue focus:ring-1 focus:ring-brand-blue transition-colors resize-none"
+                        className={cn(inputCx, 'resize-none')}
                         placeholder="Tell us about your interest in the AY60"
                       />
                     </div>
@@ -340,6 +314,7 @@ export function EnquireModal({ isOpen, onClose, vesselId, vesselName, vesselMode
                         initial={{ opacity: 0, y: -10 }}
                         animate={{ opacity: 1, y: 0 }}
                         className="flex items-center gap-3 p-4 bg-accent-coral/10 border border-accent-coral/20 rounded-xl"
+                        role="alert"
                       >
                         <AlertCircle className="w-5 h-5 text-accent-coral shrink-0" />
                         <p className="text-sm text-accent-coral">{errorMessage}</p>
@@ -374,10 +349,7 @@ export function EnquireModal({ isOpen, onClose, vesselId, vesselName, vesselMode
                 )}
               </div>
             </div>
-          </motion.div>
-        </>
-      )}
-    </AnimatePresence>
+    </Modal>
   );
 }
 

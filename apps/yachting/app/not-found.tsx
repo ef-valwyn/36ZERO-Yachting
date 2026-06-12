@@ -10,13 +10,13 @@ export default function NotFound() {
       <Header variant="solid" />
       <main className="flex-1 flex items-center justify-center px-6 py-24">
         <div className="text-center max-w-lg mx-auto">
-          <p className="text-brand-blue text-sm font-semibold uppercase tracking-widest mb-4">
+          <p className="eyebrow mb-4">
             36ZERO Yachting
           </p>
-          <h1 className="text-6xl md:text-8xl font-extrabold text-white/20 mb-4">
+          <h1 className="text-white/20 mb-4">
             404
           </h1>
-          <h2 className="text-2xl md:text-3xl font-bold text-white uppercase tracking-tight mb-4">
+          <h2 className="text-2xl md:text-3xl text-white uppercase tracking-tight mb-4">
             Page Not Found
           </h2>
           <p className="text-white/60 font-light mb-8">

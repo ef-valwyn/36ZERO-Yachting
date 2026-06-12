@@ -405,7 +405,7 @@ export default function LAPPage() {
               <LapLogo variant="full" />
             </div>
             
-            <h1 className="text-4xl md:text-6xl font-extrabold uppercase tracking-tighter text-white mb-6">
+            <h1 className="text-white mb-6">
               Sail Around The World
               <br />
               {/* Cycling gradient text with roll-down animation */}
@@ -413,7 +413,7 @@ export default function LAPPage() {
                 <AnimatePresence mode="wait">
                   <motion.span
                     key={phraseIndex}
-                    className="text-gradient inline-block"
+                    className="text-gradient font-medium inline-block"
                     initial={{ y: '-100%', opacity: 0 }}
                     animate={{ y: 0, opacity: 1 }}
                     exit={{ y: '100%', opacity: 0 }}
@@ -462,7 +462,7 @@ export default function LAPPage() {
               { value: '15', label: 'Months Total' },
             ].map((stat) => (
               <div key={stat.label} className="text-center">
-                <p className="text-3xl md:text-4xl font-bold text-brand-blue mb-1">
+                <p className="text-3xl md:text-4xl font-light text-brand-blue mb-1">
                   {stat.value}
                 </p>
                 <p className="text-sm text-white/50 uppercase tracking-wider">
@@ -475,7 +475,7 @@ export default function LAPPage() {
       </section>
 
       {/* Route Map Section */}
-      <section id="route" className="py-24 px-6">
+      <section id="route" className="py-20 md:py-28 px-6">
         <div className="max-w-7xl mx-auto">
           <motion.div
             className="text-center mb-12"
@@ -483,10 +483,10 @@ export default function LAPPage() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
           >
-            <p className="text-brand-blue font-medium tracking-widest uppercase text-sm mb-2">
+            <p className="eyebrow mb-2">
               The Route
             </p>
-            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+            <h2 className="text-3xl md:text-4xl text-white mb-4">
               14 Stages Across 4 Passages
             </h2>
             <p className="text-white/60 font-light max-w-2xl mx-auto">
@@ -506,7 +506,7 @@ export default function LAPPage() {
       </section>
 
       {/* Features Section */}
-      <section className="py-24 px-6">
+      <section className="py-20 md:py-28 px-6">
         <div className="max-w-7xl mx-auto">
           <motion.div
             className="text-center mb-16"
@@ -514,10 +514,10 @@ export default function LAPPage() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
           >
-            <p className="text-brand-blue font-medium tracking-widest uppercase text-sm mb-2">
+            <p className="eyebrow mb-2">
               Why 36ZERO LAP
             </p>
-            <h2 className="text-3xl md:text-4xl font-bold text-white">
+            <h2 className="text-3xl md:text-4xl text-white">
               Adventure Without Compromise
             </h2>
           </motion.div>
@@ -525,8 +525,8 @@ export default function LAPPage() {
           {/* Feature 1: No Ownership Required - Card Left, Text Right */}
           <div className="grid md:grid-cols-2 gap-8 md:gap-16 items-center mb-24">
             <motion.div
-              initial={{ opacity: 0, x: -100 }}
-              whileInView={{ opacity: 1, x: 0 }}
+              initial={{ opacity: 0, y: 24 }}
+              whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-100px" }}
               transition={{ duration: 0.6, ease: [0.4, 0, 0.2, 1] }}
             >
@@ -580,8 +580,8 @@ export default function LAPPage() {
               </p>
             </motion.div>
             <motion.div
-              initial={{ opacity: 0, x: 100 }}
-              whileInView={{ opacity: 1, x: 0 }}
+              initial={{ opacity: 0, y: 24 }}
+              whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-100px" }}
               transition={{ duration: 0.6, ease: [0.4, 0, 0.2, 1] }}
               className="order-1 md:order-2"
@@ -604,8 +604,8 @@ export default function LAPPage() {
           {/* Feature 3: Crew Augmentation - Card Left, Text Right */}
           <div className="grid md:grid-cols-2 gap-8 md:gap-16 items-center">
             <motion.div
-              initial={{ opacity: 0, x: -100 }}
-              whileInView={{ opacity: 1, x: 0 }}
+              initial={{ opacity: 0, y: 24 }}
+              whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-100px" }}
               transition={{ duration: 0.6, ease: [0.4, 0, 0.2, 1] }}
             >
@@ -640,7 +640,7 @@ export default function LAPPage() {
 
       {/* Video Section - Coming Soon (set to true to enable) */}
       {false && (
-        <section className="py-24 px-6">
+        <section className="py-20 md:py-28 px-6">
           <div className="max-w-5xl mx-auto">
             <motion.div
               className="text-center mb-12"
@@ -648,10 +648,10 @@ export default function LAPPage() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
             >
-              <p className="text-brand-blue font-medium tracking-widest uppercase text-sm mb-2">
+              <p className="eyebrow mb-2">
                 The Journey
               </p>
-              <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
+              <h2 className="text-white mb-4">
                 Experience the Adventure
               </h2>
               <p className="text-white/60 max-w-2xl mx-auto">
@@ -682,7 +682,7 @@ export default function LAPPage() {
       )}
 
       {/* Passages Overview */}
-      <section id="passages" className="py-24 px-6 bg-gradient-to-b from-transparent via-brand-navy-50/5 to-transparent">
+      <section id="passages" className="py-20 md:py-28 px-6 bg-gradient-to-b from-transparent via-brand-navy-50/5 to-transparent">
         <div className="max-w-7xl mx-auto">
           <motion.div
             className="text-center mb-12"
@@ -690,10 +690,10 @@ export default function LAPPage() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
           >
-            <p className="text-brand-blue font-medium tracking-widest uppercase text-sm mb-2">
+            <p className="eyebrow mb-2">
               Choose Your Adventure
             </p>
-            <h2 className="text-3xl md:text-4xl font-bold text-white">
+            <h2 className="text-3xl md:text-4xl text-white">
               The Four Passages
             </h2>
           </motion.div>
@@ -713,7 +713,7 @@ export default function LAPPage() {
                       <p className="text-brand-blue text-sm font-medium mb-1">
                         {passage.startDate} - {passage.endDate}
                       </p>
-                      <h3 className="text-xl font-semibold text-white">
+                      <h3 className="text-xl font-medium text-white">
                         {passage.name}
                       </h3>
                     </div>
@@ -766,7 +766,7 @@ export default function LAPPage() {
       </section>
 
       {/* How It Works */}
-      <section className="py-24 px-6">
+      <section className="py-20 md:py-28 px-6">
         <div className="max-w-7xl mx-auto">
           <motion.div
             className="text-center mb-16"
@@ -774,10 +774,10 @@ export default function LAPPage() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
           >
-            <p className="text-brand-blue font-medium tracking-widest uppercase text-sm mb-2">
+            <p className="eyebrow mb-2">
               How It Works
             </p>
-            <h2 className="text-3xl md:text-4xl font-bold text-white">
+            <h2 className="text-3xl md:text-4xl text-white">
               Your Journey Starts Here
             </h2>
           </motion.div>
@@ -803,7 +803,7 @@ export default function LAPPage() {
                   <p className="text-xs text-brand-blue font-medium mb-2">
                     Step {index + 1}
                   </p>
-                  <h3 className="text-lg font-semibold text-white mb-2">
+                  <h3 className="text-lg font-medium text-white mb-2">
                     {step.title}
                   </h3>
                   <p className="text-sm text-white/60 font-light">
@@ -817,7 +817,7 @@ export default function LAPPage() {
       </section>
 
       {/* What's Included */}
-      <section className="py-24 px-6 bg-gradient-to-b from-brand-blue/5 to-transparent">
+      <section className="py-20 md:py-28 px-6 bg-gradient-to-b from-brand-blue/5 to-transparent">
         <div className="max-w-5xl mx-auto">
           <GlassCard variant="blue" padding="lg">
             <div className="grid md:grid-cols-2 gap-12">
@@ -869,17 +869,17 @@ export default function LAPPage() {
 
       {/* Booking Form Modal/Section */}
       {showBookingForm && (
-        <section className="py-24 px-6" id="book">
+        <section className="py-20 md:py-28 px-6" id="book">
           <div className="max-w-7xl mx-auto">
             <motion.div
               className="text-center mb-12"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
             >
-              <p className="text-brand-blue font-medium tracking-widest uppercase text-sm mb-2">
+              <p className="eyebrow mb-2">
                 Build Your LAP
               </p>
-              <h2 className="text-3xl md:text-4xl font-bold text-white">
+              <h2 className="text-3xl md:text-4xl text-white">
                 Plan Your Passages
               </h2>
             </motion.div>
@@ -904,14 +904,14 @@ export default function LAPPage() {
       )}
 
       {/* CTA Section */}
-      <section className="py-24 px-6">
+      <section className="py-20 md:py-28 px-6">
         <div className="max-w-4xl mx-auto text-center">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
           >
-            <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
+            <h2 className="text-3xl md:text-4xl text-white mb-6">
               Ready to Sail the World?
             </h2>
             <p className="text-white/60 font-light mb-8 max-w-xl mx-auto">

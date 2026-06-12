@@ -135,10 +135,10 @@ export default function VesselsPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
           >
-            <p className="text-brand-blue font-medium tracking-widest uppercase text-sm mb-2">
+            <p className="eyebrow mb-2">
               Brokerage
             </p>
-            <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
+            <h1 className="text-white mb-4">
               Available Vessels
             </h1>
             <p className="text-white/60 font-light max-w-2xl">
@@ -424,10 +424,10 @@ export default function VesselsPage() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-24 px-6">
+      <section className="py-20 md:py-28 px-6">
         <div className="max-w-4xl mx-auto text-center">
           <GlassCard variant="blue" padding="lg">
-            <h2 className="text-2xl md:text-3xl font-bold text-white mb-4">
+            <h2 className="text-2xl md:text-3xl text-white mb-4">
               Looking for Something Specific?
             </h2>
             <p className="text-white/60 font-light mb-8 max-w-xl mx-auto">

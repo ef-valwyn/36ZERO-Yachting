@@ -107,17 +107,17 @@ export default function HomePage() {
           >
             <motion.p
               variants={itemVariants}
-              className="text-brand-blue font-medium tracking-widest uppercase text-sm mb-4"
+              className="eyebrow mb-5"
             >
-              WELCOME TO 36ZERO YACHTING
+              Welcome to 36ZERO Yachting
             </motion.p>
             <motion.h1
               variants={itemVariants}
-              className="text-5xl md:text-7xl font-extrabold uppercase tracking-tighter text-white leading-[0.9] mb-6"
+              className="text-white mb-6"
             >
               Bringing The
               <br />
-              <span className="text-gradient">Horizon Closer</span>
+              <span className="text-gradient font-medium">Horizon Closer</span>
             </motion.h1>
             <motion.p
               variants={itemVariants}
@@ -148,13 +148,13 @@ export default function HomePage() {
       </section>
 
       {/* Value Propositions */}
-      <section className="py-24 px-6 overflow-hidden">
+      <section className="py-20 md:py-28 px-6 overflow-hidden">
         <div className="max-w-7xl mx-auto">
           <div className="grid md:grid-cols-3 gap-8">
-            {/* Premium Brokerage - slides from left */}
+            {/* Premium Brokerage */}
             <motion.div
-              initial={{ opacity: 0, x: -100 }}
-              whileInView={{ opacity: 1, x: 0 }}
+              initial={{ opacity: 0, y: 24 }}
+              whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: '-100px' }}
               transition={{ duration: 0.6, ease: 'easeOut' }}
             >
@@ -174,9 +174,9 @@ export default function HomePage() {
               </Link>
             </motion.div>
 
-            {/* Adventure Yachts - slides from bottom */}
+            {/* Adventure Yachts */}
             <motion.div
-              initial={{ opacity: 0, y: 100 }}
+              initial={{ opacity: 0, y: 24 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: '-100px' }}
               transition={{ duration: 0.6, ease: 'easeOut', delay: 0.1 }}
@@ -196,10 +196,10 @@ export default function HomePage() {
               </Link>
             </motion.div>
 
-            {/* 36ZERO LAP - slides from right */}
+            {/* 36ZERO LAP */}
             <motion.div
-              initial={{ opacity: 0, x: 100 }}
-              whileInView={{ opacity: 1, x: 0 }}
+              initial={{ opacity: 0, y: 24 }}
+              whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: '-100px' }}
               transition={{ duration: 0.6, ease: 'easeOut', delay: 0.2 }}
             >
@@ -223,7 +223,7 @@ export default function HomePage() {
       </section>
 
       {/* LAP CTA Section */}
-      <section className="py-24 px-6 relative overflow-hidden">
+      <section className="py-20 md:py-28 px-6 relative overflow-hidden">
         {/* Background gradient */}
         <div className="absolute inset-0 bg-gradient-to-r from-brand-blue/10 via-transparent to-brand-blue/5" />
         
@@ -239,10 +239,10 @@ export default function HomePage() {
                   transition={{ duration: 0.6 }}
                 >
                   <LapLogo className="mb-6" />
-                  <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
+                  <h2 className="text-3xl md:text-4xl text-white mb-6">
                     Sail the World
                     <br />
-                    <span className="text-brand-blue">One Passage at a Time</span>
+                    <span className="text-brand-blue font-medium">One Passage at a Time</span>
                   </h2>
                   <p className="text-white/70 font-light mb-8 max-w-lg">
                     Join our circumnavigation journey. Choose from 4 passages 
@@ -279,10 +279,10 @@ export default function HomePage() {
                     viewport={{ once: true }}
                     transition={{ duration: 0.4, delay: index * 0.1 }}
                   >
-                    <p className="text-4xl md:text-5xl font-bold text-brand-blue mb-2">
+                    <p className="text-4xl md:text-5xl font-light text-brand-blue mb-2">
                       {stat.value}
                     </p>
-                    <p className="text-sm text-white/60 uppercase tracking-wider">
+                    <p className="eyebrow-muted">
                       {stat.label}
                     </p>
                   </motion.div>
@@ -294,7 +294,7 @@ export default function HomePage() {
       </section>
 
       {/* Featured Vessels */}
-      <section className="py-24 px-6 bg-gradient-to-b from-transparent to-brand-navy-50/5">
+      <section className="py-20 md:py-28 px-6 bg-gradient-to-b from-transparent to-brand-navy-50/5">
         <div className="max-w-7xl mx-auto">
           <motion.div
             className="flex flex-col md:flex-row items-start md:items-end justify-between mb-12"
@@ -304,10 +304,10 @@ export default function HomePage() {
             transition={{ duration: 0.5 }}
           >
             <div>
-              <p className="text-brand-blue font-medium tracking-widest uppercase text-sm mb-2">
+              <p className="eyebrow mb-3">
                 Available Now
               </p>
-              <h2 className="text-3xl md:text-4xl font-bold text-white">
+              <h2 className="text-3xl md:text-4xl text-white">
                 Featured Vessels
               </h2>
             </div>
