@@ -48,7 +48,7 @@ export const Footer: React.FC<FooterProps> = ({
         <div className="absolute -top-1/2 -right-1/4 w-1/2 h-full bg-gradient-radial from-brand-blue/5 to-transparent blur-3xl" />
       </div>
 
-      <div className="relative max-w-7xl mx-auto px-6 lg:px-8 py-16">
+      <div className="relative max-w-7xl mx-auto px-6 lg:px-8 py-20">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-12">
           {/* Brand Column */}
           <div className="lg:col-span-2 space-y-6">
@@ -104,7 +104,7 @@ export const Footer: React.FC<FooterProps> = ({
           {/* Navigation Sections */}
           {sections.map((section) => (
             <div key={section.title} className="space-y-4">
-              <h4 className="text-sm font-semibold text-white uppercase tracking-wider">
+              <h4 className="eyebrow-muted">
                 {section.title}
               </h4>
               <ul className="space-y-3">
@@ -125,7 +125,7 @@ export const Footer: React.FC<FooterProps> = ({
           {/* Contact Column */}
           {contactInfo && (
             <div className="space-y-4">
-              <h4 className="text-sm font-semibold text-white uppercase tracking-wider">
+              <h4 className="eyebrow-muted">
                 Contact
               </h4>
               <ul className="space-y-3">

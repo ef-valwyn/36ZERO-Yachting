@@ -340,18 +340,18 @@ export default function AdventureYachtsPage() {
 
             <motion.p
               variants={itemVariants}
-              className="text-brand-blue font-medium tracking-widest uppercase text-sm mb-4"
+              className="eyebrow mb-5"
             >
               Introducing
             </motion.p>
 
             <motion.h1
               variants={itemVariants}
-              className="text-5xl md:text-7xl lg:text-8xl font-extrabold uppercase tracking-tighter text-white leading-[0.9] mb-6"
+              className="text-white mb-6"
             >
               The Brand New
               <br />
-              <span className="text-gradient">AY60 Power Catamaran</span>
+              <span className="text-gradient font-medium">AY60 Power Catamaran</span>
             </motion.h1>
 
             <motion.p
@@ -400,19 +400,19 @@ export default function AdventureYachtsPage() {
       </section>
 
       {/* AY60 Showcase Section */}
-      <section id="ay60-showcase" className="py-32 px-6 bg-gradient-to-b from-transparent via-brand-blue/5 to-transparent">
+      <section id="ay60-showcase" className="py-20 md:py-28 px-6 bg-gradient-to-b from-transparent via-brand-blue/5 to-transparent">
         <div className="max-w-7xl mx-auto">
           <motion.div
             className="text-center mb-16"
-            initial={{ opacity: 0, y: 30 }}
+            initial={{ opacity: 0, y: 24 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
           >
-            <p className="text-brand-blue font-medium tracking-widest uppercase text-sm mb-4">
+            <p className="eyebrow mb-4">
               The Flagship
             </p>
-            <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
+            <h2 className="text-white mb-6">
               AY60 Power Catamaran
             </h2>
             <p className="text-lg text-white/60 font-light max-w-3xl mx-auto mb-8">
@@ -472,7 +472,7 @@ export default function AdventureYachtsPage() {
             transition={{ duration: 0.6 }}
           >
             <GlassCard variant="blue" padding="lg">
-              <h3 className="text-2xl font-semibold text-white mb-8 text-center">
+              <h3 className="text-2xl font-medium text-white mb-8 text-center">
                 Technical Specifications
               </h3>
               <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
@@ -485,7 +485,7 @@ export default function AdventureYachtsPage() {
                     viewport={{ once: true }}
                     transition={{ duration: 0.4, delay: index * 0.05 }}
                   >
-                    <p className="text-2xl font-bold text-brand-blue mb-1">{spec.value}</p>
+                    <p className="text-2xl font-light text-brand-blue mb-1">{spec.value}</p>
                     <p className="text-sm text-white/60">{spec.label}</p>
                   </motion.div>
                 ))}
@@ -509,10 +509,10 @@ export default function AdventureYachtsPage() {
             transition={{ duration: 0.6 }}
           >
             <div className="text-center mb-8">
-              <p className="text-brand-blue font-medium tracking-widest uppercase text-sm mb-4">
+              <p className="eyebrow mb-4">
                 Virtual Tour
               </p>
-              <h3 className="text-3xl md:text-4xl font-bold text-white mb-4">
+              <h3 className="h2 text-3xl md:text-4xl text-white mb-4">
                 Explore the AY60
               </h3>
               <p className="text-white/60 font-light max-w-2xl mx-auto">
@@ -554,6 +554,7 @@ export default function AdventureYachtsPage() {
                       src={activeVesselArea.imageUrl}
                       alt={activeVesselArea.name}
                       fill
+                      sizes="(max-width: 1280px) 100vw, 1152px"
                       className="object-cover"
                     />
                     {/* Gradient overlay for better hotspot visibility */}
@@ -668,6 +669,7 @@ export default function AdventureYachtsPage() {
                     src={galleryImages[activeGalleryIndex].url}
                     alt={galleryImages[activeGalleryIndex].alt}
                     fill
+                    sizes="(max-width: 1280px) 100vw, 1152px"
                     className="object-cover"
                   />
                 </motion.div>
@@ -749,6 +751,7 @@ export default function AdventureYachtsPage() {
                     src={image.url}
                     alt={image.alt}
                     fill
+                    sizes="96px"
                     className="object-cover"
                   />
                 </button>
@@ -760,7 +763,7 @@ export default function AdventureYachtsPage() {
 
 
       {/* About Adventure Yachts - DNA Section */}
-      <section className="py-32 px-6 relative overflow-hidden">
+      <section className="py-20 md:py-28 px-6 relative overflow-hidden">
         {/* DNA Helix Background Pattern */}
         <div className="absolute inset-0 pointer-events-none overflow-hidden">
           {/* DNA strand 1 */}
@@ -825,10 +828,10 @@ export default function AdventureYachtsPage() {
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
           >
-            <p className="text-brand-blue font-medium tracking-widest uppercase text-sm mb-4">
+            <p className="eyebrow mb-4">
               Brand DNA
             </p>
-            <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
+            <h2 className="text-white mb-6">
               About Adventure Yachts
             </h2>
           </motion.div>
@@ -836,8 +839,8 @@ export default function AdventureYachtsPage() {
           <div className="grid lg:grid-cols-2 gap-16 items-center">
             {/* Content */}
             <motion.div
-              initial={{ opacity: 0, x: -30 }}
-              whileInView={{ opacity: 1, x: 0 }}
+              initial={{ opacity: 0, y: 24 }}
+              whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6 }}
               className="space-y-6"
@@ -862,8 +865,8 @@ export default function AdventureYachtsPage() {
 
             {/* DNA Feature Cards */}
             <motion.div
-              initial={{ opacity: 0, x: 30 }}
-              whileInView={{ opacity: 1, x: 0 }}
+              initial={{ opacity: 0, y: 24 }}
+              whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: 0.2 }}
               className="grid grid-cols-2 gap-4"
@@ -900,19 +903,19 @@ export default function AdventureYachtsPage() {
       </section>
 
       {/* Reserve Your Vessel Section - Now powered by CMS */}
-      <section id="ay60-reserve" className="py-32 px-6 scroll-mt-24">
+      <section id="ay60-reserve" className="py-20 md:py-28 px-6 scroll-mt-24">
         <div className="max-w-7xl mx-auto">
           <motion.div
             className="text-center mb-16"
-            initial={{ opacity: 0, y: 30 }}
+            initial={{ opacity: 0, y: 24 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
           >
-            <p className="text-brand-blue font-medium tracking-widest uppercase text-sm mb-4">
+            <p className="eyebrow-gold mb-4">
               Limited Availability
             </p>
-            <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
+            <h2 className="text-white mb-6">
               Reserve Your Next Vessel
             </h2>
             <p className="text-lg text-white/60 font-light max-w-2xl mx-auto">

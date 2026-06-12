@@ -9,23 +9,29 @@ import {
   ilike,
   gte,
   lt,
+  lte,
   desc,
   sql,
 } from '@36zero/database';
 import { requireStaff, StaffAuthError } from '@/lib/auth/require-staff';
 
 /**
- * GET /api/admin/leads — list IMHS 2026 onboard registrants with filters.
+ * GET /api/admin/leads — list leads (all sources) with filters.
  *
  * Query params:
  *   q              — free-text search on name/email/country
  *   rated          — 'unrated' | '1-2' | '3' | '4-5' | 'any'
  *   appointment    — 'booked' | 'unbooked' | 'any'
- *   day            — YYYY-MM-DD (matches createdAt OR appointmentStartAt for that day UTC)
+ *   stage          — lifecycle_stage value (new|contacted|qualified|nurture|lost)
+ *   source         — match a single LEAD_SOURCES value
+ *   owner          — user uuid; '_me' resolves to the caller
+ *   due            — 'today' | 'overdue' | 'any'
+ *   day            — YYYY-MM-DD (filters createdAt for that UTC day)
  */
 export async function GET(request: NextRequest) {
+  let staff;
   try {
-    await requireStaff();
+    staff = await requireStaff();
   } catch (err) {
     if (err instanceof StaffAuthError) {
       return NextResponse.json(
@@ -40,11 +46,13 @@ export async function GET(request: NextRequest) {
   const q = searchParams.get('q')?.trim() ?? '';
   const rated = searchParams.get('rated') ?? 'any';
   const appointment = searchParams.get('appointment') ?? 'any';
-  const day = searchParams.get('day'); // YYYY-MM-DD or null
+  const stage = searchParams.get('stage') ?? '';
+  const source = searchParams.get('source') ?? '';
+  const ownerParam = searchParams.get('owner') ?? '';
+  const due = searchParams.get('due') ?? 'any';
+  const day = searchParams.get('day');
 
-  const filters: Array<ReturnType<typeof eq> | ReturnType<typeof and>> = [
-    eq(inquiries.source, 'imhs_onboard_registration'),
-  ];
+  const filters: Array<ReturnType<typeof eq> | ReturnType<typeof and>> = [];
 
   if (q) {
     const pattern = `%${q}%`;
@@ -83,9 +91,26 @@ export async function GET(request: NextRequest) {
       break;
   }
 
+  if (stage) filters.push(eq(inquiries.lifecycleStage, stage));
+  if (source) filters.push(eq(inquiries.source, source));
+
+  if (ownerParam) {
+    const ownerId = ownerParam === '_me' ? staff.id : ownerParam;
+    filters.push(eq(inquiries.ownerUserId, ownerId));
+  }
+
+  if (due === 'overdue') {
+    filters.push(lte(inquiries.nextActionAt, new Date()));
+  } else if (due === 'today') {
+    const start = new Date();
+    start.setUTCHours(0, 0, 0, 0);
+    const end = new Date(start);
+    end.setUTCDate(end.getUTCDate() + 1);
+    filters.push(gte(inquiries.nextActionAt, start));
+    filters.push(lt(inquiries.nextActionAt, end));
+  }
+
   if (day) {
-    // Match registrations created that calendar day (UTC).
-    // Show-local (Europe/Paris) vs UTC drift is ≤2h; acceptable for filtering.
     const start = new Date(`${day}T00:00:00.000Z`);
     const end = new Date(start);
     end.setUTCDate(end.getUTCDate() + 1);
@@ -99,6 +124,7 @@ export async function GET(request: NextRequest) {
       name: inquiries.name,
       email: inquiries.email,
       country: inquiries.country,
+      source: inquiries.source,
       interestAdventureYachts: inquiries.interestAdventureYachts,
       interestShift: inquiries.interestShift,
       rating: inquiries.rating,
@@ -108,6 +134,10 @@ export async function GET(request: NextRequest) {
       appointmentAssignedStaffEmail: inquiries.appointmentAssignedStaffEmail,
       hubspotContactId: inquiries.hubspotContactId,
       manualEntry: inquiries.manualEntry,
+      lifecycleStage: inquiries.lifecycleStage,
+      ownerUserId: inquiries.ownerUserId,
+      nextActionAt: inquiries.nextActionAt,
+      nextActionNote: inquiries.nextActionNote,
       createdAt: inquiries.createdAt,
       notesCount: sql<number>`(
         SELECT COUNT(*)::int FROM ${leadNotes}
@@ -115,7 +145,7 @@ export async function GET(request: NextRequest) {
       )`.as('notes_count'),
     })
     .from(inquiries)
-    .where(and(...filters))
+    .where(filters.length ? and(...filters) : undefined)
     .orderBy(desc(inquiries.createdAt))
     .limit(500);
 

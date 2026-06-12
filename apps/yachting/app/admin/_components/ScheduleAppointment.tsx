@@ -1,9 +1,8 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
 import { CalendarPlus, X } from 'lucide-react';
-import { Button } from '@36zero/ui';
+import { Button, Modal } from '@36zero/ui';
 
 interface ScheduleAppointmentProps {
   inquiryId: string;
@@ -94,28 +93,16 @@ export default function ScheduleAppointment({
         Schedule private showing
       </Button>
 
-      <AnimatePresence>
-        {open && (
-          <>
-            <motion.div
-              key="backdrop"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="fixed inset-0 z-40 bg-black/70 backdrop-blur-sm"
-              onClick={() => setOpen(false)}
-            />
-            <motion.div
-              key="modal"
-              initial={{ y: '100%', opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              exit={{ y: '100%', opacity: 0 }}
-              transition={{ type: 'spring', damping: 30, stiffness: 280 }}
-              className="fixed inset-x-0 bottom-0 z-50 mx-auto flex max-h-[92vh] w-full max-w-4xl flex-col rounded-t-2xl border border-white/10 bg-brand-navy shadow-2xl sm:inset-4 sm:rounded-2xl"
-            >
+      <Modal
+        isOpen={open}
+        onClose={() => setOpen(false)}
+        labelledBy="schedule-showing-title"
+        panelClassName="fixed inset-x-0 bottom-0 z-50 mx-auto flex max-h-[92vh] w-full max-w-4xl flex-col rounded-t-2xl border border-white/10 bg-brand-navy shadow-2xl sm:inset-4 sm:rounded-2xl"
+        panelTransition={{ type: 'spring', damping: 30, stiffness: 280 }}
+      >
               <div className="flex items-center justify-between border-b border-white/10 px-5 py-3">
                 <div>
-                  <h2 className="text-sm font-semibold">Schedule private showing</h2>
+                  <h2 id="schedule-showing-title" className="text-sm font-semibold">Schedule private showing</h2>
                   <p className="text-[11px] text-white/50">
                     {data?.prefill?.name ? `${data.prefill.name} · ` : ''}
                     Cal.com will send the confirmation email.
@@ -155,10 +142,7 @@ export default function ScheduleAppointment({
                   />
                 )}
               </div>
-            </motion.div>
-          </>
-        )}
-      </AnimatePresence>
+      </Modal>
     </>
   );
 }

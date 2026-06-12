@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { db, inquiries, leadNotes, auditLog, users, eq, and, desc } from '@36zero/database';
+import { db, inquiries, leadNotes, auditLog, users, eq, and, desc, sql } from '@36zero/database';
 import { requireStaff, StaffAuthError } from '@/lib/auth/require-staff';
 
 /**
@@ -26,22 +26,41 @@ export async function GET(
   const { id } = await params;
 
   const inquiry = await db.query.inquiries.findFirst({
-    where: and(
-      eq(inquiries.id, id),
-      eq(inquiries.source, 'imhs_onboard_registration')
-    ),
+    where: eq(inquiries.id, id),
   });
   if (!inquiry) return NextResponse.json({ error: 'not_found' }, { status: 404 });
 
-  // Pull rating author if present (denormalised into a flat email for the UI).
-  let ratingAuthorEmail: string | null = null;
-  if (inquiry.ratingUpdatedByUserId) {
-    const author = await db.query.users.findFirst({
-      where: eq(users.id, inquiry.ratingUpdatedByUserId),
-      columns: { email: true },
-    });
-    ratingAuthorEmail = author?.email ?? null;
-  }
+  // Pull rating author + owner + lifecycle-stage author (denormalised flat
+  // emails so the UI doesn't have to join four ways).
+  const lookupIds = Array.from(
+    new Set(
+      [
+        inquiry.ratingUpdatedByUserId,
+        inquiry.ownerUserId,
+        inquiry.lifecycleStageUpdatedByUserId,
+      ].filter((v): v is string => !!v)
+    )
+  );
+  const lookupRows = lookupIds.length
+    ? await db
+        .select({ id: users.id, email: users.email })
+        .from(users)
+        .where(
+          lookupIds.length === 1
+            ? eq(users.id, lookupIds[0])
+            : sql`${users.id} = ANY(${lookupIds})`
+        )
+    : [];
+  const idToEmail = new Map(lookupRows.map((r) => [r.id, r.email]));
+  const ratingAuthorEmail = inquiry.ratingUpdatedByUserId
+    ? idToEmail.get(inquiry.ratingUpdatedByUserId) ?? null
+    : null;
+  const ownerEmail = inquiry.ownerUserId
+    ? idToEmail.get(inquiry.ownerUserId) ?? null
+    : null;
+  const lifecycleStageAuthorEmail = inquiry.lifecycleStageUpdatedByUserId
+    ? idToEmail.get(inquiry.lifecycleStageUpdatedByUserId) ?? null
+    : null;
 
   const notes = await db
     .select({
@@ -67,7 +86,12 @@ export async function GET(
     .limit(20);
 
   return NextResponse.json({
-    inquiry: { ...inquiry, ratingAuthorEmail },
+    inquiry: {
+      ...inquiry,
+      ratingAuthorEmail,
+      ownerEmail,
+      lifecycleStageAuthorEmail,
+    },
     notes,
     auditLog: audit,
   });

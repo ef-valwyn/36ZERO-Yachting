@@ -307,7 +307,25 @@ export const inquiries = pgTable(
     // submissions so paper vs scan conversion can be reported.
     manualEntry: boolean('manual_entry').notNull().default(false),
     manualEntryByUserId: uuid('manual_entry_by_user_id').references(() => users.id),
+    // Generalised CRM lifecycle. Local truth about *our* triage of the lead;
+    // never a derived deal-stage label (HubSpot owns deal stage). Allowed
+    // values: new | contacted | qualified | nurture | lost.
+    lifecycleStage: varchar('lifecycle_stage', { length: 30 })
+      .notNull()
+      .default('new'),
+    lifecycleStageUpdatedAt: timestamp('lifecycle_stage_updated_at'),
+    lifecycleStageUpdatedByUserId: uuid('lifecycle_stage_updated_by_user_id').references(
+      () => users.id
+    ),
+    // Sales rep who owns the follow-up. Drives the "My leads" filter and
+    // makes nextActionAt non-ambiguous (owner's task, not a shared timestamp).
+    ownerUserId: uuid('owner_user_id').references(() => users.id),
+    // Next-action reminder. Pairs with ownerUserId — surfaces in the
+    // "Due for follow-up" filter when nextActionAt <= now.
+    nextActionAt: timestamp('next_action_at'),
+    nextActionNote: varchar('next_action_note', { length: 500 }),
     createdAt: timestamp('created_at').defaultNow().notNull(),
+    updatedAt: timestamp('updated_at').defaultNow().notNull(),
   },
   (table) => ({
     // Partial unique index: one row per email for the IMHS onboard registration

@@ -1,14 +1,11 @@
 'use client';
 
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { cn, countryEntriesOnboard } from '@36zero/ui';
+import { cn, countryEntriesOnboard, inputCompactCx } from '@36zero/ui';
 import { Plus, Trash2, Check, Loader2 } from 'lucide-react';
 
 const NAME_REGEX = /^[\p{L}\p{M} .'\-]{2,100}$/u;
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-const baseInput =
-  'w-full px-3 py-2.5 bg-white/5 border border-white/10 rounded-lg text-white placeholder-white/40 text-sm focus:outline-none focus:border-brand-blue focus:ring-1 focus:ring-brand-blue transition-colors';
 
 interface Row {
   id: string;
@@ -95,7 +92,7 @@ function CountryCombo({ value, onChange, invalid, id }: CountryComboProps) {
         }}
         placeholder="Country"
         autoComplete="off"
-        className={cn(baseInput, invalid && 'border-red-500')}
+        className={cn(inputCompactCx, invalid && 'border-red-500')}
       />
       {open && filtered.length > 0 && (
         <ul
@@ -247,7 +244,7 @@ export default function ManualLeadForm() {
   return (
     <div className="space-y-4">
       {topError && (
-        <div className="rounded-xl border border-red-500/40 bg-red-500/10 px-4 py-3 text-sm text-red-300">
+        <div role="alert" className="rounded-xl border border-red-500/40 bg-red-500/10 px-4 py-3 text-sm text-red-300">
           {topError}
         </div>
       )}
@@ -289,7 +286,7 @@ export default function ManualLeadForm() {
                     value={row.fullName}
                     onChange={(e) => updateRow(idx, { fullName: e.target.value })}
                     placeholder="Jane Smith"
-                    className={baseInput}
+                    className={inputCompactCx}
                   />
                 </div>
                 <div>
@@ -302,7 +299,7 @@ export default function ManualLeadForm() {
                     onChange={(e) => updateRow(idx, { email: e.target.value })}
                     placeholder="jane@example.com"
                     autoComplete="off"
-                    className={baseInput}
+                    className={inputCompactCx}
                   />
                 </div>
                 <div className="md:col-span-2">

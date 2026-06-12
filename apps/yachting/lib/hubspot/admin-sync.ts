@@ -171,6 +171,87 @@ export async function createHubSpotNote(
 }
 
 /**
+ * Patch the local lifecycle stage onto the HubSpot Contact via a custom
+ * property. We deliberately use a custom property name (`lifecycle_stage_36zero`)
+ * rather than HubSpot's native `lifecyclestage` because HubSpot's stage
+ * values have their own semantics (lead, marketingqualifiedlead, etc.) and
+ * are also written by HubSpot workflows — overwriting it here would create
+ * a tug-of-war.
+ */
+export async function syncLifecycleStageToHubSpot(
+  inquiry: AdminSyncInquiry,
+  stage: string
+): Promise<boolean> {
+  if (!HUBSPOT_ACCESS_TOKEN) return false;
+  const contactId = await resolveContactId(inquiry);
+  if (!contactId) return false;
+
+  try {
+    const res = await fetch(`${HUBSPOT_API_URL}/objects/contacts/${contactId}`, {
+      method: 'PATCH',
+      headers: {
+        Authorization: `Bearer ${HUBSPOT_ACCESS_TOKEN}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        properties: {
+          lifecycle_stage_36zero: stage,
+        },
+      }),
+    });
+    if (!res.ok) {
+      console.error(
+        '[admin-sync] lifecycleStage PATCH failed',
+        res.status,
+        await res.text()
+      );
+      return false;
+    }
+    return true;
+  } catch (err) {
+    console.error('[admin-sync] lifecycleStage PATCH threw', err);
+    return false;
+  }
+}
+
+/**
+ * Patch the lead owner email onto the HubSpot Contact via a custom property.
+ * (HubSpot's native `hubspot_owner_id` requires a HubSpot user id, which we
+ * don't keep an internal mapping for. The custom property is informational.)
+ */
+export async function syncOwnerToHubSpot(
+  inquiry: AdminSyncInquiry,
+  ownerEmail: string | null
+): Promise<boolean> {
+  if (!HUBSPOT_ACCESS_TOKEN) return false;
+  const contactId = await resolveContactId(inquiry);
+  if (!contactId) return false;
+
+  try {
+    const res = await fetch(`${HUBSPOT_API_URL}/objects/contacts/${contactId}`, {
+      method: 'PATCH',
+      headers: {
+        Authorization: `Bearer ${HUBSPOT_ACCESS_TOKEN}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        properties: {
+          owner_email_36zero: ownerEmail ?? '',
+        },
+      }),
+    });
+    if (!res.ok) {
+      console.error('[admin-sync] owner PATCH failed', res.status, await res.text());
+      return false;
+    }
+    return true;
+  } catch (err) {
+    console.error('[admin-sync] owner PATCH threw', err);
+    return false;
+  }
+}
+
+/**
  * Patch the appointment fields on a HubSpot Contact.
  */
 export async function syncAppointmentToHubSpot(

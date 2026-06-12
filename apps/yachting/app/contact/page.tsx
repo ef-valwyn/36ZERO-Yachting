@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Mail, User, Phone, CheckCircle, AlertCircle, Loader2, Send } from 'lucide-react';
 import Image from 'next/image';
-import { Button, GlassCard, countryCodes } from '@36zero/ui';
+import { Button, GlassCard, countryCodes, inputCx, honeypotCx } from '@36zero/ui';
 import Header from '@/components/Header';
 import SiteFooter from '@/components/SiteFooter';
 import { useUser, useSignIn, useSignUp } from '@clerk/nextjs';
@@ -173,8 +173,6 @@ export default function ContactPage() {
     }
   };
 
-  const inputClasses = 'w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-white/40 focus:outline-none focus:border-brand-blue focus:ring-1 focus:ring-brand-blue transition-colors';
-
   return (
     <main className="min-h-screen bg-brand-navy">
       <Header variant="solid" />
@@ -188,11 +186,11 @@ export default function ContactPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
           >
-            <p className="text-brand-blue font-medium tracking-widest uppercase text-sm mb-4">
+            <p className="eyebrow mb-4">
               Get In Touch
             </p>
-            <h1 className="text-4xl md:text-5xl font-extrabold uppercase tracking-tighter text-white mb-6">
-              Contact <span className="text-gradient">Our Team</span>
+            <h1 className="text-white mb-6">
+              Contact <span className="text-gradient font-medium">Our Team</span>
             </h1>
             <p className="text-lg text-white/70 font-light max-w-2xl mx-auto">
               Whether you&apos;re interested in the Adventure Yachts AY60 or joining the 36ZERO LAP circumnavigation,
@@ -220,7 +218,7 @@ export default function ContactPage() {
                   <div className="w-16 h-16 mx-auto mb-6 rounded-full bg-accent-teal/20 flex items-center justify-center">
                     <CheckCircle className="w-8 h-8 text-accent-teal" />
                   </div>
-                  <h3 className="text-2xl font-semibold text-white mb-3">
+                  <h3 className="text-2xl font-medium text-white mb-3">
                     Thank You for Reaching Out
                   </h3>
                   <p className="text-white/70 mb-8 max-w-md mx-auto">
@@ -301,7 +299,7 @@ export default function ContactPage() {
                       name="website"
                       value={honeypot}
                       onChange={(e) => setHoneypot(e.target.value)}
-                      style={{ position: 'absolute', left: '-9999px' }}
+                      className={honeypotCx}
                       tabIndex={-1}
                       autoComplete="off"
                       aria-hidden="true"
@@ -320,7 +318,7 @@ export default function ContactPage() {
                           value={formData.fullName}
                           onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
                           placeholder="John Smith"
-                          className={`${inputClasses} pl-12 ${isSignedIn && formData.fullName ? 'bg-white/10' : ''} ${isFieldInvalid('fullName') ? 'border-red-500' : ''}`}
+                          className={`${inputCx} pl-12 ${isSignedIn && formData.fullName ? 'bg-white/10' : ''} ${isFieldInvalid('fullName') ? 'border-red-500' : ''}`}
                         />
                       </div>
                     </div>
@@ -338,7 +336,7 @@ export default function ContactPage() {
                           value={formData.email}
                           onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                           placeholder="john@example.com"
-                          className={`${inputClasses} pl-12 ${isSignedIn && formData.email ? 'bg-white/10' : ''} ${isFieldInvalid('email') ? 'border-red-500' : ''}`}
+                          className={`${inputCx} pl-12 ${isSignedIn && formData.email ? 'bg-white/10' : ''} ${isFieldInvalid('email') ? 'border-red-500' : ''}`}
                         />
                       </div>
                     </div>
@@ -353,6 +351,7 @@ export default function ContactPage() {
                           value={formData.countryCode}
                           onChange={(e) => setFormData({ ...formData, countryCode: e.target.value })}
                           className="w-28 px-3 py-3 bg-white/5 border border-white/10 rounded-xl text-white focus:outline-none focus:border-brand-blue focus:ring-1 focus:ring-brand-blue transition-colors"
+                          aria-label="Country code"
                         >
                           {countryCodes.map((cc) => (
                             <option key={cc.code} value={cc.code} className="bg-brand-navy">
@@ -368,7 +367,7 @@ export default function ContactPage() {
                             value={formData.phone}
                             onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                             placeholder="123 456 7890"
-                            className={`${inputClasses} pl-12`}
+                            className={`${inputCx} pl-12`}
                           />
                         </div>
                       </div>
@@ -439,7 +438,7 @@ export default function ContactPage() {
                         rows={4}
                         value={formData.message}
                         onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                        className={`${inputClasses} resize-none`}
+                        className={`${inputCx} resize-none`}
                         placeholder="Tell us how we can help..."
                       />
                     </div>
@@ -450,6 +449,7 @@ export default function ContactPage() {
                         initial={{ opacity: 0, y: -10 }}
                         animate={{ opacity: 1, y: 0 }}
                         className="flex items-center gap-3 p-4 bg-accent-coral/10 border border-accent-coral/20 rounded-xl"
+                        role="alert"
                       >
                         <AlertCircle className="w-5 h-5 text-accent-coral shrink-0" />
                         <p className="text-sm text-accent-coral">{errorMessage}</p>

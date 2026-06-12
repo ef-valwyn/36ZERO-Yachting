@@ -17,7 +17,7 @@ import {
   Ship,
   Anchor,
 } from 'lucide-react';
-import { Button, GlassCard, countryCodes, countries } from '@36zero/ui';
+import { Button, GlassCard, countryCodes, countries, inputCx, honeypotCx } from '@36zero/ui';
 import Image from 'next/image';
 import Link from 'next/link';
 import Header from '@/components/Header';
@@ -262,9 +262,6 @@ export default function IMHSPage() {
     }
   };
 
-  const inputClasses =
-    'w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-white/40 focus:outline-none focus:border-brand-blue focus:ring-1 focus:ring-brand-blue transition-colors';
-
   return (
     <main className="min-h-screen bg-brand-navy">
       <Header variant="solid" />
@@ -290,16 +287,16 @@ export default function IMHSPage() {
         >
           <motion.p
             variants={itemVariants}
-            className="text-brand-blue font-medium tracking-widest uppercase text-sm mb-4"
+            className="eyebrow mb-4"
           >
             April 22-26, 2026 &middot; La Grande Motte, France
           </motion.p>
           <motion.h1
             variants={itemVariants}
-            className="text-4xl md:text-6xl font-extrabold uppercase tracking-tighter text-white mb-6"
+            className="text-white mb-6"
           >
             International Multihull{' '}
-            <span className="text-gradient">Show 2026</span>
+            <span className="text-gradient font-medium">Show 2026</span>
           </motion.h1>
           <motion.p
             variants={itemVariants}
@@ -350,7 +347,7 @@ export default function IMHSPage() {
 
             {countdown.isLive ? (
               <div>
-                <h2 className="text-3xl md:text-4xl font-extrabold uppercase tracking-tighter text-white mb-4">
+                <h2 className="text-3xl md:text-4xl text-white mb-4">
                   The Show Is <span className="text-gradient">Live!</span>
                 </h2>
                 <p className="text-lg text-white/70 font-light">
@@ -359,7 +356,7 @@ export default function IMHSPage() {
               </div>
             ) : (
               <>
-                <p className="text-brand-blue font-medium tracking-widest uppercase text-sm mb-8">
+                <p className="eyebrow mb-8">
                   Countdown to Opening
                 </p>
                 <div className="grid grid-cols-4 gap-3 sm:gap-6 max-w-xl mx-auto">
@@ -435,10 +432,10 @@ export default function IMHSPage() {
               />
             </div>
             <div>
-              <p className="text-brand-blue font-medium tracking-widest uppercase text-sm mb-3">
+              <p className="eyebrow mb-3">
                 World Premiere
               </p>
-              <h2 className="text-3xl md:text-4xl font-extrabold uppercase tracking-tighter text-white mb-4">
+              <h2 className="text-3xl md:text-4xl text-white mb-4">
                 The AY60 Power{' '}
                 <span className="text-gradient">Catamaran</span>
               </h2>
@@ -474,10 +471,10 @@ export default function IMHSPage() {
             transition={{ duration: 0.6 }}
           >
             <div className="text-center mb-8">
-              <p className="text-brand-blue font-medium tracking-widest uppercase text-sm mb-3">
+              <p className="eyebrow mb-3">
                 Book Your Appointment
               </p>
-              <h2 className="text-3xl md:text-4xl font-extrabold uppercase tracking-tighter text-white mb-4">
+              <h2 className="text-3xl md:text-4xl text-white mb-4">
                 Register for a{' '}
                 <span className="text-gradient">Private Viewing</span>
               </h2>
@@ -497,7 +494,7 @@ export default function IMHSPage() {
                   <div className="w-16 h-16 mx-auto mb-6 rounded-full bg-accent-teal/20 flex items-center justify-center">
                     <CheckCircle className="w-8 h-8 text-accent-teal" />
                   </div>
-                  <h3 className="text-2xl font-semibold text-white mb-3">
+                  <h3 className="text-2xl font-medium text-white mb-3">
                     Viewing Request Received
                   </h3>
                   <p className="text-white/70 max-w-md mx-auto">
@@ -576,7 +573,7 @@ export default function IMHSPage() {
                       name="website"
                       value={honeypot}
                       onChange={(e) => setHoneypot(e.target.value)}
-                      style={{ position: 'absolute', left: '-9999px' }}
+                      className={honeypotCx}
                       tabIndex={-1}
                       autoComplete="off"
                       aria-hidden="true"
@@ -595,7 +592,7 @@ export default function IMHSPage() {
                           value={tourForm.fullName}
                           onChange={(e) => setTourForm({ ...tourForm, fullName: e.target.value })}
                           placeholder="John Smith"
-                          className={`${inputClasses} pl-12 ${isSignedIn && tourForm.fullName ? 'bg-white/10' : ''} ${isTourFieldInvalid('fullName') ? 'border-red-500' : ''}`}
+                          className={`${inputCx} pl-12 ${isSignedIn && tourForm.fullName ? 'bg-white/10' : ''} ${isTourFieldInvalid('fullName') ? 'border-red-500' : ''}`}
                         />
                       </div>
                     </div>
@@ -613,7 +610,7 @@ export default function IMHSPage() {
                           value={tourForm.email}
                           onChange={(e) => setTourForm({ ...tourForm, email: e.target.value })}
                           placeholder="john@example.com"
-                          className={`${inputClasses} pl-12 ${isSignedIn && tourForm.email ? 'bg-white/10' : ''} ${isTourFieldInvalid('email') ? 'border-red-500' : ''}`}
+                          className={`${inputCx} pl-12 ${isSignedIn && tourForm.email ? 'bg-white/10' : ''} ${isTourFieldInvalid('email') ? 'border-red-500' : ''}`}
                         />
                       </div>
                     </div>
@@ -643,7 +640,7 @@ export default function IMHSPage() {
                             value={tourForm.phone}
                             onChange={(e) => setTourForm({ ...tourForm, phone: e.target.value })}
                             placeholder="123 456 7890"
-                            className={`${inputClasses} pl-12 ${isTourFieldInvalid('phone') ? 'border-red-500' : ''}`}
+                            className={`${inputCx} pl-12 ${isTourFieldInvalid('phone') ? 'border-red-500' : ''}`}
                           />
                         </div>
                       </div>
@@ -660,7 +657,7 @@ export default function IMHSPage() {
                           id="tour-country"
                           value={tourForm.country}
                           onChange={(e) => setTourForm({ ...tourForm, country: e.target.value })}
-                          className={`${inputClasses} pl-12 appearance-none ${isTourFieldInvalid('country') ? 'border-red-500' : ''}`}
+                          className={`${inputCx} pl-12 appearance-none ${isTourFieldInvalid('country') ? 'border-red-500' : ''}`}
                         >
                           <option value="" className="bg-brand-navy">Select your country</option>
                           {countries.map((c) => (
@@ -705,7 +702,7 @@ export default function IMHSPage() {
                           value={tourForm.otherInterest}
                           onChange={(e) => setTourForm({ ...tourForm, otherInterest: e.target.value })}
                           placeholder="Please specify..."
-                          className={`${inputClasses} mt-3`}
+                          className={`${inputCx} mt-3`}
                         />
                       )}
                     </div>
@@ -723,7 +720,7 @@ export default function IMHSPage() {
                           value={tourForm.company}
                           onChange={(e) => setTourForm({ ...tourForm, company: e.target.value })}
                           placeholder="Your company name"
-                          className={`${inputClasses} pl-12`}
+                          className={`${inputCx} pl-12`}
                         />
                       </div>
                     </div>
@@ -784,10 +781,10 @@ export default function IMHSPage() {
             transition={{ duration: 0.6 }}
           >
             <div className="order-2 md:order-1">
-              <p className="text-brand-blue font-medium tracking-widest uppercase text-sm mb-3">
+              <p className="eyebrow mb-3">
                 At the Show
               </p>
-              <h2 className="text-3xl md:text-4xl font-extrabold uppercase tracking-tighter text-white mb-4">
+              <h2 className="text-3xl md:text-4xl text-white mb-4">
                 Visit{' '}
                 <span className="text-gradient">Adventure One</span>
               </h2>
@@ -845,7 +842,7 @@ export default function IMHSPage() {
                   <div className="w-12 h-12 mx-auto mb-4 rounded-full bg-accent-teal/20 flex items-center justify-center">
                     <CheckCircle className="w-6 h-6 text-accent-teal" />
                   </div>
-                  <h3 className="text-xl font-semibold text-white mb-2">You&apos;re Signed Up!</h3>
+                  <h3 className="text-xl font-medium text-white mb-2">You&apos;re Signed Up!</h3>
                   <p className="text-white/60 text-sm">
                     We&apos;ll keep you updated on everything IMHS 2026.
                   </p>
@@ -900,7 +897,7 @@ export default function IMHSPage() {
                         value={signupEmail}
                         onChange={(e) => setSignupEmail(e.target.value)}
                         placeholder="your@email.com"
-                        className={`${inputClasses} pl-12`}
+                        className={`${inputCx} pl-12`}
                         required
                       />
                     </div>

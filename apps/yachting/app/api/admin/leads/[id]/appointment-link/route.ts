@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { db, inquiries, eq, and } from '@36zero/database';
+import { db, inquiries, eq } from '@36zero/database';
 import { requireStaff, StaffAuthError } from '@/lib/auth/require-staff';
 
 /**
@@ -29,10 +29,7 @@ export async function GET(
   const { id } = await params;
 
   const inquiry = await db.query.inquiries.findFirst({
-    where: and(
-      eq(inquiries.id, id),
-      eq(inquiries.source, 'imhs_onboard_registration')
-    ),
+    where: eq(inquiries.id, id),
     columns: { id: true, name: true, email: true },
   });
   if (!inquiry) return NextResponse.json({ error: 'not_found' }, { status: 404 });

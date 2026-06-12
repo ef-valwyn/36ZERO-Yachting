@@ -1,13 +1,21 @@
 import type { Metadata } from 'next';
 import Script from 'next/script';
+import { Inter_Tight } from 'next/font/google';
 import { ClerkProvider } from '@clerk/nextjs';
 import '@36zero/ui/styles';
 import './globals.css';
 import { AnalyticsProvider } from '@/components/Analytics';
+import { MotionProvider } from '@/components/MotionProvider';
 import { OrganizationSchema, WebSiteSchema } from '@/components/OrganizationSchema';
 
 // Force dynamic rendering to fix Clerk + Next.js 15 compatibility
 export const dynamic = 'force-dynamic';
+
+const interTight = Inter_Tight({
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-inter-tight',
+});
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://www.36zeroyachting.com'),
@@ -69,7 +77,7 @@ export default function RootLayout({
 }) {
   return (
     <ClerkProvider publishableKey={process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY}>
-      <html lang="en" className="scroll-smooth">
+      <html lang="en" className={`scroll-smooth ${interTight.variable}`}>
         <head>
           {/* Structured Data - Organization & Website Schema */}
           <OrganizationSchema />
@@ -77,7 +85,9 @@ export default function RootLayout({
         </head>
         <body className="bg-brand-navy text-white antialiased">
           <AnalyticsProvider>
-            {children}
+            <MotionProvider>
+              {children}
+            </MotionProvider>
           </AnalyticsProvider>
           {/* HubSpot Tracking Code — captures UTM params & page views */}
           <Script

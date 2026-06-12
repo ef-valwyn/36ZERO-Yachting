@@ -33,11 +33,11 @@ export const GlassCard = React.forwardRef<HTMLDivElement, GlassCardProps>(
   ) => {
     const baseClasses = cn(
       'relative overflow-hidden rounded-2xl',
-      'bg-brand-navy/80 backdrop-blur-xl',
+      'bg-brand-navy/60 backdrop-blur-md',
       'border transition-all duration-300',
-      variant === 'default' && 'border-white/10',
+      variant === 'default' && 'border-white/[0.08]',
       variant === 'blue' && 'border-brand-blue/20',
-      variant === 'hover' && 'border-white/10 hover:border-brand-blue/30 hover:shadow-glow',
+      variant === 'hover' && 'border-white/[0.08] hover:border-brand-blue/30 hover:shadow-glow',
       paddings[padding],
       className
     );
@@ -46,10 +46,10 @@ export const GlassCard = React.forwardRef<HTMLDivElement, GlassCardProps>(
       <motion.div
         ref={ref}
         className={baseClasses}
-        initial={{ opacity: 0, y: 20 }}
+        initial={{ opacity: 0, y: 16 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: '-50px' }}
-        transition={{ duration: 0.5, ease: 'easeOut' }}
+        transition={{ duration: 0.6, ease: 'easeOut' }}
         {...props}
       >
         {withOverlay && <div className="glass-overlay" />}

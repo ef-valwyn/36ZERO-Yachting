@@ -85,7 +85,7 @@ export const VesselCard: React.FC<VesselCardProps> = ({
             alt={`${manufacturer} ${model}`}
             fill
             sizes={isFeatured ? '(max-width: 1024px) 100vw, 66vw' : '(max-width: 768px) 100vw, 33vw'}
-            className="object-cover transition-transform duration-700 group-hover:scale-110"
+            className="object-cover transition-transform duration-700 group-hover:scale-[1.04]"
           />
           
           {/* Overlay on hover */}
@@ -103,7 +103,7 @@ export const VesselCard: React.FC<VesselCardProps> = ({
 
           {/* Featured Badge */}
           {isFeatured && (
-            <span className="absolute top-4 left-4 px-3 py-1 text-xs font-semibold uppercase tracking-wider bg-accent-gold text-brand-navy rounded-full">
+            <span className="absolute top-4 left-4 px-2.5 py-1 text-[11px] font-medium uppercase tracking-widest bg-accent-gold text-brand-navy rounded-full">
               Featured
             </span>
           )}
@@ -121,7 +121,7 @@ export const VesselCard: React.FC<VesselCardProps> = ({
         <div className="vessel-card-content">
           {/* Manufacturer & Model */}
           <div className="space-y-1">
-            <p className="text-sm font-medium text-brand-blue uppercase tracking-wider">
+            <p className="eyebrow">
               {manufacturer}
             </p>
             <h3 className="text-xl font-semibold text-white">
