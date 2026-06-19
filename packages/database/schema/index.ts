@@ -7,6 +7,7 @@ import {
   text,
   integer,
   decimal,
+  numeric,
   date,
   timestamp,
   boolean,
@@ -492,5 +493,73 @@ export const auditLogRelations = relations(auditLog, ({ one }) => ({
   actor: one(users, {
     fields: [auditLog.actorUserId],
     references: [users.id],
+  }),
+}));
+
+// =========================================
+// INBOUND DRAFTS (Postmark inbound → Claude parse → human review)
+// =========================================
+
+/**
+ * Each row is one inbound email. The status column is a single state machine:
+ *
+ *   parsing  → parsed   → approved      (terminal)
+ *            → parse_failed → rejected  (terminal)
+ *                          → approved   (after manual edit)
+ *            → duplicate (terminal)
+ *            → rejected  (terminal: spam, off-topic, etc.)
+ *
+ * Raw bodies (rawTextBody / rawHtmlBody) are PII-bearing and get nulled by
+ * a retention job ~30 days after the row reaches a terminal status.
+ */
+export const inboundDrafts = pgTable(
+  'inbound_drafts',
+  {
+    id: uuid('id').primaryKey().defaultRandom(),
+    // Postmark idempotency key: their docs say inbound retries up to 10 times
+    // over ~10.5h, so this MUST be unique to dedup retries.
+    postmarkMessageId: varchar('postmark_message_id', { length: 200 }).notNull().unique(),
+    fromEmail: varchar('from_email', { length: 255 }).notNull(),
+    fromName: varchar('from_name', { length: 255 }),
+    subject: varchar('subject', { length: 998 }), // RFC 5322 line length cap
+    receivedAt: timestamp('received_at').notNull(),
+    rawTextBody: text('raw_text_body'),
+    rawHtmlBody: text('raw_html_body'),
+    parsedJson: jsonb('parsed_json').$type<{
+      firstName?: string | null;
+      lastName?: string | null;
+      phone?: string | null;
+      companyOrBroker?: string | null;
+      vesselOfInterest?: string | null;
+      intent?: 'buying' | 'selling' | 'chartering' | 'info' | 'other' | null;
+      urgency?: 'low' | 'medium' | 'high' | 'unknown' | null;
+      summary?: string | null;
+    }>(),
+    // States listed in the table doc above.
+    status: varchar('status', { length: 20 }).notNull().default('parsing'),
+    statusReason: text('status_reason'),
+    reviewedByUserId: uuid('reviewed_by_user_id').references(() => users.id),
+    reviewedAt: timestamp('reviewed_at'),
+    resultingInquiryId: uuid('resulting_inquiry_id').references(() => inquiries.id),
+    spamScore: numeric('spam_score', { precision: 5, scale: 2 }),
+    bodyDeletedAt: timestamp('body_deleted_at'),
+    createdAt: timestamp('created_at').defaultNow().notNull(),
+  },
+  (t) => ({
+    statusCreatedIdx: index('inbound_drafts_status_created_idx').on(
+      t.status,
+      t.createdAt
+    ),
+  })
+);
+
+export const inboundDraftsRelations = relations(inboundDrafts, ({ one }) => ({
+  reviewedBy: one(users, {
+    fields: [inboundDrafts.reviewedByUserId],
+    references: [users.id],
+  }),
+  resultingInquiry: one(inquiries, {
+    fields: [inboundDrafts.resultingInquiryId],
+    references: [inquiries.id],
   }),
 }));

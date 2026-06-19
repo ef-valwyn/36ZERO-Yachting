@@ -4,7 +4,14 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { SignOutButton } from '@clerk/nextjs';
 import { cn } from '@36zero/ui';
-import { LayoutList, CalendarDays, LogOut, UserPlus, FilePlus2 } from 'lucide-react';
+import {
+  LayoutList,
+  CalendarDays,
+  LogOut,
+  UserPlus,
+  FilePlus2,
+  Inbox,
+} from 'lucide-react';
 import type { StaffUser } from '@/lib/auth/require-staff';
 
 interface AdminShellProps {
@@ -14,6 +21,7 @@ interface AdminShellProps {
 
 const NAV = [
   { href: '/admin', label: 'Leads', icon: LayoutList, exact: true },
+  { href: '/admin/inbox', label: 'Inbox', icon: Inbox, exact: false },
   { href: '/admin/leads/add', label: 'Add lead', icon: UserPlus, exact: false },
   { href: '/admin/leads/new', label: 'IMHS bulk', icon: FilePlus2, exact: false },
   { href: '/admin/calendar', label: 'Calendar', icon: CalendarDays, exact: false },

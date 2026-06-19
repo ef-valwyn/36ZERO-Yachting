@@ -11,12 +11,14 @@
   "dependencies": {
     "@36zero/database": "*",
     "@36zero/ui": "*",
+    "@anthropic-ai/sdk": "^0.93.0",
     "@calcom/embed-react": "^1.5.3",
     "@clerk/nextjs": "^4.29.1",
     "@microsoft/clarity": "^1.0.2",
     "@sentry/nextjs": "^10.38.0",
     "framer-motion": "^11.0.3",
     "gray-matter": "^4.0.3",
+    "html-to-text": "^10.0.0",
     "lucide-react": "^0.312.0",
     "next": "^15.5.11",
     "next-mdx-remote": "^5.0.0",
@@ -31,6 +33,7 @@
   },
   "devDependencies": {
     "@hubspot/cli": "^7.11.2",
+    "@types/html-to-text": "^9.0.4",
     "@types/node": "^20.10.6",
     "@types/react": "^18.2.47",
     "@types/react-dom": "^18.2.18",
