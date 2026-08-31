@@ -547,8 +547,8 @@ const vesselsData = [
     },
   },
   {
-    // Displayed as "Adventure Two". Slug kept as adventure-three to preserve the
-    // existing URL and update the existing DB row in place (no delete / no new row).
+    // Previously displayed as "Adventure Two". Withdrawn from public listings
+    // (isVisible: false) — row kept in place (no delete) so it can be restored.
     name: 'Adventure Two',
     slug: 'adventure-three',
     manufacturer: 'Adventure Yachts',
@@ -577,7 +577,7 @@ const vesselsData = [
       'https://yyofqqbn0jyxo9dg.public.blob.vercel-storage.com/yachts/adventure-one/side.jpeg',
     ],
     isFeatured: false,
-    isVisible: true,
+    isVisible: false,
     isAdventureYacht: true,
     variant: 'Outboard Version',
     availabilityText: 'Q2 2026',

@@ -3,12 +3,12 @@ import { getAllArticles } from '@/lib/news';
 
 const baseUrl = 'https://www.36zeroyachting.com';
 
-// Adventure Yacht slugs for individual detail pages
-// adventure-three is the live slug for the listing displayed as "Adventure Two".
-// adventure-two (Flybridge) and adventure-four are hidden (isVisible=false).
+// Adventure Yacht slugs for individual detail pages.
+// Adventure One is the only publicly listed build. adventure-two (Flybridge),
+// adventure-three and adventure-four are hidden (isVisible=false) and their
+// detail routes redirect to /adventure-yachts.
 const adventureYachtSlugs = [
   'adventure-one',
-  'adventure-three',
 ];
 
 export async function GET() {

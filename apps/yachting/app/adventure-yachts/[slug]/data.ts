@@ -20,27 +20,6 @@ export const buildVariants = [
     },
     imageUrl: 'https://yyofqqbn0jyxo9dg.public.blob.vercel-storage.com/yachts/adventure-one/hero-landing.png',
   },
-  {
-    // Displayed as "Adventure Two". Retains the adventure-three slug/URL so the
-    // existing detail-page link and database row (renamed, not deleted) stay in sync.
-    id: 'adventure-three',
-    slug: 'adventure-three',
-    name: 'Adventure Two',
-    model: 'AY60 Sport',
-    variant: 'Outboard',
-    tagline: 'Bespoke excellence awaits your vision',
-    location: 'Thailand (Global Delivery Available)',
-    description: 'A blank canvas ready for your personal touch. This AY60 Sport offers full customisation opportunities, allowing you to work directly with our design team to create a vessel that perfectly reflects your lifestyle and aspirations. From layout to finishes, every detail is yours to define.',
-    specs: {
-      lengthOverall: { value: '18.3 m', imperial: "(60' 0\")" },
-      beamOverall: { value: '8.47m', imperial: "(30' 0\")" },
-      range: { value: '2,000', unit: 'nm' },
-      cruisingSpeed: { value: '14', unit: 'kn' },
-      berths: { value: '4+2', unit: '' },
-      construction: { value: 'Composite', detail: '(Carbon - eGlass)' },
-    },
-    imageUrl: 'https://yyofqqbn0jyxo9dg.public.blob.vercel-storage.com/yachts/adventure-one/portthreequarter.jpeg',
-  },
 ];
 
 export type BuildVariant = typeof buildVariants[number];
