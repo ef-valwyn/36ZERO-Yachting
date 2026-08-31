@@ -45,6 +45,25 @@ const nextConfig: NextConfig = {
         destination: '/adventure-yachts',
         permanent: true,
       },
+      // Adventure Two has been withdrawn from public listings. Both the Flybridge
+      // (adventure-two) and Sport (adventure-three, previously displayed as
+      // "Adventure Two") detail URLs redirect back to the Adventure Yachts page.
+      // Temporary redirects so the routes can be re-enabled if the builds return.
+      {
+        source: '/adventure-yachts/adventure-two',
+        destination: '/adventure-yachts',
+        permanent: false,
+      },
+      {
+        source: '/adventure-yachts/adventure-three',
+        destination: '/adventure-yachts',
+        permanent: false,
+      },
+      {
+        source: '/adventure-yachts/adventure-four',
+        destination: '/adventure-yachts',
+        permanent: false,
+      },
       // IMHS 2026 (La Grande Motte, 22-26 April 2026) has passed — page deactivated.
       // Temporary redirects so the route can be re-enabled for a future event;
       // the page components under app/imhs-2026 are kept in place for reuse.

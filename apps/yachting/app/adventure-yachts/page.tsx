@@ -994,25 +994,6 @@ export default function AdventureYachtsPage() {
               </div>
             </GlassCard>
           )}
-
-          {/* CTA */}
-          <motion.div
-            className="text-center mt-16"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5 }}
-          >
-            <p className="text-white/60 mb-4">
-              Can&apos;t find what you&apos;re looking for?
-            </p>
-            <Button variant="secondary" size="lg" asChild>
-              <Link href="/contact">
-                Discuss Custom Build Options
-                <ArrowRight className="w-4 h-4 ml-2" />
-              </Link>
-            </Button>
-          </motion.div>
         </div>
       </section>
 

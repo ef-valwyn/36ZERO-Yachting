@@ -265,45 +265,48 @@ export default function AdventureYachtDetail({ build, allBuilds, pricing }: Prop
               {build.tagline}
             </motion.p>
 
-            {/* Build Selector - Now links to individual pages */}
-            <motion.div
-              variants={itemVariants}
-              className="flex flex-wrap justify-center gap-3 md:gap-4 mb-12"
-            >
-              {allBuilds.map((variant) => (
-                <Link
-                  key={variant.id}
-                  href={build.id === variant.id ? '#' : `/adventure-yachts/${variant.slug}?scroll=specs`}
-                  className={`group relative px-5 md:px-8 py-4 md:py-5 rounded-2xl transition-all duration-500 ${
-                    build.id === variant.id
-                      ? 'bg-brand-blue shadow-glow'
-                      : 'bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20'
-                  }`}
-                >
-                  <div className="text-left">
-                    <p className={`text-sm font-semibold tracking-wide transition-colors ${
-                      build.id === variant.id ? 'text-white' : 'text-white/90'
-                    }`}>
-                      {variant.name}
-                    </p>
-                    <p className={`text-xs transition-colors ${
-                      build.id === variant.id ? 'text-white/80' : 'text-white/50'
-                    }`}>
-                      {variant.model} — {variant.variant}
-                    </p>
-                  </div>
+            {/* Build Selector - Now links to individual pages.
+                Hidden when only one build is publicly listed. */}
+            {allBuilds.length > 1 && (
+              <motion.div
+                variants={itemVariants}
+                className="flex flex-wrap justify-center gap-3 md:gap-4 mb-12"
+              >
+                {allBuilds.map((variant) => (
+                  <Link
+                    key={variant.id}
+                    href={build.id === variant.id ? '#' : `/adventure-yachts/${variant.slug}?scroll=specs`}
+                    className={`group relative px-5 md:px-8 py-4 md:py-5 rounded-2xl transition-all duration-500 ${
+                      build.id === variant.id
+                        ? 'bg-brand-blue shadow-glow'
+                        : 'bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20'
+                    }`}
+                  >
+                    <div className="text-left">
+                      <p className={`text-sm font-semibold tracking-wide transition-colors ${
+                        build.id === variant.id ? 'text-white' : 'text-white/90'
+                      }`}>
+                        {variant.name}
+                      </p>
+                      <p className={`text-xs transition-colors ${
+                        build.id === variant.id ? 'text-white/80' : 'text-white/50'
+                      }`}>
+                        {variant.model} — {variant.variant}
+                      </p>
+                    </div>
                   
-                  {/* Selection indicator */}
-                  {build.id === variant.id && (
-                    <motion.div
-                      layoutId="selector-indicator"
-                      className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-2 h-2 bg-white rounded-full"
-                      transition={{ type: 'spring', stiffness: 400, damping: 30 }}
-                    />
-                  )}
-                </Link>
-              ))}
-            </motion.div>
+                    {/* Selection indicator */}
+                    {build.id === variant.id && (
+                      <motion.div
+                        layoutId="selector-indicator"
+                        className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-2 h-2 bg-white rounded-full"
+                        transition={{ type: 'spring', stiffness: 400, damping: 30 }}
+                      />
+                    )}
+                  </Link>
+                ))}
+              </motion.div>
+            )}
 
             <motion.div variants={itemVariants}>
               <Button variant="secondary" onClick={scrollToSpecs}>
